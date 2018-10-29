@@ -1,5 +1,36 @@
+#!/bin/bash
 
 
+:<<comment
+函数的描述
+全局变量的使用和修改
+使用的参数说明
+返回值，而不是上一条命令运行后默认的退出状态
+# Cleanup files from the backup dir
+# Globals:
+#   BACKUP_DIR
+#   ORACLE_SID
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function cleanup() {
+  ...
+}
+comment
+
+
+#############################################
+:<<comment
+打印日志
+Globals:
+    None
+Arguments:
+    content
+Returns:
+    None
+comment
 function printLog()
 {
     content="$1"
@@ -19,4 +50,7 @@ function printLog()
         *) echo -e "[$(date +"%F %T")] \033[32m$content \033[0m";;
     esac
 }
+
+
+
 
