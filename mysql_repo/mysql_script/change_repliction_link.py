@@ -44,11 +44,11 @@ sys.setdefaultencoding('utf8')
 dba_host = '172.16.112.10'
 dba_port = 10000
 dba_user = 'dba_master' # DML权限
-dba_pass = 'jtfoC18Zr9FGay2esiNpdOZIKaB1OaZv'
+dba_pass = 'dba_master'
 repl_user = 'repl_user' # 复制用户
 repl_pass = 'repl_user'
 admin_user = 'remote_root' # surper权限
-admin_pass = '72d18a42c455c744461e08ea19e7c7d1'
+admin_pass = 'remote_root'
 
 
 delay_time = 3
