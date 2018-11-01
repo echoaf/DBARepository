@@ -1,0 +1,7 @@
+Xtraback目录独立
+
+# 基础目录:/tmp/backupXtrabackup/
+# 使用方式
+cd /tmp/backupXtrabackup && sh xtrabackup.sh  remote_host remote_mysql_port remote_ssh_port local_host local_mysql_port local_ssh_port backupdir innodb_buff
+cd /tmp/backupXtrabackup && sh xtrabackup.sh  172.16.112.10 11000 22 172.16.112.10 11002 22 /data/tmpdir/ 512M
+

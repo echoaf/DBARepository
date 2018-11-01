@@ -1,0 +1,253 @@
+#!/bin/bash
+
+
+#######################################
+# 检测xtrabackup是否可以执行备份
+# Globals:
+#   None
+# Arguments:
+#   xtrabackupCheck master_host master_ssh_port local_host local_ssh_port backupdir
+# Returns:
+#   0:成功
+#   64:失败
+#######################################
+function xtrabackupCheck()
+{
+	# 检测xtrabackup是否能够执行
+	# 密钥已打通
+	# 数据库连接可用 
+	master_host="$1" # 数据源地址
+	master_ssh_port="$2"
+	local_host="$3"
+	local_ssh_port="$4"
+	backupdir="$5"
+    normal_log="$6"
+    is_check="$7"
+    if [ -z "$is_check" ];then
+        is_check="YES"
+    fi
+
+
+	printLog "===check 密钥" "$normal_log"
+	value=$(ssh -p $master_ssh_port root@"$master_host" "ssh -p $local_ssh_port root@'$local_host' 'echo HELLO'" 2>&1)
+	if [ "$value" != "HELLO" ];then
+		printLog "ssh免密钥检测出错,exit,$value" "$normal_log"
+		return 64
+	fi
+    
+    tmp=$(echo "$is_check"| tr 'a-z' 'A-Z')
+    if [ "$tmp" == "YES" ];then
+	    printLog "===check 目录" "$normal_log"
+	    if (( $(ls "$backupdir"|wc -l)!=0 )) ;then
+	    	printLog "备份目录'$backupdir'存在数据,请先清理掉" "$normal_log"
+	    	return 64
+	    fi
+    fi
+}
+
+
+
+#######################################
+# xtrabackup备份
+# Globals:
+#   None
+# Arguments:
+#   xtrabackupBackup "$master_host" "$master_port" "$master_ssh_port" "$master_my_cnf" "$local_host" "$local_ssh_port" "$backupdir" "Y" "$normal_log"
+# Returns:
+#   0:成功
+#   64:失败
+#######################################
+function xtrabackupBackup()
+{
+	master_host="$1"
+	master_port="$2"
+	master_ssh_port="$3"
+	master_my_cnf="$4"
+	local_host="$5"
+	local_ssh_port="$6"
+	backupdir="$7"
+	is_wait="$8"
+    normal_log="$9"
+	
+
+	remote_tmp_dir="/tmp/full_$(date +%s)"
+	ssh -p $master_ssh_port root@$master_host "mkdir -p $remote_tmp_dir"
+
+	cmd="$innobackupex --defaults-file=$master_my_cnf \
+--user=$dump_user --password=$dump_pass --host=$master_host --port=$master_port \
+--slave-info \
+--no-timestamp $remote_tmp_dir --tmpdir=$remote_tmp_dir \
+--stream=tar | ssh -p $local_ssh_port root@'$local_host'  'gzip - > ${backupdir}/backup.tar' "
+
+	printLog "###############开始备份数据" "$normal_log" 
+	printLog "$cmd" "$normal_log"
+	#ssh -p $master_ssh_port root@"$master_host" "$cmd" | tee -a $normal_log 
+	if [ "$is_wait" == "Y" ];then
+		ssh -p $master_ssh_port root@"$master_host" "$cmd" >>$normal_log 2>&1
+	else
+		ssh -p $master_ssh_port root@"$master_host" "$cmd" >>$normal_log 2>&1 &
+	fi
+	if (($?!=0));then
+		return 64
+	fi
+	return 0
+}
+
+
+
+#######################################
+# 检测xtrabackup是否可以执行还原
+# Globals:
+#   None
+# Arguments:
+#   restoreXtrabackupCheck "$slave_host" "$slave_port" "$backupdir" "$normal_log"
+# Returns:
+#   0:成功
+#   64:失败
+#######################################
+function restoreXtrabackupCheck()
+{
+    # datadir和tmpdir不能已经存在
+    # pid进程不能存在
+    slave_host="$1"
+    slave_port="$2"
+    backupdir="$3"
+    normal_log="$4"
+    is_check="$5"
+
+    datadir="$basedir/$slave_port"
+    tmpdir="$basedir/tmpdir/$slave_port"
+
+    printLog "===check pid" "$normal_log"
+    if ps aux| grep mysqld | grep "$basedir/${slave_port}/my.cnf" -q; then
+        printLog "pid存在($basedir/${slave_port})" "$normal_log"
+        return 64
+    fi
+
+    if ls $datadir >/dev/null 2>&1 || ls $tmpdir >/dev/null 2>&1;then
+        printLog "===datadir($datadir)目录或者tmpdir($tmpdir)目录已存在" "$normal_log"
+        return 64
+    fi
+
+    if [ "$is_check" == "YES" ];then
+        if [ -d "$backupdir" ] && (( $(ls $backupdir| wc -l)==0 )) ; then
+            >/dev/null 2>&1
+        else
+            printLog "===tmpdir目录不是空目录" "$normal_log"
+            return 64
+        fi
+    else
+        >/dev/null 2>&1
+    fi
+
+}
+
+
+
+function xtrabackupResultCheck()
+{
+    backupdir="$1"
+    
+    printLog "###检测备份集是否正常" "$normal_log"
+    cd $backupdir
+    tmp_value=$(tar -tf backup.tar 2>&1 | grep -E "xtrabackup_info|xtrabackup_binlog_info"| wc -l)
+    if ((${tmp_value}!=2));then
+        printLog "innobackupex执行失败,找不到xtrabackup_info或xtrabackup_binlog_info" "$normal_log"
+        return 64
+    else
+        printLog "备份成功" "$normal_log"
+    fi
+}
+
+
+
+#######################################
+# create backup
+# Globals:
+#   None
+# Arguments:
+#   restoreXtrabackup $master_host $master_port $slave_host $slave_port $backupdir $innodb_buff $my_cnf $normal_log 
+# Returns:
+#   0:成功
+#   64:失败
+#######################################
+function restoreXtrabackup()
+{
+    master_host="$1" 
+    master_port="$2"
+    slave_host="$3"
+    slave_port="$4"
+    backupdir="$5"
+    innodb_buff="$6"
+    my_cnf="$7"
+    normal_log="$8"
+
+    mkdir -p $basedir/$slave_port $basedir/tmpdir/$slave_port
+    cp -avf $backupdir/backup.tar $basedir/$slave_port/
+    cd $basedir/$slave_port
+    tar xvf backup.tar
+
+    printLog "开始apply-log,请等待" "$normal_log"
+    $innobackupex --apply-log $basedir/$slave_port | tee -a $normal_log 
+    printLog "结束apply-log" "$normal_log"
+
+    cd $basedir/$slave_port && rm -f backup.tar # rm -rf操作
+    chown -R mysql:mysql $basedir/$slave_port $basedir/tmpdir/$slave_port
+
+    slave_my_cnf="$dirname/${slave_port}.cnf"
+    /bin/cp -avf $my_cnf $slave_my_cnf
+    sed -i "s/65536/${slave_port}/g" $slave_my_cnf
+    sed -i "s/server_id=14294967295/server_id=$(date +%s)/g" $slave_my_cnf
+    sed -i "s/innodb_buffer_pool_size=1G/innodb_buffer_pool_size=${innodb_buff}/g" $slave_my_cnf
+    mv -vf $slave_my_cnf $basedir/$slave_port/my.cnf
+
+    printLog "###启动mysqld" "$normal_log"
+    $mysqld_safe --defaults-file=${basedir}/$slave_port/my.cnf >>$normal_log 2>&1 &
+    printLog "###启动mysqld验证中,请等待" "$normal_log"
+    sleep 30
+
+    if ps aux| grep mysqld | grep "$basedir/${slave_port}/my.cnf" -q; then
+        printLog "###启动mysqld成功" "$normal_log"
+    else
+        printLog "###启动mysqld失败,exit" "$normal_log"
+        return 64
+    fi
+    
+    xtrabackup_binlog_info="${datadir}/xtrabackup_binlog_info"
+    xtrabackup_slave_info="${datadir}/xtrabackup_slave_info"
+
+    slave_status=$(echo "show slave status\G"| $mysql -u$repl_user -p$repl_pass -h$master_host -P$master_port)
+    Slave_IO_Running=$(echo "$slave_status"| grep -w "Slave_IO_Running:"| awk -F"Slave_IO_Running:" '{print $2}'| sed 's/ //g')
+    Slave_SQL_Running=$(echo "$slave_status"| grep -w "Slave_SQL_Running:"| awk -F"Slave_SQL_Running:" '{print $2}'| sed 's/ //g')
+    echo "$Slave_SQL_Running,$Slave_IO_Running"
+    #cat xtrabackup_slave_info 
+    #CHANGE MASTER TO MASTER_LOG_FILE='binlog.000004', MASTER_LOG_POS=133914241;
+    #cat xtrabackup_binlog_info 
+    #binlog.000004   3225437
+
+    if [ "$Slave_IO_Running" == "Yes" ] && [ "$Slave_SQL_Running" == "Yes" ];then
+        master_info=$(cat $xtrabackup_slave_info)
+        log_file=$(echo "$master_info" | awk -F"MASTER_LOG_FILE=" '{print $2}'| awk -F"," '{print $1}'| sed "s/'//g")
+        log_pos=$(echo "$master_info" | awk -F"MASTER_LOG_POS=" '{print $2}'| awk -F"," '{print $1}'| sed -e "s/'//g" -e "s/,//g")
+        host=$(echo "$slave_status" | grep -w "Master_Host" | awk -F":" '{print $2}'| sed 's/ //g')
+        port=$(echo "$slave_status" | grep -w "Master_Port" | awk -F":" '{print $2}'| sed -e 's/ //g' -e 's/;//g')
+    else
+        master_info=$(cat $xtrabackup_binlog_info)
+        log_file=$(echo "$master_info"| awk '{print $1}')
+        log_pos=$(echo "$master_info"| awk '{print $2}')
+        host="$master_host"
+        port="$master_port"
+    fi
+
+    tmp_connection="$mysql -u$admin_user -p$admin_pass -h$slave_host -P$slave_port"
+    sql="change master to master_host='$host',master_port=$port,master_user='$repl_user',master_password='$repl_pass',master_log_file='$log_file',master_log_pos=$log_pos;"
+    printLog "开始构造主从" "$normal_log"
+    printLog "$sql" "$normal_log"
+    echo "$sql" | $tmp_connection
+    echo "start slave;" | $tmp_connection
+    io_status=$(echo "show slave status\G"|$tmp_connection| grep -w "Slave_IO_Running"| awk -F":" '{print $2}'| sed 's/ //g')
+    sql_status=$(echo "show slave status\G"|$tmp_connection| grep -w "Slave_SQL_Running"| awk -F":" '{print $2}'| sed 's/ //g')
+    delay_time=$(echo "show slave status\G"|$tmp_connection| grep -w "Seconds_Behind_Master"| awk -F":" '{print $2}'| sed 's/ //g')
+    printLog "检测slave info(Slave_IO_Running:$io_status,Slave_SQL_Running:$sql_status,Seconds_Behind_Master:$delay_time)" "$normal_log"
+}
+

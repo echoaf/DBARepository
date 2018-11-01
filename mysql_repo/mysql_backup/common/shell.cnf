@@ -1,0 +1,138 @@
+#!/bin/bash
+
+# SHELL配置文件
+
+######################## 变量 ##############################
+local_ip=$(/sbin/ifconfig|grep "inet "|awk '{print $2}'|grep -Ev "127.0.0.1|172.17"|head -1) # centos-7
+#local_ip=$(/sbin/ifconfig|grep "inet addr"|awk '{print $2}'|awk -F":" '{print $2}'|grep -Ev "127.0.0.1|172.17"|head -1) # centos-6
+#present_dir=$(cd $(dirname "$0") && pwd)
+present_dir="/data/code/github/repository/mysql_repo/mysql_backup/common" # 写死
+log_dir=$(cd $present_dir && mkdir -p ../log_dir && cd ../log_dir && pwd)
+tmp_dir=$(cd $present_dir && mkdir -p ../tmp_dir && cd ../tmp_dir && pwd)
+mysql="$present_dir/mysql" # Ver 15.1 Distrib 5.5.60-MariaDB, for Linux (x86_64) using readline 5.1
+mysqlbinlog="$present_dir/mysqlbinlog" # Ver 3.4 for Linux at x86_64
+chmod a+x $mysql $mysqlbinlog
+normal_log="$log_dir/shell.log"
+
+mydumper="/usr/local/bin/mydumper"
+myloader="/usr/local/bin/myloader"
+innobackupex="/usr/local/xtrabackup/bin/innobackupex"
+
+# 备份目录
+backup_parent_dir="/data/MySQL_BACKUP"
+full_backup_dir="$backup_parent_dir/FULL_BACKUP"
+binarylog_backup_dir="$backup_parent_dir/BINARYLOG_BACKUP"
+dump_dir="$backup_parent_dir/DUMP"
+mkdir -p $backup_parent_dir $full_backup_dir $binarylog_backup_dir $dump_dir
+
+# 功能变量
+max_table_rows=1000000 # 大于此数对表分块dump
+
+######################## MySQL连接方式 ##############################
+dba_host="172.16.112.10"
+dba_port="10000"
+dba_user="dba_master" # DML权限
+dba_pass="dba_master"
+check_user="read_user" # 只读权限
+check_pass="read_user"
+admin_user="remote_root" # surper权限
+admin_pass="remote_root"
+repl_user="repl_user" # 复制用户
+repl_pass="repl_user"
+dump_user="dump_user" # 备份用户
+dump_pass="dump_user"
+DBA_MYSQL="$mysql -h$dba_host -P$dba_port -u$dba_user -p$dba_pass --default-character-set=utf8 -N"
+
+
+######################## MySQL TABLE ##############################
+t_mysql_info="mysql_info_db.t_mysql_info" # MySQL信息表
+t_mysql_fullbackup_info="mysql_backup_db.t_mysql_fullbackup_info" # 全备信息表
+t_mysql_fullbackup_result="mysql_backup_db.t_mysql_fullbackup_result" # 全备结果表
+t_mysql_binarylog_info="mysql_backup_db.t_mysql_binarylog_info" # 增备信息表
+t_mysql_binarylog_result="mysql_backup_db.t_mysql_binarylog_result" # 增备结果表
+t_mysql_check_info="mysql_backup_db.t_mysql_check_info" # 校验信息表
+t_mysql_check_result="mysql_backup_db.t_mysql_check_result" # 校验结果表
+
+
+
+######################## Functions ##############################
+function printLog()
+{
+	content="$1"
+	normal_log="$2"
+	color="$3"
+	if [ -z "$normal_log" ];then
+		normal_log="$log_dir/printLog.log"
+	fi
+	if [ -z "$color" ];then
+		color="green"
+	fi		
+	echo "[$(date +"%F %T")] $content" >>$normal_log 2>&1
+	case "$color" in
+		green) echo -e "[$(date +"%F %T")] \033[32m$content \033[0m";;
+		red) echo -e "[$(date +"%F %T")] \033[31m$content \033[0m";;
+		normal) echo -e "[$(date +"%F %T")] $content";;
+		*) echo -e "[$(date +"%F %T")] \033[32m$content \033[0m";;
+	esac
+}
+
+
+
+function checkShell()
+{
+	shell_name="$0"
+	shell_id=$(ps aux| grep "$shell_name"| grep -v grep | awk '{print $2}')
+	shell_num=$(echo "$shell_id" | wc -l)
+	if ((${shell_num}>3));then
+		exit 1
+	fi
+}
+
+
+function lockFile()
+{
+	shell_name="$1"
+	sock_file="$2"
+	pid="$3"
+
+	# 检测是否还存在除了$pid的其他进程,如果存在需要kill
+	is_pids=$(ps aux| grep -w "$shell_name"| grep -v grep | grep -v "$pid"| awk '{print $2}')
+
+	# 判断是否存在sock_file
+	if [ ! -f "$sock_file" ];then
+		if [ "$is_pids" ];then
+			for is_pid in $(echo "$is_pids")
+			do
+				# kill前再次判断是否存在当前pid,避免异常
+				if ps aux| grep $is_pid| grep -w "$shell_name"| grep -v grep >/dev/null 2>&1; then
+					echo "[$(date +"%F %T")]$shell_name存在异常进程,开始执行kill $is_pid"
+					kill $is_pid
+				fi
+			done
+		fi
+		echo "[$(date +"%F %T")]$shell_name进程没有在运行,准备拉起" 
+		echo "$pid" >$sock_file
+
+	else
+		value=$(cat $sock_file 2>&1)
+		is_num=$(ps aux | grep $value | grep $shell_name | wc -l)
+		# 唯一一种正常情况
+		if ((${is_num}==1));then
+			echo "[$(date +"%F %T")]$shell_name进程在运行" 
+			exit 0
+		else
+			if [ "$is_pids" ];then
+				for is_pid in $(echo "$is_pids")
+				do
+					if ps aux| grep $is_pid| grep -w $shell_name |grep -v grep >/dev/null 2>&1; then
+						echo "[$(date +"%F %T")]$shell_name存在异常进程,开始执行kill $is_pid"
+						kill $is_pid
+					fi
+				done
+			fi
+			echo "[$(date +"%F %T")]$shell_name进程运行异常($sock_file异常),准备重启" 
+			echo "$pid" >$sock_file
+		fi
+	fi
+}
+
