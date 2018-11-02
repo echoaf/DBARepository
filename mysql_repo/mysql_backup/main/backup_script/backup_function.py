@@ -12,10 +12,15 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 
-# 备份前检测
-# True|False
 def checkBackupAgain(source_host,source_port,dest_host,dest_port,backup_path,normal_log):
-
+    """检测备份是否能运行
+    Args:
+        backup_path:待备份路径,必须是一个空目录
+    Returns:
+        True|False
+    Raises:
+        None
+    """
     E_VALUE = True
  
     sql = ("""select count(*) from information_schema.tables 
@@ -31,17 +36,21 @@ def checkBackupAgain(source_host,source_port,dest_host,dest_port,backup_path,nor
     return E_VALUE
 
 
-# 做逻辑备份
-# metadata|False
 def doBackupMydumper(source_host,source_port,logic_threads,backup_path,normal_log):
+    """做mydumper备份
+    Args:
+        source_host,source_port:备份数据源
+    Returns:
+        metadata:位点信息文件
+    """
     
-    # -s,-r:大表分块备份
+    # TIPS:
+    # -s,-r:分块,锁表时间会变长
     tmp_cmd = ("""%s --user='%s' --password='%s' --host='%s' --port='%s' \
         --threads='%s' --outputdir='%s' --verbose=3 -s 1000000 -r 1000000 >>%s 2>&1"""%
         (mydumper,dump_user,dump_pass,source_host,source_port,logic_threads,backup_path,normal_log))
     printLog("=================开始dump",normal_log,'green')   
     printLog(tmp_cmd,normal_log,'green')   
-    #subprocess.Popen('sleep 111111',stdout=subprocess.PIPE,shell=True) # 不会等待
     subprocess.call(tmp_cmd,stdout=subprocess.PIPE,shell=True) # 等待命令执行完
     metadata = '%s/metadata'%(backup_path)
     if os.path.exists(metadata):
@@ -54,25 +63,32 @@ def doBackupMydumper(source_host,source_port,logic_threads,backup_path,normal_lo
 
 
 
-# 做逻辑恢复
-# None
 def doRestoreMydumper(dest_host,dest_port,load_threads,backup_path,normal_log):
+    """使用myload恢复
+    Args:
+    Returns:
+        None
+    """
+    # TODO:
     # --overwrite-tables:不覆盖,mysql.user表导不过去
     # --enable-binlog:不写binary log,如果dest是主库的话，下有从库会有问题
     tmp_cmd = ("""%s --user='%s' --password='%s' --host='%s' --port='%s' \
         --threads='%s' --verbose=3 --directory='%s' >>%s 2>&1"""%
         (myloader,admin_user,admin_pass,dest_host,dest_port,load_threads,backup_path,normal_log))
     
-    printLog("=================开始load",normal_log,'green')   
+    printLog("====开始load",normal_log,'green')   
     printLog(tmp_cmd,normal_log,'green')   
     connMySQL("set global slow_query_log='off';",dest_host,dest_port,admin_user,admin_pass) # 关闭慢日志
     subprocess.call(tmp_cmd,stdout=subprocess.PIPE,shell=True) # 等待命令执行完
     connMySQL("set global slow_query_log='on';",dest_host,dest_port,admin_user,admin_pass) # 关闭慢日志
-    printLog("=================结束load",normal_log,'green')
+    printLog("====结束load",normal_log,'green')
 
 
-# 解析位点
 def parsePosFile(metadata,source_host,source_port):
+    """解析metadata
+    Returns:
+        master位点信息:master_log_file,master_log_pos,master_host,master_port
+    """
 
     f = open(metadata, 'r')
     i = 1
@@ -112,12 +128,13 @@ def parsePosFile(metadata,source_host,source_port):
 
 
 def changeMaster(master_host,master_port,master_log_file,master_log_pos,slave_host,slave_port):
+    """change master"""
 
     sql = ("""change master to master_host='%s',master_port=%s,master_user='%s',master_password='%s', 
         master_log_file='%s',master_log_pos=%s;""" % 
         (master_host,master_port,repl_user,repl_pass,master_log_file,master_log_pos))
 
-    printLog("=======================打开主从,请检测延迟",normal_log,'green')
+    printLog("====打开主从,请检测延迟",normal_log,'green')
     printLog(sql,normal_log,'green')
     printLog("start slave;",normal_log,'green')
     
@@ -125,7 +142,18 @@ def changeMaster(master_host,master_port,master_log_file,master_log_pos,slave_ho
     connMySQL("start slave;",slave_host,slave_port,admin_user,admin_pass)
 
 
-def doXtrabackup(master_host,master_port,master_ssh_port,local_host,local_port,local_ssh_port,backupdir,innodb_buff,is_backup='YES'):
+def doXtrabackup(master_host,master_port,master_ssh_port,
+        local_host,local_port,local_ssh_port,
+        backupdir,innodb_buff,is_backup='YES'):
+    """物理备份
+    Args:
+        master_ssh_port:远程机器ssh port
+        local_ssh_port:本地机器ssh port,远程机器要使用innobackupex传回文件到本地
+        backupdir:本地存放备份文件的目录
+        is_backup:是否需要备份
+            YES:需要备份,需要使用xtrabackup获取最新的备份数据
+            NO:不需要备份,local_host已存在备份的文件
+    """
 
     # local_host实际上是slave,这里是把整个脚本丢到slave执行,所以Slave变成了local
     # xtrabackup.sh master_host master_port master_ssh_port local_host local_port local_ssh_port backupdir innodb_buff

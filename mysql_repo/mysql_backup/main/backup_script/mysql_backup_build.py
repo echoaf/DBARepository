@@ -12,9 +12,9 @@ import linecache
 import argparse
 import subprocess
 github_dir = '/data/code/github/repository/mysql_repo/mysql_backup'
-common_dir = '%s/common'%github_dir
-sys.path.append(common_dir)
-from python_cnf import *
+#common_dir = '%s/common'%github_dir
+#sys.path.append(common_dir)
+#from python_cnf import *
 script_dir = '%s/main/backup_script'%github_dir
 sys.path.append(script_dir)
 from backup_function import *

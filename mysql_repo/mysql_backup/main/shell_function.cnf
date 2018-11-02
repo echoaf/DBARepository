@@ -6,13 +6,12 @@
 
 github_dir="/data/code/github/repository/mysql_repo/mysql_backup"
 shell_cnf="$github_dir/common/shell.cnf"
-if [ ! -f "$shell_function_cnf" ] ;then
+if [ ! -f "$shell_cnf" ] ;then
     echo "$0:找不到配置文件"
     exit 64
 else
-    source $shell_function_cnf
+    source $shell_cnf
 fi
-
 
 #######################################
 # 检测MySQL是否可以连接

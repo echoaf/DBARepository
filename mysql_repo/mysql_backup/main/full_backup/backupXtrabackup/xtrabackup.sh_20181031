@@ -25,7 +25,7 @@ function printLog()
 	normal_log="$2"
 	color="$3"
 	if [ -z "$normal_log" ];then
-		normal_log="/tmp/printLog.log"
+		normal_log="/tmp/shell.log"
 	fi
 	if [ -z "$color" ];then
 		color="normal"

@@ -236,35 +236,35 @@ function main()
 {
     lockFile "$0" "$f_lock" "$$"
 
-	while ((1))
-	do
+    while ((1))
+    do
         indexs=$(echo "select Findex from $t_mysql_binarylog_info where Fbackup_address='$local_ip' and Fstate='online';"| $DBA_MYSQL)
 
-		printLog "======进入mysqlbinlog监控逻辑" "$normal_log" 
+        printLog "======进入mysqlbinlog监控逻辑" "$normal_log" 
         for index in $(echo "$indexs")
         do
             instance=$(echo "select Ftype from $t_mysql_binarylog_info where Findex='$index'"| $DBA_MYSQL)
             data_source=$(echo "select Fdata_source from $t_mysql_binarylog_info where Findex='$index'"| $DBA_MYSQL)
             source_host=$(echo "$data_source"| awk -F":" '{print $1}')
             source_port=$(echo "$data_source"| awk -F":" '{print $2}')
-		    printLog "[$instance-$source_host:$source_port] 进入mysqlbinlog监控逻辑" "$normal_log" 
+            printLog "[$instance-$source_host:$source_port] 进入mysqlbinlog监控逻辑" "$normal_log" 
             monitorProcess "$instance" "$source_host" "$source_port"
         done
 
-		printLog "======进入binlog上报逻辑,不能使用ctrl+c" "$normal_log" 
+        printLog "======进入binlog上报逻辑,不能使用ctrl+c" "$normal_log" 
         for index in $(echo "$indexs")
         do
             instance=$(echo "select Ftype from $t_mysql_binarylog_info where Findex='$index'"| $DBA_MYSQL)
             data_source=$(echo "select Fdata_source from $t_mysql_binarylog_info where Findex='$index'"| $DBA_MYSQL)
             source_host=$(echo "$data_source"| awk -F":" '{print $1}')
             source_port=$(echo "$data_source"| awk -F":" '{print $2}')
-		    printLog "[$instance-$source_host:$source_port] 进入binlog上报逻辑" "$normal_log" 
+            printLog "[$instance-$source_host:$source_port] 进入binlog上报逻辑" "$normal_log" 
             checkBinaryLog "$instance" "$source_host" "$source_port"
         done
 
-		printLog "======开始sleep,进入下一次循环" "$normal_log"
-		sleep 60
-	done
+        printLog "======开始sleep,进入下一次循环" "$normal_log"
+        sleep 60
+    done
 }
 
 

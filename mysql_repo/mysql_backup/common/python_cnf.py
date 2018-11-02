@@ -18,12 +18,14 @@ mydumper = '/usr/local/bin/mydumper'
 myloader = '/usr/local/bin/myloader'
 innobackupex = '/usr/local/xtrabackup/bin/innobackupex'
 
-present_dir = os.getcwd()
-parent_dir = os.path.abspath(os.path.dirname(os.getcwd()))
-mysql = '%s/mysql'%(present_dir)
-mysqlbinlog = '%s/mysqlbinlog'%(present_dir)
-log_dir = '%s/log_dir'%(parent_dir)
-tmp_dir = '%s/tmp_dir'%(parent_dir)
+#present_dir = os.getcwd()
+#parent_dir = os.path.abspath(os.path.dirname(os.getcwd()))
+github_dir = '/data/code/github/repository/mysql_repo/mysql_backup'
+common_dir = '%s/common'%github_dir
+mysql = '%s/mysql'%(common_dir)
+mysqlbinlog = '%s/mysqlbinlog'%(common_dir)
+log_dir = '%s/log_dir'%(github_dir)
+tmp_dir = '%s/tmp_dir'%(github_dir)
 normal_log = '%s/python.log'%(log_dir)
 
 if not os.path.exists(log_dir):
@@ -66,42 +68,41 @@ t_mysql_check_result = 'mysql_backup_db.t_mysql_check_result' # 校验结果表
 ############## 基础函数 #######################
 
 def connMySQL(exec_sql,db_host=dba_host,db_port=dba_port,db_user=dba_user,db_pass=dba_pass):
-
-	conn = MySQLdb.connect(host=db_host,port=db_port,user=db_user,passwd=db_pass,
+    conn = MySQLdb.connect(host=db_host,port=db_port,user=db_user,passwd=db_pass,
         db='information_schema',charset='utf8', 
         cursorclass=MySQLdb.cursors.DictCursor)
-	cur = conn.cursor()
+    cur = conn.cursor()
 
-	try:
-		cur.execute(exec_sql)
-		values = cur.fetchall()
-		conn.commit()
-	except MySQLdb.error,e:
-		print(e)
-		print("MySQL Error [%d]: %s" %(e.args[0],e.args[1]))
+    try:
+        cur.execute(exec_sql)
+        values = cur.fetchall()
+        conn.commit()
+    except MySQLdb.error,e:
+        print(e)
+        print("MySQL Error [%d]: %s" %(e.args[0],e.args[1]))
 
-	cur.close()
-	conn.close()
+    cur.close()
+    conn.close()
 
-	return values
+    return values
 
 
 def printLog(content,normal_log,color='normal'):
 
-	# Tips:可能没有权限写日志
-	try:
-		logging.basicConfig(
-					level = logging.DEBUG,
-					format = '[%(asctime)s %(filename)s]:%(message)s',
-					datefmt = '%Y-%m-%d %H:%M:%S',
-					filename = normal_log,
-					filemode = 'a')
-		logging.info(content)
-		content = str(content)
-	except Exception,e:
-		pass
+    # Tips:可能没有权限写日志
+    try:
+        logging.basicConfig(
+                    level = logging.DEBUG,
+                    format = '[%(asctime)s %(filename)s]:%(message)s',
+                    datefmt = '%Y-%m-%d %H:%M:%S',
+                    filename = normal_log,
+                    filemode = 'a')
+        logging.info(content)
+        content = str(content)
+    except Exception,e:
+        pass
 
-	codeCodes = {'black':'0;30', 'green':'0;32', 'cyan':'0;36', 'red':'0;31', 'purple':'0;35', 'normal':'0'}
-	print("\033["+codeCodes[color]+"m"+'[%s] %s'%(time.strftime('%F %T',time.localtime()),content)+"\033[0m")
+    codeCodes = {'black':'0;30', 'green':'0;32', 'cyan':'0;36', 'red':'0;31', 'purple':'0;35', 'normal':'0'}
+    print("\033["+codeCodes[color]+"m"+'[%s] %s'%(time.strftime('%F %T',time.localtime()),content)+"\033[0m")
 
 

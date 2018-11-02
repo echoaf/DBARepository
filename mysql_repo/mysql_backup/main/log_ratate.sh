@@ -34,15 +34,15 @@ function logRatate()
     # --remove-files:压缩后删除源文件
     cd $log_dir/backup && tar -zcvf ${yesterday}.tar.gz $yesterday --remove-files 
 
-	#cd $log_dir/backup && find $log_dir/backup -type d | xargs -i rm -rfv {} # 可能是解压查看日志忘记删除
-	cd $log_dir/backup && find $log_dir/backup -type f -name "*.tar.gz" -atime +${log_large} | xargs -i rm -rfv {} # 删除log_large之前的压缩包
+    #cd $log_dir/backup && find $log_dir/backup -type d | xargs -i rm -rfv {} # 可能是解压查看日志忘记删除
+    cd $log_dir/backup && find $log_dir/backup -type f -name "*.tar.gz" -atime +${log_large} | xargs -i rm -rfv {} # 删除log_large之前的压缩包
 
 }
 
 
 function main()
 {
-	logRatate
+    logRatate
 }
 
 main

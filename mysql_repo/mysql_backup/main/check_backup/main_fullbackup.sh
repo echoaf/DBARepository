@@ -17,6 +17,7 @@ fi
 
 f_lock="$tmp_dir/"$(basename "$0"| awk -F"." '{print $1}')".sock"
 
+
 function backupFunctionMain()
 {
     backup_mode="$1"

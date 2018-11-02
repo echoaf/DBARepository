@@ -21,22 +21,22 @@ source $dirname/function_xtraback.cnf || exit 64
 
 function printLog()
 {
-	content="$1"
-	normal_log="$2"
-	color="$3"
-	if [ -z "$normal_log" ];then
-		normal_log="/tmp/printLog.log"
-	fi
-	if [ -z "$color" ];then
-		color="normal"
-	fi
-	echo "[$(date +"%F %T")] $content" >>$normal_log 2>&1
-	case "$color" in
-		green) echo -e "[`date +"%F %T"`] \033[32m$content \033[0m";;
-		red) echo -e "[`date +"%F %T"`] \033[31m$content \033[0m";;
-		normal) echo -e "[`date +"%F %T"`] $content";;
-		*) echo -e "[`date +"%F %T"`] \033[32m$content \033[0m";;
-	esac
+    content="$1"
+    normal_log="$2"
+    color="$3"
+    if [ -z "$normal_log" ];then
+        normal_log="/tmp/shell.log"
+    fi
+    if [ -z "$color" ];then
+        color="normal"
+    fi
+    echo "[$(date +"%F %T")] $content" >>$normal_log 2>&1
+    case "$color" in
+        green) echo -e "[`date +"%F %T"`] \033[32m$content \033[0m";;
+        red) echo -e "[`date +"%F %T"`] \033[31m$content \033[0m";;
+        normal) echo -e "[`date +"%F %T"`] $content";;
+        *) echo -e "[`date +"%F %T"`] \033[32m$content \033[0m";;
+    esac
 }
 
 
@@ -71,10 +71,10 @@ function main()
     normal_log="/tmp/backupXtrabackup/shell_$(date +"%Y%m%d").log"
 
     # 备份检测
-	xtrabackupCheck $master_host $master_ssh_port $local_host $local_ssh_port $backupdir $normal_log "$is_check"
-	if (($?!=0));then
-		exit 64
-	fi
+    xtrabackupCheck $master_host $master_ssh_port $local_host $local_ssh_port $backupdir $normal_log "$is_check"
+    if (($?!=0));then
+        exit 64
+    fi
 
     # 还原检测
     restoreXtrabackupCheck "$local_host" "$local_port" "$backupdir" "$normal_log" "$is_check"
