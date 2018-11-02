@@ -138,3 +138,21 @@ function lockFile()
 	fi
 }
 
+
+function lastExit()
+{
+    bd="$1"
+    maxr_second="$2"
+    if [ -z "$bd" ];then
+        bd="0"
+    fi
+    if [ -z "$maxr_second" ];then
+        maxr_second="1"
+    fi
+    ed=$(date +%s)
+    vd=$(echo "$ed -$bd" | bc)
+    if ((${vd}>=${maxr_second}));then #执行超过时间推出
+        exit
+    fi
+}
+

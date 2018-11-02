@@ -21,6 +21,9 @@ fi
 f_lock="$tmp_dir/"$(basename "$0"| awk -F"." '{print $1}')".sock"
 
 
+bd=$(date +%s) # 脚本开始执行时间
+maxr_second=3600 # 脚本执行时间
+
 function pullProcess()
 {
     instance="$1"
@@ -264,6 +267,9 @@ function main()
 
         printLog "======开始sleep,进入下一次循环" "$normal_log"
         sleep 60
+
+        lastExit $bd $maxr_second
+
     done
 }
 

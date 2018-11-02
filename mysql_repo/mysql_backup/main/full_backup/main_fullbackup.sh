@@ -17,6 +17,10 @@ fi
 
 f_lock="$tmp_dir/"$(basename "$0"| awk -F"." '{print $1}')".sock"
 
+bd=$(date +%s) # 脚本开始执行时间
+maxr_second=3600 # 脚本执行时间
+
+
 function backupFunctionMain()
 {
     backup_mode="$1"
@@ -314,15 +318,16 @@ function main()
         else
             printLog "进入备份逻辑失败,当前事件点${cur_pos}不在备份时间点(${start_pos}-${end_pos})内,不进入今天的备份逻辑" "$normal_log" "green"
         fi
-        sleep 10
+        sleep 60
 
         # 检测备份成功失败状态(只检测Backing状态的task_id)
         printLog "====================进入检测逻辑,可以ctrl+c" "$normal_log" "green"
         checkBackStatus
 
         printLog "====================开始sleep,进入下一次循环" "$normal_log"
-        #sleep 60
-        exit
+        sleep 60
+
+        lastExit $bd $maxr_second
     done
 }
 

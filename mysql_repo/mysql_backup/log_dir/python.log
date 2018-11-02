@@ -1,1 +1,3 @@
-[2018-11-01 21:49:35 python_cnf.py]:开始做备库,远程执行cd /tmp/backupXtrabackup && sh xtrabackup.sh 172.16.112.10 10000 22 172.16.112.10 60000 22 /data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181101 512M NO
+
+[2018-11-02 21:14:14 python_cnf.py]:开始做备库,远程执行cd /tmp/backupXtrabackup && sh xtrabackup.sh 172.16.112.10 10000 22 172.16.112.10 50000 22  512M NO
+[2018-11-02 21:14:26 python_cnf.py]:开始做备库,远程执行cd /tmp/backupXtrabackup && sh xtrabackup.sh 172.16.112.10 10000 22 172.16.112.10 50000 22 /data/tmpdir 512M NO
