@@ -94,7 +94,7 @@ function main()
     fi
 
     # 结果集检测
-    xtrabackupResultCheck "$backupdir"
+    xtrabackupResultCheck "$backupdir/backup.tar"
     if (($?!=0));then
         exit 64
     fi

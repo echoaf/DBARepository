@@ -25,7 +25,7 @@ def checkBackupAgain(source_host,source_port,dest_host,dest_port,backup_path,nor
  
     sql = ("""select count(*) from information_schema.tables 
         where table_schema not in ('test','mysql','performance_schema','information_schema','sys');""")  
-    value = connMySQL(sql,dest_host,dest_port,check_user,check_pass)
+    value = connMySQL(sql,dest_host,int(dest_port),check_user,check_pass)
     if value:
         if value[0]['count(*)'] != 0:
             printLog('目标数据库不是空实例,需要先手动清理数据,或者更改数据源',normal_log)
@@ -78,9 +78,9 @@ def doRestoreMydumper(dest_host,dest_port,load_threads,backup_path,normal_log):
     
     printLog("====开始load",normal_log,'green')   
     printLog(tmp_cmd,normal_log,'green')   
-    connMySQL("set global slow_query_log='off';",dest_host,dest_port,admin_user,admin_pass) # 关闭慢日志
+    connMySQL("set global slow_query_log='off';",dest_host,int(dest_port),admin_user,admin_pass) # 关闭慢日志
     subprocess.call(tmp_cmd,stdout=subprocess.PIPE,shell=True) # 等待命令执行完
-    connMySQL("set global slow_query_log='on';",dest_host,dest_port,admin_user,admin_pass) # 关闭慢日志
+    connMySQL("set global slow_query_log='on';",int(dest_host),dest_port,admin_user,admin_pass) # 关闭慢日志
     printLog("====结束load",normal_log,'green')
 
 
@@ -104,7 +104,7 @@ def parsePosFile(metadata,source_host,source_port):
     f.close()
 
     # 即使metadata存在show slave status,有可能slave状态不是Yes,这种情况下master是source
-    slave_status = connMySQL("show slave status;",source_host,source_port,repl_user,repl_pass)
+    slave_status = connMySQL("show slave status;",source_host,int(source_port),repl_user,repl_pass)
     if not slave_status:
         master_host = source_host
         master_port = source_port
@@ -138,8 +138,8 @@ def changeMaster(master_host,master_port,master_log_file,master_log_pos,slave_ho
     printLog(sql,normal_log,'green')
     printLog("start slave;",normal_log,'green')
     
-    connMySQL(sql,slave_host,slave_port,admin_user,admin_pass)
-    connMySQL("start slave;",slave_host,slave_port,admin_user,admin_pass)
+    connMySQL(sql,slave_host,int(slave_port),admin_user,admin_pass)
+    connMySQL("start slave;",slave_host,int(slave_port),admin_user,admin_pass)
 
 
 def doXtrabackup(master_host,master_port,master_ssh_port,

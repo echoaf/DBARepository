@@ -43,6 +43,8 @@ repl_user="repl_user" # 复制用户
 repl_pass="repl_user"
 dump_user="dump_user" # 备份用户
 dump_pass="dump_user"
+restore_user="restore_user" # 检测恢复校验是否成功用户,只有恢复的实例才会存在此用户
+restore_pass="restore_user"
 DBA_MYSQL="$mysql -h$dba_host -P$dba_port -u$dba_user -p$dba_pass --default-character-set=utf8 -N"
 
 

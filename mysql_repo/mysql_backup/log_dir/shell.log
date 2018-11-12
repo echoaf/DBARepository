@@ -1617,3 +1617,1418 @@ xtrabackup_info
 
 [2018-11-12 12:25:56] 进入检测逻辑,可以ctrl+c
 [2018-11-12 12:25:57] 退出备份主函数,进入下一轮循环,可以ctrl+c
+[2018-11-12 12:32:35] ======进入mysqlbinlog监控逻辑
+[2018-11-12 12:32:35] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-12 12:32:36] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-12 12:32:36] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-12 12:32:36] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-12 12:32:36] ======开始sleep,进入下一次循环
+[2018-11-12 12:33:25] ======进入mysqlbinlog监控逻辑
+[2018-11-12 12:33:25] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-12 12:33:25] [TestDB 172.16.112.10:10000] mysqlbinlog进程不存在,准备拉起
+[2018-11-12 12:33:25] 开始打开mysqlbinlog
+[2018-11-12 12:33:25] /data/code/github/repository/mysql_repo/mysql_backup/common/mysqlbinlog -h172.16.112.10 -P10000 -urepl_user -prepl_user binlog.000006 --read-from-remote-server --raw --stop-never --result-file /data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10000/REPORTED/
+mysqlbinlog: [Warning] Using a password on the command line interface can be insecure.
+[2018-11-12 12:33:25] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-12 12:33:25] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-12 12:33:25] ======开始sleep,进入下一次循环
+[2018-11-12 12:34:13] ======进入mysqlbinlog监控逻辑
+[2018-11-12 12:34:13] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-12 12:34:13] [TestDB 172.16.112.10:10000] mysqlbinlog进程不存在,准备拉起
+[2018-11-12 12:34:13] 开始打开mysqlbinlog
+[2018-11-12 12:34:13] /data/code/github/repository/mysql_repo/mysql_backup/common/mysqlbinlog -h172.16.112.10 -P10000 -urepl_user -prepl_user binlog.000001 --read-from-remote-server --raw --stop-never --result-file /data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10000/REPORTED/
+[2018-11-12 12:34:13] ======进入binlog上报逻辑,不能使用ctrl+c
+mysqlbinlog: [Warning] Using a password on the command line interface can be insecure.
+[2018-11-12 12:34:13] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-12 12:34:14] ======开始sleep,进入下一次循环
+[2018-11-12 12:35:14] ======进入mysqlbinlog监控逻辑
+[2018-11-12 12:35:14] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-12 12:35:14] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-12 12:35:14] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-12 12:35:14] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-12 12:35:14] dir_size:650486040,slave_size:650486040
+‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10000/REPORTED/binlog.000001’ -> ‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10000/SUCC/20181022/binlog.000001’
+[2018-11-12 12:35:14] dir_size:154,slave_size:154
+‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10000/REPORTED/binlog.000002’ -> ‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10000/SUCC/20181026/binlog.000002’
+[2018-11-12 12:35:14] dir_size:502744,slave_size:502744
+‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10000/REPORTED/binlog.000003’ -> ‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10000/SUCC/20181026/binlog.000003’
+[2018-11-12 12:35:14] dir_size:189737513,slave_size:189737513
+‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10000/REPORTED/binlog.000004’ -> ‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10000/SUCC/20181026/binlog.000004’
+[2018-11-12 12:35:14] dir_size:502,slave_size:502
+‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10000/REPORTED/binlog.000005’ -> ‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10000/SUCC/20181102/binlog.000005’
+[2018-11-12 12:35:15] ======开始sleep,进入下一次循环
+[2018-11-12 12:36:35] ======进入mysqlbinlog监控逻辑
+[2018-11-12 12:36:35] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-12 12:36:35] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-12 12:36:35] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-12 12:36:35] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-12 12:36:35] ======开始sleep,进入下一次循环
+[2018-11-12 13:40:47] [TestDB]开始恢复task_id(TestDB_20181112)数据
+/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[2018-11-12 13:44:03] MySQL连接失败:ERROR 1045 (28000): Access denied for user '-p'@'172.16.112.10' (using password: NO)
+[2018-11-12 13:44:03] 检测还原失败,实例连接失败,更新状态为Restored
+[2018-11-12 13:44:39] [TestDB]开始恢复task_id(TestDB_20181112)数据
+[2018-11-12 13:44:39] /data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[2018-11-12 13:44:39] MySQL连接失败:ERROR 1045 (28000): Access denied for user '-p'@'172.16.112.10' (using password: NO)
+[2018-11-12 13:44:39] 检测还原失败,实例连接失败,更新状态为Restored
+[2018-11-12 13:45:32] [TestDB]开始恢复task_id(TestDB_20181112)数据
+[2018-11-12 13:45:32] /data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[2018-11-12 13:45:33] 检测还原成功,更新状态为Restored
+[2018-11-12 13:49:12] [TestDB]开始恢复task_id(TestDB_20181112)数据
+[2018-11-12 13:49:12] /data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[2018-11-12 13:50:49] MySQL连接失败:ERROR 2003 (HY000): Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-12 13:50:49] 检测还原失败,实例连接失败,更新状态为Restored
+[2018-11-12 13:51:18] [TestDB]当前有正在恢复的数据集
+[2018-11-12 13:51:28] [TestDB]当前有正在恢复的数据集
+[2018-11-12 13:55:00] [TestDB]当前有正在恢复的数据集
+[2018-11-12 13:55:00] MySQL连接失败:ERROR 2003 (HY000): Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-12 13:55:00] 检测还原失败,实例连接失败,更新状态为Restored
+[2018-11-12 13:55:10] [TestDB]当前有正在恢复的数据集
+[2018-11-12 13:55:10] MySQL连接失败:ERROR 2003 (HY000): Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-12 13:55:10] 检测还原失败,实例连接失败,更新状态为Restored
+[2018-11-12 14:11:56] [TestDB]当前有正在恢复的数据集
+[2018-11-12 14:11:56] MySQL连接失败:ERROR 2003 (HY000): Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-12 14:11:56] 检测还原失败,实例连接失败,更新状态为Restored
+[2018-11-12 14:15:25] [TestDB]当前有正在恢复的数据集
+[2018-11-12 14:15:25] MySQL连接失败:ERROR 2003 (HY000): Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-12 14:15:25] 检测还原失败,实例连接失败,更新状态为Restored
+[2018-11-12 14:25:00] [TestDB]当前有正在恢复的数据集
+[2018-11-12 14:25:00] [TestDB]正在还原中
+[2018-11-12 14:25:50] [TestDB]当前有正在恢复的数据集
+[2018-11-12 14:25:50] MySQL连接失败:ERROR 2003 (HY000): Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-12 14:25:50] 检测还原失败,实例连接失败,更新状态为Restored
+[2018-11-12 14:53:29] [TestDB]开始恢复task_id(TestDB_20181112)数据
+[2018-11-12 14:53:29] 开始在后台执行:/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[2018-11-12 14:53:46] [TestDB]开始恢复task_id(TestDB_20181112)数据
+[2018-11-12 14:53:46] 开始在后台执行:/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[2018-11-12 14:55:40] [TestDB]当前有正在恢复的数据集:TestDB_20181112
+[2018-11-12 15:02:18] [TestDB]当前有正在恢复的数据集:TestDB_20181112
+[2018-11-12 15:02:39] [TestDB]当前有正在恢复的数据集:TestDB_20181112
+[2018-11-12 15:03:22] [TestDB]当前有正在恢复的数据集:TestDB_20181112
+[2018-11-12 15:03:22] [TestDB]正在还原中
+[2018-11-12 15:03:56] [TestDB]当前有正在恢复的数据集:TestDB_20181112
+[2018-11-12 15:03:56] [TestDB]正在还原中
+[2018-11-12 15:04:35] [TestDB]当前有正在恢复的数据集:TestDB_20181112
+[2018-11-12 15:04:35] MySQL连接失败:ERROR 2003 (HY000): Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-12 15:04:35] 检测还原失败,实例连接失败,更新状态为Restored
+[2018-11-12 15:04:56] [TestDB]开始恢复task_id(TestDB_20181112)数据
+[2018-11-12 15:04:56] 开始在后台执行:/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[2018-11-12 15:04:56] MySQL连接失败:ERROR 2003 (HY000): Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-12 15:04:56] 检测还原失败,实例连接失败
+[2018-11-12 15:05:12] [TestDB]开始恢复task_id(TestDB_20181112)数据
+[2018-11-12 15:05:12] 开始在后台执行:/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[2018-11-12 15:05:12] MySQL连接失败:ERROR 2003 (HY000): Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-12 15:05:12] 检测还原失败,实例连接失败
+[2018-11-12 15:05:48] [TestDB]开始恢复task_id(TestDB_20181112)数据
+[2018-11-12 15:05:48] 开始在后台执行:/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+Traceback (most recent call last):
+  File "/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py", line 170, in <module>
+    main()
+  File "/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py", line 162, in main
+    args.load_threads,args.innodb_buff)
+  File "/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py", line 114, in doSlaveByRestore
+    metadata,normal_log)
+  File "/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py", line 55, in restoreMydumperSlave
+    tmp = checkBackupAgain(source_host,source_port,dest_host,dest_port,backup_path,normal_log)
+  File "/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/backup_function.py", line 28, in checkBackupAgain
+    value = connMySQL(sql,dest_host,dest_port,check_user,check_pass)
+  File "/data/code/github/repository/mysql_repo/mysql_backup/common/python_cnf.py", line 73, in connMySQL
+    cursorclass=MySQLdb.cursors.DictCursor)
+  File "build/bdist.linux-x86_64/egg/MySQLdb/__init__.py", line 81, in Connect
+    
+  File "build/bdist.linux-x86_64/egg/MySQLdb/connections.py", line 193, in __init__
+TypeError: an integer is required
+[2018-11-12 15:06:48] MySQL连接失败:ERROR 2003 (HY000): Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-12 15:06:48] 检测还原失败,实例连接失败
+[2018-11-12 15:11:20] [TestDB]找不到最近一周需要的恢复集
+[2018-11-12 15:11:35] 进入备份主函数
+[2018-11-12 15:11:35] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 15:11:35] [TestDB_20181112]当前事件点15:11:35在备份时间点(00:00:01-23:59:59)内,开始进入今天的备份逻辑
+[2018-11-12 15:11:35] [TestDB_20181112]当前备份状态为:,进入备份逻辑
+[2018-11-12 15:11:35] ###############开始备份数据
+[2018-11-12 15:11:35] /usr/local/xtrabackup/bin/innobackupex --defaults-file=/data/mysql/10000/my.cnf --user=dump_user --password=dump_user --host=172.16.112.10 --port=10000 --slave-info --no-timestamp /tmp/full_1542006695 --tmpdir=/tmp/full_1542006695 --stream=tar | ssh -p 22 root@'172.16.112.10'  'gzip - > /data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112/backup.tar' 
+[2018-11-12 15:11:35] [TestDB_20181112 TestDB 172.16.112.10:10000] 尝试备份Succ
+181112 15:11:42 innobackupex: Starting the backup operation
+
+IMPORTANT: Please check that the backup run completes successfully.
+           At the end of a successful backup run innobackupex
+           prints "completed OK!".
+
+Can't locate Digest/MD5.pm in @INC (@INC contains: /usr/local/lib64/perl5 /usr/local/share/perl5 /usr/lib64/perl5/vendor_perl /usr/share/perl5/vendor_perl /usr/lib64/perl5 /usr/share/perl5 .) at - line 693.
+BEGIN failed--compilation aborted at - line 693.
+181112 15:11:42 Connecting to MySQL server host: 172.16.112.10, user: dump_user, password: set, port: 10000, socket: /data/mysql/10000/mysql.sock
+Using server version 5.7.22-log
+/usr/local/xtrabackup/bin/innobackupex version 2.4.9 based on MySQL server 5.7.13 Linux (x86_64) (revision id: a467167cdd4)
+xtrabackup: uses posix_fadvise().
+xtrabackup: cd to /data/mysql/10000/
+xtrabackup: open files limit requested 204800, set to 204800
+xtrabackup: using the following InnoDB configuration:
+xtrabackup:   innodb_data_home_dir = .
+xtrabackup:   innodb_data_file_path = ibdata1:12M:autoextend
+xtrabackup:   innodb_log_group_home_dir = ./
+xtrabackup:   innodb_log_files_in_group = 2
+xtrabackup:   innodb_log_file_size = 536870912
+xtrabackup: using O_DIRECT
+InnoDB: Number of pools: 1
+181112 15:11:42 >> log scanned up to (3780226648)
+181112 15:11:43 >> log scanned up to (3780226776)
+xtrabackup: Generating a list of tablespaces
+InnoDB: Allocated tablespace ID 55 for monitor_script_db/t_common_cnf, old maximum was 0
+181112 15:11:43 [01] Streaming ./ibdata1
+181112 15:11:44 >> log scanned up to (3780227808)
+181112 15:11:45 >> log scanned up to (3780228271)
+181112 15:11:46 >> log scanned up to (3780228679)
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./monitor_script_db/t_common_cnf.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./monitor_script_db/t_person_cnf.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./monitor_script_db/t_script_common_cnf.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./monitor_script_db/t_script_person_cnf.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./monitor_script_db/t_script_status.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/slave_master_info.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/help_topic.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/innodb_index_stats.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/innodb_table_stats.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/plugin.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/time_zone_leap_second.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/time_zone_name.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/time_zone_transition.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/time_zone_transition_type.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/slave_relay_log_info.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/slave_worker_info.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/time_zone.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/server_cost.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/servers.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/engine_cost.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/gtid_executed.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/help_category.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/help_keyword.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/help_relation.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_backup_db/t_mysql_fullbackup_result.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_backup_db/t_mysql_binarylog_info.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_backup_db/t_mysql_binarylog_result.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_backup_db/t_mysql_check_result.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_backup_db/t_mysql_fullbackup_info.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_backup_db/t_mysql_check_info.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_info_db/t_mysql_machine_info.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_info_db/t_mysql_proxy_machine_info.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_info_db/t_mysql_instance_info.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_info_db/t_mysql_resource_pool.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_info_db/t_mysql_proxy_resource_pool.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_info_db/t_mysql_info.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_monitor_db/t_mysql_machine_disk.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_monitor_db/t_mysql_instance_disk.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql_monitor_db/t_monitor_mysql_slow.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./sys/sys_config.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./test_db/t_test.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./test_db/t_test_info_old_RENAME.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./synchronization_db/t_synchronization.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./synchronization_db/t_synchronization_test.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./django_db/django_migrations.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./django_db/auth_group.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./django_db/auth_permission.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./django_db/auth_group_permissions.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./django_db/auth_user_groups.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./django_db/auth_user_user_permissions.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./django_db/django_admin_log.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./django_db/django_content_type.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./django_db/auth_user.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./django_db/django_session.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./django_db/blog_t_blog.ibd
+181112 15:11:47 [01]        ...done
+181112 15:11:47 >> log scanned up to (3780229071)
+181112 15:11:47 Executing FLUSH NO_WRITE_TO_BINLOG TABLES...
+181112 15:11:47 Executing FLUSH TABLES WITH READ LOCK...
+181112 15:11:47 Starting to backup non-InnoDB tables and files
+181112 15:11:47 [01] Streaming ./monitor_script_db/db.opt to <STDOUT>
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./monitor_script_db/t_common_cnf.frm to <STDOUT>
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./monitor_script_db/t_person_cnf.frm to <STDOUT>
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./monitor_script_db/t_script_common_cnf.frm to <STDOUT>
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./monitor_script_db/t_script_person_cnf.frm to <STDOUT>
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./monitor_script_db/t_script_status.frm to <STDOUT>
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/db.opt to <STDOUT>
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/tables_priv.MYI to <STDOUT>
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/time_zone.frm to <STDOUT>
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/time_zone_leap_second.frm to <STDOUT>
+181112 15:11:47 [01]        ...done
+181112 15:11:47 [01] Streaming ./mysql/proc.MYD to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/procs_priv.MYD to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/time_zone_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/time_zone_transition.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/time_zone_transition_type.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/user.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/user.MYI to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/user.MYD to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/proxies_priv.MYD to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/general_log.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/general_log.CSM to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/general_log.CSV to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/slow_log.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/slow_log.CSM to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/slow_log.CSV to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/ndb_binlog_index.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/ndb_binlog_index.MYI to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/plugin.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/proc.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/procs_priv.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/proxies_priv.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/slave_relay_log_info.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/slave_worker_info.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/tables_priv.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/tables_priv.MYD to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/server_cost.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/servers.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/slave_master_info.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/columns_priv.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/columns_priv.MYI to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/columns_priv.MYD to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/db.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/db.MYI to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/db.MYD to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/engine_cost.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/event.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/event.MYI to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/event.MYD to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/func.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/func.MYI to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/func.MYD to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/gtid_executed.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/help_category.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/help_keyword.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/help_relation.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/help_topic.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/innodb_index_stats.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/innodb_table_stats.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/ndb_binlog_index.MYD to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/proc.MYI to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/procs_priv.MYI to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql/proxies_priv.MYI to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_backup_db/db.opt to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_backup_db/t_mysql_fullbackup_info.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_backup_db/t_mysql_fullbackup_result.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_backup_db/t_mysql_binarylog_info.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_backup_db/t_mysql_binarylog_result.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_backup_db/t_mysql_check_info.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_backup_db/t_mysql_check_result.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_info_db/db.opt to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_info_db/t_mysql_machine_info.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_info_db/t_mysql_proxy_machine_info.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_info_db/t_mysql_instance_info.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_info_db/t_mysql_resource_pool.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_info_db/t_mysql_proxy_resource_pool.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_info_db/t_mysql_info.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_monitor_db/db.opt to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_monitor_db/t_mysql_machine_disk.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_monitor_db/t_mysql_instance_disk.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_monitor_db/t_monitor_mysql_slow.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/db.opt to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/wait_classes_global_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/sys_config.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/sys_config.TRG to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/statements_with_full_table_scans.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/processlist.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/user_summary.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/statements_with_sorting.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/innodb_buffer_stats_by_schema.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/schema_index_statistics.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024innodb_buffer_stats_by_schema.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/statements_with_temp_tables.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/innodb_buffer_stats_by_table.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024schema_index_statistics.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024innodb_buffer_stats_by_table.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/host_summary.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/innodb_lock_waits.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024host_summary.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024innodb_lock_waits.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/waits_by_user_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/schema_object_overview.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/user_summary_by_file_io_type.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/schema_auto_increment_columns.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/user_summary_by_file_io.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024schema_flattened_keys.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024user_summary_by_file_io.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/schema_redundant_indexes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/user_summary_by_statement_type.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/ps_check_lost_instrumentation.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/latest_file_io.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024io_global_by_file_by_bytes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024latest_file_io.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/waits_global_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/io_by_thread_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/user_summary_by_stages.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024io_by_thread_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024user_summary_by_stages.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/io_global_by_file_by_bytes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024session.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024processlist.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/io_global_by_file_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/schema_table_statistics.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024io_global_by_file_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024user_summary.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/io_global_by_wait_by_bytes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024schema_table_statistics.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024io_global_by_wait_by_bytes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/host_summary_by_statement_type.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/io_global_by_wait_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/schema_tables_with_full_table_scans.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024io_global_by_wait_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/metrics.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/memory_global_total.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/schema_table_lock_waits.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024memory_by_user_by_current_bytes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024host_summary_by_file_io.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/memory_by_host_by_current_bytes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024schema_table_lock_waits.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024memory_by_host_by_current_bytes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/statement_analysis.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/memory_by_thread_by_current_bytes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024statement_analysis.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024memory_by_thread_by_current_bytes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/memory_by_user_by_current_bytes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/memory_global_by_current_bytes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/waits_by_host_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024memory_global_by_current_bytes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/schema_table_statistics_with_buffer.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/host_summary_by_stages.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024memory_global_total.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/statements_with_errors_or_warnings.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024schema_table_statistics_with_buffer.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024statements_with_errors_or_warnings.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/session.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/schema_unused_indexes.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/version.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024schema_tables_with_full_table_scans.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024host_summary_by_stages.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024waits_by_user_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024waits_global_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/host_summary_by_file_io.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/host_summary_by_file_io_type.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/host_summary_by_statement_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/session_ssl_status.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/statements_with_runtimes_in_95th_percentile.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/user_summary_by_statement_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/wait_classes_global_by_avg_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024host_summary_by_file_io_type.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024host_summary_by_statement_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024host_summary_by_statement_type.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024ps_digest_95th_percentile_by_avg_us.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024ps_digest_avg_latency_distribution.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024ps_schema_table_statistics_io.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024statements_with_full_table_scans.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024statements_with_runtimes_in_95th_percentile.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024statements_with_sorting.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024statements_with_temp_tables.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024user_summary_by_file_io_type.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024user_summary_by_statement_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024user_summary_by_statement_type.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024wait_classes_global_by_avg_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024wait_classes_global_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/x@0024waits_by_host_by_latency.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/sys_config_insert_set_user.TRN to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./sys/sys_config_update_set_user.TRN to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./test_db/db.opt to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./test_db/t_test.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./test_db/t_test_info_old_RENAME.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/db.opt to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/cond_instances.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_waits_current.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_waits_history.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_waits_history_long.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_waits_summary_by_instance.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_waits_summary_by_host_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_waits_summary_by_user_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_waits_summary_by_account_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_waits_summary_by_thread_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_waits_summary_global_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/file_instances.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/file_summary_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/file_summary_by_instance.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/socket_instances.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/socket_summary_by_instance.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/socket_summary_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/host_cache.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/mutex_instances.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/objects_summary_global_by_type.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/performance_timers.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/rwlock_instances.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/setup_actors.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/setup_consumers.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/setup_instruments.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/setup_objects.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/setup_timers.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/table_io_waits_summary_by_index_usage.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/table_io_waits_summary_by_table.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/table_lock_waits_summary_by_table.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/threads.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_stages_current.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_stages_history.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_stages_history_long.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_stages_summary_by_thread_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_stages_summary_by_host_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_stages_summary_by_user_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_stages_summary_by_account_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_stages_summary_global_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_statements_current.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_statements_history.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_statements_history_long.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_statements_summary_by_thread_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_statements_summary_by_host_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_statements_summary_by_user_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_statements_summary_by_account_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_statements_summary_global_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_transactions_current.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_transactions_history.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_transactions_history_long.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_transactions_summary_by_thread_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_transactions_summary_by_host_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_transactions_summary_by_user_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_transactions_summary_by_account_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_transactions_summary_global_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/hosts.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/users.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/accounts.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/memory_summary_global_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/memory_summary_by_thread_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/memory_summary_by_account_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/memory_summary_by_host_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/memory_summary_by_user_by_event_name.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_statements_summary_by_digest.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/events_statements_summary_by_program.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/prepared_statements_instances.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/replication_connection_configuration.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/replication_group_member_stats.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/replication_group_members.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/replication_connection_status.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/replication_applier_configuration.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/replication_applier_status.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/replication_applier_status_by_coordinator.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/replication_applier_status_by_worker.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/session_connect_attrs.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/session_account_connect_attrs.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/table_handles.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/metadata_locks.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/user_variables_by_thread.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/variables_by_thread.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/global_variables.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/session_variables.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/status_by_thread.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/status_by_user.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/status_by_host.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/status_by_account.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/global_status.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./performance_schema/session_status.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./synchronization_db/db.opt to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./synchronization_db/t_synchronization.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./synchronization_db/t_synchronization_test.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./mysql_info_db_new/db.opt to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./django_db/db.opt to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./django_db/django_migrations.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./django_db/django_content_type.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./django_db/auth_group.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./django_db/auth_user.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./django_db/auth_permission.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./django_db/auth_group_permissions.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./django_db/auth_user_groups.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./django_db/auth_user_user_permissions.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./django_db/django_admin_log.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./django_db/django_session.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 [01] Streaming ./django_db/blog_t_blog.frm to <STDOUT>
+181112 15:11:48 [01]        ...done
+181112 15:11:48 Finished backing up non-InnoDB tables and files
+181112 15:11:48 [00] Streaming <STDOUT>
+181112 15:11:48 [00]        ...done
+181112 15:11:48 [00] Streaming <STDOUT>
+181112 15:11:48 [00]        ...done
+181112 15:11:48 Executing FLUSH NO_WRITE_TO_BINLOG ENGINE LOGS...
+xtrabackup: The latest check point (for incremental): '3780224471'
+xtrabackup: Stopping log copying thread.
+.181112 15:11:48 >> log scanned up to (3780229197)
+
+181112 15:11:48 Executing UNLOCK TABLES
+181112 15:11:48 All tables unlocked
+181112 15:11:48 [00] Streaming ib_buffer_pool to <STDOUT>
+181112 15:11:48 [00]        ...done
+181112 15:11:48 Backup created in directory '/tmp/full_1542006695/'
+MySQL binlog position: filename 'binlog.000006', position '253789246'
+181112 15:11:48 [00] Streaming <STDOUT>
+181112 15:11:48 [00]        ...done
+181112 15:11:48 [00] Streaming <STDOUT>
+181112 15:11:48 [00]        ...done
+xtrabackup: Transaction log of lsn (3780223354) to (3780229197) was copied.
+181112 15:11:48 completed OK!
+[2018-11-12 15:12:35] 进入检测逻辑,可以ctrl+c
+xtrabackup_info
+[2018-11-12 15:12:36] 退出备份主函数,进入下一轮循环,可以ctrl+c
+[2018-11-12 15:12:55] [TestDB]开始恢复task_id(TestDB_20181112)数据
+[2018-11-12 15:12:55] 开始在后台执行:/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[0m[2018-11-12 15:12:56] 开始做备库,远程执行cd /tmp/backupXtrabackup && sh xtrabackup.sh 172.16.112.10 10000 22 172.16.112.10 60000 22 /data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112 512M NO[0m
+[2018-11-12 15:12:56] ===check 密钥
+[2018-11-12 15:12:57] ===check pid
+[2018-11-12 15:12:57] 已存在备份集
+[2018-11-12 15:18:55] [TestDB]当前有正在恢复的数据集:TestDB_20181112
+[2018-11-12 15:19:36] [TestDB]当前有正在恢复的数据集:TestDB_20181112
+[2018-11-12 15:19:36] MySQL连接失败:ERROR 2003 (HY000): Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-12 15:19:36] 检测还原失败,实例连接失败
+[2018-11-12 15:19:37] [TestDB]开始恢复task_id(TestDB_20181112)数据
+[2018-11-12 15:19:37] 开始在后台执行:/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[2018-11-12 15:19:37] MySQL连接失败:ERROR 2003 (HY000): Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-12 15:19:37] 检测还原失败,实例连接失败
+[0m[2018-11-12 15:19:38] 开始做备库,远程执行cd /tmp/backupXtrabackup && sh xtrabackup.sh 172.16.112.10 10000 22 172.16.112.10 60000 22 /data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112 512M NO[0m
+[2018-11-12 15:19:39] ===check 密钥
+[2018-11-12 15:19:39] ===check pid
+[2018-11-12 15:19:39] 已存在备份集
+xtrabackup_info
+‘/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112/backup.tar’ -> ‘/data/mysql/60000/backup.tar’
+ibdata1
+monitor_script_db/t_common_cnf.ibd
+monitor_script_db/t_person_cnf.ibd
+monitor_script_db/t_script_common_cnf.ibd
+monitor_script_db/t_script_person_cnf.ibd
+monitor_script_db/t_script_status.ibd
+mysql/slave_master_info.ibd
+mysql/help_topic.ibd
+mysql/innodb_index_stats.ibd
+mysql/innodb_table_stats.ibd
+mysql/plugin.ibd
+mysql/time_zone_leap_second.ibd
+mysql/time_zone_name.ibd
+mysql/time_zone_transition.ibd
+mysql/time_zone_transition_type.ibd
+mysql/slave_relay_log_info.ibd
+mysql/slave_worker_info.ibd
+mysql/time_zone.ibd
+mysql/server_cost.ibd
+mysql/servers.ibd
+mysql/engine_cost.ibd
+mysql/gtid_executed.ibd
+mysql/help_category.ibd
+mysql/help_keyword.ibd
+mysql/help_relation.ibd
+mysql_backup_db/t_mysql_fullbackup_result.ibd
+mysql_backup_db/t_mysql_binarylog_info.ibd
+mysql_backup_db/t_mysql_binarylog_result.ibd
+mysql_backup_db/t_mysql_check_result.ibd
+mysql_backup_db/t_mysql_fullbackup_info.ibd
+mysql_backup_db/t_mysql_check_info.ibd
+mysql_info_db/t_mysql_machine_info.ibd
+mysql_info_db/t_mysql_proxy_machine_info.ibd
+mysql_info_db/t_mysql_instance_info.ibd
+mysql_info_db/t_mysql_resource_pool.ibd
+mysql_info_db/t_mysql_proxy_resource_pool.ibd
+mysql_info_db/t_mysql_info.ibd
+mysql_monitor_db/t_mysql_machine_disk.ibd
+mysql_monitor_db/t_mysql_instance_disk.ibd
+mysql_monitor_db/t_monitor_mysql_slow.ibd
+sys/sys_config.ibd
+test_db/t_test.ibd
+test_db/t_test_info_old_RENAME.ibd
+synchronization_db/t_synchronization.ibd
+synchronization_db/t_synchronization_test.ibd
+django_db/django_migrations.ibd
+django_db/auth_group.ibd
+django_db/auth_permission.ibd
+django_db/auth_group_permissions.ibd
+django_db/auth_user_groups.ibd
+django_db/auth_user_user_permissions.ibd
+django_db/django_admin_log.ibd
+django_db/django_content_type.ibd
+django_db/auth_user.ibd
+django_db/django_session.ibd
+django_db/blog_t_blog.ibd
+monitor_script_db/db.opt
+monitor_script_db/t_common_cnf.frm
+monitor_script_db/t_person_cnf.frm
+monitor_script_db/t_script_common_cnf.frm
+monitor_script_db/t_script_person_cnf.frm
+monitor_script_db/t_script_status.frm
+mysql/db.opt
+mysql/tables_priv.MYI
+mysql/time_zone.frm
+mysql/time_zone_leap_second.frm
+mysql/proc.MYD
+mysql/procs_priv.MYD
+mysql/time_zone_name.frm
+mysql/time_zone_transition.frm
+mysql/time_zone_transition_type.frm
+mysql/user.frm
+mysql/user.MYI
+mysql/user.MYD
+mysql/proxies_priv.MYD
+mysql/general_log.frm
+mysql/general_log.CSM
+mysql/general_log.CSV
+mysql/slow_log.frm
+mysql/slow_log.CSM
+mysql/slow_log.CSV
+mysql/ndb_binlog_index.frm
+mysql/ndb_binlog_index.MYI
+mysql/plugin.frm
+mysql/proc.frm
+mysql/procs_priv.frm
+mysql/proxies_priv.frm
+mysql/slave_relay_log_info.frm
+mysql/slave_worker_info.frm
+mysql/tables_priv.frm
+mysql/tables_priv.MYD
+mysql/server_cost.frm
+mysql/servers.frm
+mysql/slave_master_info.frm
+mysql/columns_priv.frm
+mysql/columns_priv.MYI
+mysql/columns_priv.MYD
+mysql/db.frm
+mysql/db.MYI
+mysql/db.MYD
+mysql/engine_cost.frm
+mysql/event.frm
+mysql/event.MYI
+mysql/event.MYD
+mysql/func.frm
+mysql/func.MYI
+mysql/func.MYD
+mysql/gtid_executed.frm
+mysql/help_category.frm
+mysql/help_keyword.frm
+mysql/help_relation.frm
+mysql/help_topic.frm
+mysql/innodb_index_stats.frm
+mysql/innodb_table_stats.frm
+mysql/ndb_binlog_index.MYD
+mysql/proc.MYI
+mysql/procs_priv.MYI
+mysql/proxies_priv.MYI
+mysql_backup_db/db.opt
+mysql_backup_db/t_mysql_fullbackup_info.frm
+mysql_backup_db/t_mysql_fullbackup_result.frm
+mysql_backup_db/t_mysql_binarylog_info.frm
+mysql_backup_db/t_mysql_binarylog_result.frm
+mysql_backup_db/t_mysql_check_info.frm
+mysql_backup_db/t_mysql_check_result.frm
+mysql_info_db/db.opt
+mysql_info_db/t_mysql_machine_info.frm
+mysql_info_db/t_mysql_proxy_machine_info.frm
+mysql_info_db/t_mysql_instance_info.frm
+mysql_info_db/t_mysql_resource_pool.frm
+mysql_info_db/t_mysql_proxy_resource_pool.frm
+mysql_info_db/t_mysql_info.frm
+mysql_monitor_db/db.opt
+mysql_monitor_db/t_mysql_machine_disk.frm
+mysql_monitor_db/t_mysql_instance_disk.frm
+mysql_monitor_db/t_monitor_mysql_slow.frm
+sys/db.opt
+sys/wait_classes_global_by_latency.frm
+sys/sys_config.frm
+sys/sys_config.TRG
+sys/statements_with_full_table_scans.frm
+sys/processlist.frm
+sys/user_summary.frm
+sys/statements_with_sorting.frm
+sys/innodb_buffer_stats_by_schema.frm
+sys/schema_index_statistics.frm
+sys/x@0024innodb_buffer_stats_by_schema.frm
+sys/statements_with_temp_tables.frm
+sys/innodb_buffer_stats_by_table.frm
+sys/x@0024schema_index_statistics.frm
+sys/x@0024innodb_buffer_stats_by_table.frm
+sys/host_summary.frm
+sys/innodb_lock_waits.frm
+sys/x@0024host_summary.frm
+sys/x@0024innodb_lock_waits.frm
+sys/waits_by_user_by_latency.frm
+sys/schema_object_overview.frm
+sys/user_summary_by_file_io_type.frm
+sys/schema_auto_increment_columns.frm
+sys/user_summary_by_file_io.frm
+sys/x@0024schema_flattened_keys.frm
+sys/x@0024user_summary_by_file_io.frm
+sys/schema_redundant_indexes.frm
+sys/user_summary_by_statement_type.frm
+sys/ps_check_lost_instrumentation.frm
+sys/latest_file_io.frm
+sys/x@0024io_global_by_file_by_bytes.frm
+sys/x@0024latest_file_io.frm
+sys/waits_global_by_latency.frm
+sys/io_by_thread_by_latency.frm
+sys/user_summary_by_stages.frm
+sys/x@0024io_by_thread_by_latency.frm
+sys/x@0024user_summary_by_stages.frm
+sys/io_global_by_file_by_bytes.frm
+sys/x@0024session.frm
+sys/x@0024processlist.frm
+sys/io_global_by_file_by_latency.frm
+sys/schema_table_statistics.frm
+sys/x@0024io_global_by_file_by_latency.frm
+sys/x@0024user_summary.frm
+sys/io_global_by_wait_by_bytes.frm
+sys/x@0024schema_table_statistics.frm
+sys/x@0024io_global_by_wait_by_bytes.frm
+sys/host_summary_by_statement_type.frm
+sys/io_global_by_wait_by_latency.frm
+sys/schema_tables_with_full_table_scans.frm
+sys/x@0024io_global_by_wait_by_latency.frm
+sys/metrics.frm
+sys/memory_global_total.frm
+sys/schema_table_lock_waits.frm
+sys/x@0024memory_by_user_by_current_bytes.frm
+sys/x@0024host_summary_by_file_io.frm
+sys/memory_by_host_by_current_bytes.frm
+sys/x@0024schema_table_lock_waits.frm
+sys/x@0024memory_by_host_by_current_bytes.frm
+sys/statement_analysis.frm
+sys/memory_by_thread_by_current_bytes.frm
+sys/x@0024statement_analysis.frm
+sys/x@0024memory_by_thread_by_current_bytes.frm
+sys/memory_by_user_by_current_bytes.frm
+sys/memory_global_by_current_bytes.frm
+sys/waits_by_host_by_latency.frm
+sys/x@0024memory_global_by_current_bytes.frm
+sys/schema_table_statistics_with_buffer.frm
+sys/host_summary_by_stages.frm
+sys/x@0024memory_global_total.frm
+sys/statements_with_errors_or_warnings.frm
+sys/x@0024schema_table_statistics_with_buffer.frm
+sys/x@0024statements_with_errors_or_warnings.frm
+sys/session.frm
+sys/schema_unused_indexes.frm
+sys/version.frm
+sys/x@0024schema_tables_with_full_table_scans.frm
+sys/x@0024host_summary_by_stages.frm
+sys/x@0024waits_by_user_by_latency.frm
+sys/x@0024waits_global_by_latency.frm
+sys/host_summary_by_file_io.frm
+sys/host_summary_by_file_io_type.frm
+sys/host_summary_by_statement_latency.frm
+sys/session_ssl_status.frm
+sys/statements_with_runtimes_in_95th_percentile.frm
+sys/user_summary_by_statement_latency.frm
+sys/wait_classes_global_by_avg_latency.frm
+sys/x@0024host_summary_by_file_io_type.frm
+sys/x@0024host_summary_by_statement_latency.frm
+sys/x@0024host_summary_by_statement_type.frm
+sys/x@0024ps_digest_95th_percentile_by_avg_us.frm
+sys/x@0024ps_digest_avg_latency_distribution.frm
+sys/x@0024ps_schema_table_statistics_io.frm
+sys/x@0024statements_with_full_table_scans.frm
+sys/x@0024statements_with_runtimes_in_95th_percentile.frm
+sys/x@0024statements_with_sorting.frm
+sys/x@0024statements_with_temp_tables.frm
+sys/x@0024user_summary_by_file_io_type.frm
+sys/x@0024user_summary_by_statement_latency.frm
+sys/x@0024user_summary_by_statement_type.frm
+sys/x@0024wait_classes_global_by_avg_latency.frm
+sys/x@0024wait_classes_global_by_latency.frm
+sys/x@0024waits_by_host_by_latency.frm
+sys/sys_config_insert_set_user.TRN
+sys/sys_config_update_set_user.TRN
+test_db/db.opt
+test_db/t_test.frm
+test_db/t_test_info_old_RENAME.frm
+performance_schema/db.opt
+performance_schema/cond_instances.frm
+performance_schema/events_waits_current.frm
+performance_schema/events_waits_history.frm
+performance_schema/events_waits_history_long.frm
+performance_schema/events_waits_summary_by_instance.frm
+performance_schema/events_waits_summary_by_host_by_event_name.frm
+performance_schema/events_waits_summary_by_user_by_event_name.frm
+performance_schema/events_waits_summary_by_account_by_event_name.frm
+performance_schema/events_waits_summary_by_thread_by_event_name.frm
+performance_schema/events_waits_summary_global_by_event_name.frm
+performance_schema/file_instances.frm
+performance_schema/file_summary_by_event_name.frm
+performance_schema/file_summary_by_instance.frm
+performance_schema/socket_instances.frm
+performance_schema/socket_summary_by_instance.frm
+performance_schema/socket_summary_by_event_name.frm
+performance_schema/host_cache.frm
+performance_schema/mutex_instances.frm
+performance_schema/objects_summary_global_by_type.frm
+performance_schema/performance_timers.frm
+performance_schema/rwlock_instances.frm
+performance_schema/setup_actors.frm
+performance_schema/setup_consumers.frm
+performance_schema/setup_instruments.frm
+performance_schema/setup_objects.frm
+performance_schema/setup_timers.frm
+performance_schema/table_io_waits_summary_by_index_usage.frm
+performance_schema/table_io_waits_summary_by_table.frm
+performance_schema/table_lock_waits_summary_by_table.frm
+performance_schema/threads.frm
+performance_schema/events_stages_current.frm
+performance_schema/events_stages_history.frm
+performance_schema/events_stages_history_long.frm
+performance_schema/events_stages_summary_by_thread_by_event_name.frm
+performance_schema/events_stages_summary_by_host_by_event_name.frm
+performance_schema/events_stages_summary_by_user_by_event_name.frm
+performance_schema/events_stages_summary_by_account_by_event_name.frm
+performance_schema/events_stages_summary_global_by_event_name.frm
+performance_schema/events_statements_current.frm
+performance_schema/events_statements_history.frm
+performance_schema/events_statements_history_long.frm
+performance_schema/events_statements_summary_by_thread_by_event_name.frm
+performance_schema/events_statements_summary_by_host_by_event_name.frm
+performance_schema/events_statements_summary_by_user_by_event_name.frm
+performance_schema/events_statements_summary_by_account_by_event_name.frm
+performance_schema/events_statements_summary_global_by_event_name.frm
+performance_schema/events_transactions_current.frm
+performance_schema/events_transactions_history.frm
+performance_schema/events_transactions_history_long.frm
+performance_schema/events_transactions_summary_by_thread_by_event_name.frm
+performance_schema/events_transactions_summary_by_host_by_event_name.frm
+performance_schema/events_transactions_summary_by_user_by_event_name.frm
+performance_schema/events_transactions_summary_by_account_by_event_name.frm
+performance_schema/events_transactions_summary_global_by_event_name.frm
+performance_schema/hosts.frm
+performance_schema/users.frm
+performance_schema/accounts.frm
+performance_schema/memory_summary_global_by_event_name.frm
+performance_schema/memory_summary_by_thread_by_event_name.frm
+performance_schema/memory_summary_by_account_by_event_name.frm
+performance_schema/memory_summary_by_host_by_event_name.frm
+performance_schema/memory_summary_by_user_by_event_name.frm
+performance_schema/events_statements_summary_by_digest.frm
+performance_schema/events_statements_summary_by_program.frm
+performance_schema/prepared_statements_instances.frm
+performance_schema/replication_connection_configuration.frm
+performance_schema/replication_group_member_stats.frm
+performance_schema/replication_group_members.frm
+performance_schema/replication_connection_status.frm
+performance_schema/replication_applier_configuration.frm
+performance_schema/replication_applier_status.frm
+performance_schema/replication_applier_status_by_coordinator.frm
+performance_schema/replication_applier_status_by_worker.frm
+performance_schema/session_conn181112 15:19:53 innobackupex: Starting the apply-log operation
+
+IMPORTANT: Please check that the apply-log run completes successfully.
+           At the end of a successful apply-log run innobackupex
+           prints "completed OK!".
+
+/usr/local/xtrabackup/bin/innobackupex version 2.4.9 based on MySQL server 5.7.13 Linux (x86_64) (revision id: a467167cdd4)
+xtrabackup: cd to /data/mysql/60000/
+xtrabackup: This target seems to be not prepared yet.
+InnoDB: Number of pools: 1
+xtrabackup: xtrabackup_logfile detected: size=8388608, start_lsn=(3780223354)
+xtrabackup: using the following InnoDB configuration for recovery:
+xtrabackup:   innodb_data_home_dir = .
+xtrabackup:   innodb_data_file_path = ibdata1:12M:autoextend
+xtrabackup:   innodb_log_group_home_dir = .
+xtrabackup:   innodb_log_files_in_group = 1
+xtrabackup:   innodb_log_file_size = 8388608
+xtrabackup: using the following InnoDB configuration for recovery:
+xtrabackup:   innodb_data_home_dir = .
+xtrabackup:   innodb_data_file_path = ibdata1:12M:autoextend
+xtrabackup:   innodb_log_group_home_dir = .
+xtrabackup:   innodb_log_files_in_group = 1
+xtrabackup:   innodb_log_file_size = 8388608
+xtrabackup: Starting InnoDB instance for recovery.
+xtrabackup: Using 104857600 bytes for buffer pool (set by --use-memory parameter)
+InnoDB: PUNCH HOLE support available
+InnoDB: Mutexes and rw_locks use GCC atomic builtins
+InnoDB: Uses event mutexes
+InnoDB: GCC builtin __atomic_thread_fence() is used for memory barrier
+InnoDB: Compressed tables use zlib 1.2.7
+InnoDB: Number of pools: 1
+InnoDB: Using CPU crc32 instructions
+InnoDB: Initializing buffer pool, total size = 100M, instances = 1, chunk size = 100M
+InnoDB: Completed initialization of buffer pool
+InnoDB: page_cleaner coordinator priority: -20
+InnoDB: Highest supported file format is Barracuda.
+InnoDB: Log scan progressed past the checkpoint lsn 3780223354
+InnoDB: Doing recovery: scanned up to log sequence number 3780229197 (0%)
+InnoDB: Doing recovery: scanned up to log sequence number 3780229197 (0%)
+InnoDB: Database was not shutdown normally!
+InnoDB: Starting crash recovery.
+InnoDB: Starting an apply batch of log records to the database...
+InnoDB: Progress in percent: 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 
+InnoDB: Apply batch completed
+InnoDB: xtrabackup: Last MySQL binlog file position 253789246, file name binlog.000006
+InnoDB: Creating shared tablespace for temporary tables
+InnoDB: Setting file './ibtmp1' size to 12 MB. Physically writing the file full; Please wait ...
+InnoDB: File './ibtmp1' size is now 12 MB.
+InnoDB: 96 redo rollback segment(s) found. 1 redo rollback segment(s) are active.
+InnoDB: 32 non-redo rollback segment(s) are active.
+InnoDB: Waiting for purge to start
+InnoDB: 5.7.13 started; log sequence number 3780229197
+InnoDB: xtrabackup: Last MySQL binlog file position 253789246, file name binlog.000006
+
+xtrabackup: starting shutdown with innodb_fast_shutdown = 1
+InnoDB: FTS optimize thread exiting.
+InnoDB: Starting shutdown...
+InnoDB: Shutdown completed; log sequence number 3780229433
+InnoDB: Number of pools: 1
+xtrabackup: using the following InnoDB configuration for recovery:
+xtrabackup:   innodb_data_home_dir = .
+xtrabackup:   innodb_data_file_path = ibdata1:12M:autoextend
+xtrabackup:   innodb_log_group_home_dir = .
+xtrabackup:   innodb_log_files_in_group = 2
+xtrabackup:   innodb_log_file_size = 536870912
+InnoDB: PUNCH HOLE support available
+InnoDB: Mutexes and rw_locks use GCC atomic builtins
+InnoDB: Uses event mutexes
+InnoDB: GCC builtin __atomic_thread_fence() is used for memory barrier
+InnoDB: Compressed tables use zlib 1.2.7
+InnoDB: Number of pools: 1
+InnoDB: Using CPU crc32 instructions
+InnoDB: Initializing buffer pool, total size = 100M, instances = 1, chunk size = 100M
+InnoDB: Completed initialization of buffer pool
+InnoDB: page_cleaner coordinator priority: -20
+InnoDB: Setting log file ./ib_logfile101 size to 512 MB
+InnoDB: Progress in MB:
+ 100 200 300 400 500
+InnoDB: Setting log file ./ib_logfile1 size to 512 MB
+InnoDB: Progress in MB:
+ 100 200 300 400 500
+InnoDB: Renaming log file ./ib_logfile101 to ./ib_logfile0
+InnoDB: New log files created, LSN=3780229433
+InnoDB: Highest supported file format is Barracuda.
+InnoDB: Log scan progressed past the checkpoint lsn 3780229644
+InnoDB: Doing recovery: scanned up to log sequence number 3780229653 (0%)
+InnoDB: Doing recovery: scanned up to log sequence number 3780229653 (0%)
+InnoDB: Database was not shutdown normally!
+InnoDB: Starting crash recovery.
+InnoDB: xtrabackup: Last MySQL binlog file position 253789246, file name binlog.000006
+InnoDB: Removed temporary tablespace data file: "ibtmp1"
+InnoDB: Creating shared tablespace for temporary tables
+InnoDB: Setting file './ibtmp1' size to 12 MB. Physically writing the file full; Please wait ...
+InnoDB: File './ibtmp1' size is now 12 MB.
+InnoDB: 96 redo rollback segment(s) found. 1 redo rollback segment(s) are active.
+InnoDB: 32 non-redo rollback segment(s) are active.
+InnoDB: Waiting for purge to start
+InnoDB: 5.7.13 started; log sequence number 3780229653
+xtrabackup: starting shutdown with innodb_fast_shutdown = 1
+InnoDB: page_cleaner: 1000ms intended loop took 14420ms. The settings might not be optimal. (flushed=0 and evicted=0, during the time.)
+InnoDB: FTS optimize thread exiting.
+InnoDB: Starting shutdown...
+InnoDB: Shutdown completed; log sequence number 3780229672
+181112 15:20:13 completed OK!
+[2018-11-12 15:20:14] [TestDB]开始恢复task_id(TestDB_20181112)数据
+[2018-11-12 15:20:14] 开始在后台执行:/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[2018-11-12 15:20:15] MySQL连接失败:ERROR 2003 (HY000): Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-12 15:20:15] 检测还原失败,实例连接失败
+[0m[2018-11-12 15:20:22] 开始做备库,远程执行cd /tmp/backupXtrabackup && sh xtrabackup.sh 172.16.112.10 10000 22 172.16.112.10 60000 22 /data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112 512M NO[0m
+[2018-11-12 15:20:22] ===check 密钥
+[2018-11-12 15:20:23] ===check pid
+[2018-11-12 15:20:23] pid存在(/data/mysql/60000)
+ect_attrs.frm
+performance_schema/session_account_connect_attrs.frm
+performance_schema/table_handles.frm
+performance_schema/metadata_locks.frm
+performance_schema/user_variables_by_thread.frm
+performance_schema/variables_by_thread.frm
+performance_schema/global_variables.frm
+performance_schema/session_variables.frm
+performance_schema/status_by_thread.frm
+performance_schema/status_by_user.frm
+performance_schema/status_by_host.frm
+performance_schema/status_by_account.frm
+performance_schema/global_status.frm
+performance_schema/session_status.frm
+synchronization_db/db.opt
+synchronization_db/t_synchronization.frm
+synchronization_db/t_synchronization_test.frm
+mysql_info_db_new/db.opt
+django_db/db.opt
+django_db/django_migrations.frm
+django_db/django_content_type.frm
+django_db/auth_group.frm
+django_db/auth_user.frm
+django_db/auth_permission.frm
+django_db/auth_group_permissions.frm
+django_db/auth_user_groups.frm
+django_db/auth_user_user_permissions.frm
+django_db/django_admin_log.frm
+django_db/django_session.frm
+django_db/blog_t_blog.frm
+xtrabackup_slave_info
+xtrabackup_binlog_info
+ib_buffer_pool
+backup-my.cnf
+xtrabackup_info
+xtrabackup_logfile
+xtrabackup_checkpoints
+[2018-11-12 15:19:53] 开始apply-log,请等待
+[2018-11-12 15:20:13] 结束apply-log
+‘/tmp/backupXtrabackup/my.cnf’ -> ‘/tmp/backupXtrabackup/60000.cnf’
+‘/tmp/backupXtrabackup/60000.cnf’ -> ‘/data/mysql/60000/my.cnf’
+[2018-11-12 15:20:14] ###启动mysqld
+[2018-11-12 15:20:14] ###启动mysqld验证中,请等待
+[2018-11-12 15:20:44] ###启动mysqld成功
+,
+[2018-11-12 15:20:44] 开始构造主从
+[2018-11-12 15:20:44] change master to master_host='172.16.112.10',master_port=10000,master_user='repl_user',master_password='repl_user',master_log_file='binlog.000006',master_log_pos=253789246;
+[2018-11-12 15:20:44] 检测slave info(Slave_IO_Running:Yes,Slave_SQL_Running:Yes,Seconds_Behind_Master:0)
+[2018-11-12 15:25:09] [TestDB]开始恢复task_id(TestDB_20181112)数据
+[2018-11-12 15:25:09] 开始在后台执行:/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[2018-11-12 15:25:09] 检测还原成功
+[0m[2018-11-12 15:25:10] 开始做备库,远程执行cd /tmp/backupXtrabackup && sh xtrabackup.sh 172.16.112.10 10000 22 172.16.112.10 60000 22 /data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112 512M NO[0m
+[2018-11-12 15:25:10] ===check 密钥
+[2018-11-12 15:25:11] ===check pid
+[2018-11-12 15:25:11] pid存在(/data/mysql/60000)
+[2018-11-12 15:26:20] [TestDB]开始恢复task_id(TestDB_20181112)数据
+[2018-11-12 15:26:20] 开始在后台执行:/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[2018-11-12 15:26:20] 检测还原成功
+[0m[2018-11-12 15:26:21] 开始做备库,远程执行cd /tmp/backupXtrabackup && sh xtrabackup.sh 172.16.112.10 10000 22 172.16.112.10 60000 22 /data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112 512M NO[0m
+[2018-11-12 15:26:21] ===check 密钥
+[2018-11-12 15:26:22] ===check pid
+[2018-11-12 15:26:22] pid存在(/data/mysql/60000)
+[2018-11-12 17:10:43] 开始在后台执行:/data/code/github/repository/mysql_repo/mysql_backup/main/backup_script/mysql_restore_build.py --instance='TestDB' --dest='172.16.112.10:60000' --load_thread='8' --innodb_buff='512M' --remote_backup_path='/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112'
+[0m[2018-11-12 17:10:45] 开始做备库,远程执行cd /tmp/backupXtrabackup && sh xtrabackup.sh 172.16.112.10 10000 22 172.16.112.10 60000 22 /data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112 512M NO[0m
+[2018-11-12 17:10:45] ===check 密钥
+[2018-11-12 17:10:46] ===check pid
+[2018-11-12 17:10:46] pid存在(/data/mysql/60000)
+[2018-11-12 17:11:02] TestDB_20181112最近已经成功恢复过或者正在恢复
+[2018-11-12 17:15:26] TestDB_20181112正在做恢复
+[2018-11-12 17:15:57] TestDB_20181112正在做恢复
+[2018-11-12 17:16:14] TestDB_20181112正在做恢复
+[2018-11-12 17:16:21] TestDB_20181112正在做恢复
+[2018-11-12 17:19:04] TestDB_20181112最近已经成功恢复过
+[2018-11-12 17:36:50] TestDB_20181112最近已经成功恢复过
+[2018-11-12 17:36:51] TestDB_20181112最近已经成功恢复过
+[2018-11-12 17:38:08] TestDB_20181112最近已经成功恢复过
+[2018-11-12 17:38:09] TestDB_20181112正在做恢复
+[2018-11-12 17:38:27] TestDB_20181112正在做恢复
+[2018-11-12 17:38:29] TestDB_20181112正在做恢复
+[2018-11-12 17:59:11] TestDB_20181112正在做恢复

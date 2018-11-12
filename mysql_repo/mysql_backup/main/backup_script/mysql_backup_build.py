@@ -12,9 +12,6 @@ import linecache
 import argparse
 import subprocess
 github_dir = '/data/code/github/repository/mysql_repo/mysql_backup'
-#common_dir = '%s/common'%github_dir
-#sys.path.append(common_dir)
-#from python_cnf import *
 script_dir = '%s/main/backup_script'%github_dir
 sys.path.append(script_dir)
 from backup_function import *
@@ -139,7 +136,7 @@ def main():
 
     args = commandLineArgs(sys.argv[1:])
 
-    # bug:写死了
+    # BUG:写死SSH_PORT
     source_ssh_port = "22"
     dest_ssh_port = "22"
 

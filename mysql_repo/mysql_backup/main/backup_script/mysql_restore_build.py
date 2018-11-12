@@ -10,9 +10,6 @@ import os
 import argparse
 import subprocess
 github_dir = '/data/code/github/repository/mysql_repo/mysql_backup'
-#common_dir = '%s/common'%github_dir
-#sys.path.append(common_dir)
-#from python_cnf import *
 script_dir = '%s/main/backup_script'%github_dir
 sys.path.append(script_dir)
 from backup_function import *
@@ -139,7 +136,6 @@ def main():
     where Fback_status='Succ' and Ftype='%s' and Fdate_time>date_sub(CURDATE(),interval 1 week) 
     and Fbackup_address='%s'
     order by Fdate_time desc limit 1"""%(t_mysql_fullbackup_result,args.instance,local_ip)
-    print sql
     result = connMySQL(sql)
     if not result:
         raise ValueError("找不到最近一周成功的备份集,可以使用mysql_backup_build.py进行备库搭建")
@@ -147,14 +143,14 @@ def main():
     result = result[0]
     data_source = result['Fdata_source']
     backup_mode = result['Fbackup_mode']
-    #backup_address = result['Fbackup_address']
     backup_path = result['Fbackup_path']
 
     source_host = data_source.split(':',-1)[0]
     source_port = data_source.split(':',-1)[1]
     dest_host = (args.dest).split(':',-1)[0]
     dest_port = (args.dest).split(':',-1)[1]
-    print backup_mode   
+
+    # BUGS:写死SSH_PORT
     source_ssh_port = '22'
     dest_ssh_port = '22'
 
