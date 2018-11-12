@@ -144,21 +144,63 @@ function restoreXtrabackupCheck()
 
 
 
+#function xtrabackupResultCheck()
+#{
+#    backupdir="$1"
+#    
+#    printLog "###检测备份集是否正常" "$normal_log"
+#    cd $backupdir
+#    tmp_value=$(tar -tf backup.tar 2>&1 | grep -E "xtrabackup_info|xtrabackup_binlog_info"| wc -l)
+#    if ((${tmp_value}!=2));then
+#        printLog "innobackupex执行失败,找不到xtrabackup_info或xtrabackup_binlog_info" "$normal_log"
+#        return 64
+#    else
+#        printLog "备份成功" "$normal_log"
+#    fi
+#}
+
+#######################################
+# xtrabackup check result
+# Globals:
+#   None
+# Arguments:
+#   xtrabackupResultCheck backup_path/backup.tar
+# Returns:
+#   0:备份成功
+#   1:备份中
+#   其他:备份失败
+#######################################
 function xtrabackupResultCheck()
 {
-    backupdir="$1"
-    
-    printLog "###检测备份集是否正常" "$normal_log"
-    cd $backupdir
-    tmp_value=$(tar -tf backup.tar 2>&1 | grep -E "xtrabackup_info|xtrabackup_binlog_info"| wc -l)
-    if ((${tmp_value}!=2));then
-        printLog "innobackupex执行失败,找不到xtrabackup_info或xtrabackup_binlog_info" "$normal_log"
-        return 64
+    # 检测逻辑,检测备份tar包下是否有xtrabackup_info文件,有则成功
+    # 备份文件写死为backup.tar
+    backup_tar="$1"
+    backup_path=$(dirname "$backup_tar") # 备份路径
+    backup_file=$(basename "$backup_tar") # 备份文件,按理说写死了backup.tar
+    if tar -tf $backup_path/$backup_file xtrabackup_info >>$normal_log 2>&1 ;then
+        # Tips:这里cd到另外一个目录了
+        cd $backup_path && tar -xvf $backup_file xtrabackup_info
+        f_start_time=$(cat xtrabackup_info | grep -w "start_time"| awk -F"= " '{print $2}')
+        f_end_time=$(cat xtrabackup_info | grep -w "end_time"| awk -F"= " '{print $2}')
+        f_slave_host=$(echo "$data_source" | awk -F":" '{print $1}')
+        f_slave_port=$(echo "$data_source" | awk -F":" '{print $2}')
+        f_slave_log_file=$(cat xtrabackup_info | grep -w "binlog_pos"| awk -F"= " '{print $2}'| awk -F"," '{print $1}'| awk '{print $2}'| sed "s/'//g")
+        f_slave_log_pos=$(cat xtrabackup_info | grep -w "binlog_pos"| awk -F"= " '{print $2}'| awk -F"," '{print $2}'| awk '{print $2}'| sed "s/'//g")
+        metadata_jason="{'start_time':'$f_start_time','end_time':'$f_end_time','slave_host':'$f_slave_host','slave_port':'$f_slave_port','slave_log_file':'$f_slave_log_file','slave_log_pos':'$f_slave_log_pos','slave_gtid':'','master_host':'','master_port':'','master_log_file':'','master_log_pos':'','master_gitd':''}"
+        size=$(du -shm $backup_path | awk '{print $1}') 
+        return_info="备份成功"
+        E_VALUE=0
     else
-        printLog "备份成功" "$normal_log"
+        if [ -f "$backup_path/$backup_file" ];then
+            return_info="备份中"
+            E_VALUE=1
+        else
+            return_info="备份失败,找不到$backup_tar"
+            E_VALUE=2
+        fi
+        return $E_VALUE
     fi
 }
-
 
 
 #######################################

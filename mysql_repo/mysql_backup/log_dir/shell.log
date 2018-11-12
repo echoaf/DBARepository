@@ -177,3 +177,1443 @@
 [2018-11-02 21:20:47] ======进入binlog上报逻辑,不能使用ctrl+c
 [2018-11-02 21:20:47] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
 [2018-11-02 21:20:47] ======开始sleep,进入下一次循环
+[2018-11-02 21:21:45] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:21:45] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:21:45] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:21:47] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:21:47] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:21:47] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:21:47] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:21:47] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:21:47] ======开始sleep,进入下一次循环
+[2018-11-02 21:22:45] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:22:45] ====================开始sleep,进入下一次循环
+[2018-11-02 21:22:47] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:22:47] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:22:47] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:22:47] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:22:47] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:22:47] ======开始sleep,进入下一次循环
+[2018-11-02 21:23:45] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:23:45] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:23:45] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:23:47] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:23:47] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:23:47] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:23:47] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:23:47] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:23:47] ======开始sleep,进入下一次循环
+[2018-11-02 21:24:45] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:24:45] ====================开始sleep,进入下一次循环
+[2018-11-02 21:24:47] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:24:47] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:24:48] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:24:48] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:24:48] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:24:48] ======开始sleep,进入下一次循环
+[2018-11-02 21:25:45] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:25:45] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:25:45] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:25:48] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:25:48] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:25:48] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:25:48] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:25:48] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:25:48] ======开始sleep,进入下一次循环
+[2018-11-02 21:26:45] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:26:45] ====================开始sleep,进入下一次循环
+[2018-11-02 21:26:48] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:26:48] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:26:48] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:26:48] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:26:48] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:26:48] ======开始sleep,进入下一次循环
+[2018-11-02 21:27:45] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:27:45] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:27:45] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:27:48] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:27:48] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:27:48] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:27:48] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:27:48] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:27:48] ======开始sleep,进入下一次循环
+[2018-11-02 21:28:45] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:28:45] ====================开始sleep,进入下一次循环
+[2018-11-02 21:28:48] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:28:48] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:28:48] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:28:48] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:28:48] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:28:48] ======开始sleep,进入下一次循环
+[2018-11-02 21:29:45] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:29:45] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:29:45] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:29:48] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:29:48] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:29:48] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:29:48] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:29:48] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:29:48] ======开始sleep,进入下一次循环
+[2018-11-02 21:30:45] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:30:45] ====================开始sleep,进入下一次循环
+[2018-11-02 21:30:48] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:30:48] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:30:48] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:30:48] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:30:48] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:30:48] ======开始sleep,进入下一次循环
+[2018-11-02 21:31:45] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:31:45] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:31:45] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:31:48] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:31:48] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:31:48] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:31:48] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:31:48] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:31:48] ======开始sleep,进入下一次循环
+[2018-11-02 21:32:45] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:32:45] ====================开始sleep,进入下一次循环
+[2018-11-02 21:32:48] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:32:49] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:32:49] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:32:49] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:32:49] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:32:49] ======开始sleep,进入下一次循环
+[2018-11-02 21:33:45] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:33:45] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:33:45] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:33:49] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:33:49] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:33:49] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:33:49] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:33:49] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:33:49] ======开始sleep,进入下一次循环
+[2018-11-02 21:34:45] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:34:45] ====================开始sleep,进入下一次循环
+[2018-11-02 21:34:49] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:34:49] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:34:49] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:34:49] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:34:49] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:34:49] ======开始sleep,进入下一次循环
+[2018-11-02 21:35:45] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:35:45] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:35:45] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:35:49] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:35:49] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:35:49] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:35:49] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:35:49] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:35:49] ======开始sleep,进入下一次循环
+[2018-11-02 21:36:45] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:36:45] ====================开始sleep,进入下一次循环
+[2018-11-02 21:36:49] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:36:49] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:36:49] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:36:49] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:36:49] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:36:49] ======开始sleep,进入下一次循环
+[2018-11-02 21:37:46] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:37:46] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:37:46] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:37:49] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:37:49] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:37:49] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:37:49] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:37:49] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:37:49] ======开始sleep,进入下一次循环
+[2018-11-02 21:38:46] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:38:46] ====================开始sleep,进入下一次循环
+[2018-11-02 21:38:49] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:38:49] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:38:49] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:38:49] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:38:49] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:38:49] ======开始sleep,进入下一次循环
+[2018-11-02 21:39:46] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:39:46] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:39:46] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:39:49] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:39:49] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:39:49] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:39:49] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:39:49] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:39:50] ======开始sleep,进入下一次循环
+[2018-11-02 21:40:46] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:40:46] ====================开始sleep,进入下一次循环
+[2018-11-02 21:40:50] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:40:50] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:40:50] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:40:50] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:40:50] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:40:50] ======开始sleep,进入下一次循环
+[2018-11-02 21:41:46] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:41:46] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:41:46] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:41:50] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:41:50] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:41:50] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:41:50] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:41:50] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:41:50] ======开始sleep,进入下一次循环
+[2018-11-02 21:42:46] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:42:46] ====================开始sleep,进入下一次循环
+[2018-11-02 21:42:50] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:42:50] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:42:50] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:42:50] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:42:50] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:42:50] ======开始sleep,进入下一次循环
+[2018-11-02 21:43:46] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:43:46] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:43:46] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:43:50] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:43:50] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:43:50] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:43:50] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:43:50] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:43:50] ======开始sleep,进入下一次循环
+[2018-11-02 21:44:46] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:44:46] ====================开始sleep,进入下一次循环
+[2018-11-02 21:44:50] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:44:50] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:44:50] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:44:50] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:44:50] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:44:50] ======开始sleep,进入下一次循环
+[2018-11-02 21:45:46] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:45:46] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:45:46] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:45:50] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:45:50] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:45:50] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:45:50] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:45:50] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:45:50] ======开始sleep,进入下一次循环
+[2018-11-02 21:46:46] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:46:46] ====================开始sleep,进入下一次循环
+[2018-11-02 21:46:50] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:46:50] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:46:50] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:46:50] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:46:50] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:46:50] ======开始sleep,进入下一次循环
+[2018-11-02 21:47:46] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:47:46] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:47:46] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:47:50] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:47:50] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:47:50] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:47:50] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:47:51] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:47:51] ======开始sleep,进入下一次循环
+[2018-11-02 21:48:46] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:48:46] ====================开始sleep,进入下一次循环
+[2018-11-02 21:48:51] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:48:51] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:48:51] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:48:51] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:48:51] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:48:51] ======开始sleep,进入下一次循环
+[2018-11-02 21:49:46] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:49:46] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:49:46] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:49:51] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:49:51] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:49:51] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:49:51] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:49:51] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:49:51] ======开始sleep,进入下一次循环
+[2018-11-02 21:50:46] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:50:46] ====================开始sleep,进入下一次循环
+[2018-11-02 21:50:51] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:50:51] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:50:51] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:50:51] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:50:51] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:50:51] ======开始sleep,进入下一次循环
+[2018-11-02 21:51:46] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:51:46] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:51:46] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:51:51] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:51:51] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:51:51] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:51:51] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:51:51] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:51:51] ======开始sleep,进入下一次循环
+[2018-11-02 21:52:46] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:52:46] ====================开始sleep,进入下一次循环
+[2018-11-02 21:52:51] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:52:51] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:52:51] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:52:51] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:52:51] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:52:51] ======开始sleep,进入下一次循环
+[2018-11-02 21:53:46] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:53:46] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:53:46] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:53:51] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:53:51] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:53:51] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:53:51] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:53:51] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:53:51] ======开始sleep,进入下一次循环
+[2018-11-02 21:54:46] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:54:46] ====================开始sleep,进入下一次循环
+[2018-11-02 21:54:51] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:54:51] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:54:51] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:54:51] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:54:51] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:54:52] ======开始sleep,进入下一次循环
+[2018-11-02 21:55:46] ====================尝试进入备份逻辑主函数
+[2018-11-02 21:55:46] 进入备份逻辑成功,此时不可以Ctrl+C
+[2018-11-02 21:55:46] [TestDB_20181102]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-02 21:55:52] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:55:52] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:55:52] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:55:52] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:55:52] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:55:52] ======开始sleep,进入下一次循环
+[2018-11-02 21:56:46] ====================进入检测逻辑,可以ctrl+c
+[2018-11-02 21:56:46] ====================开始sleep,进入下一次循环
+[2018-11-02 21:56:52] ======进入mysqlbinlog监控逻辑
+[2018-11-02 21:56:52] [TestDB-172.16.112.10:10000] 进入mysqlbinlog监控逻辑
+[2018-11-02 21:56:52] [TestDB 172.16.112.10:10000] mysqlbinlog进程正常
+[2018-11-02 21:56:52] ======进入binlog上报逻辑,不能使用ctrl+c
+[2018-11-02 21:56:52] [TestDB-172.16.112.10:10000] 进入binlog上报逻辑
+[2018-11-02 21:56:52] ======开始sleep,进入下一次循环
+[2018-11-12 10:46:25] 进入备份主函数
+[2018-11-12 10:46:25] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:46:48] 进入备份主函数
+[2018-11-12 10:46:48] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:46:58] 进入备份主函数
+[2018-11-12 10:46:58] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:48:52] 进入备份主函数
+[2018-11-12 10:48:52] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:48:52] []当前事件点1541990932不在备份时间点(00:00:01-08:00:00)内,不进入今天的备份逻辑
+[2018-11-12 10:49:57] 进入备份主函数
+[2018-11-12 10:49:57] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:50:08] 进入备份主函数
+[2018-11-12 10:50:08] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:50:17] 进入备份主函数
+[2018-11-12 10:50:17] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:50:22] 进入备份主函数
+[2018-11-12 10:50:22] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:50:22] []当前事件点1541991022不在备份时间点(00:00:01-08:00:00)内,不进入今天的备份逻辑
+[2018-11-12 10:50:39] 进入备份主函数
+[2018-11-12 10:50:39] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:50:39] []当前事件点1541991039不在备份时间点(00:00:01-08:00:00)内,不进入今天的备份逻辑
+[2018-11-12 10:51:31] 进入备份主函数
+[2018-11-12 10:51:31] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:51:31] [TestDB_20181112]当前事件点1541991091不在备份时间点(00:00:01-08:00:00)内,不进入今天的备份逻辑
+[2018-11-12 10:51:51] 进入备份主函数
+[2018-11-12 10:51:51] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:51:51] [TestDB_20181112]当前事件点1541991111不在备份时间点(00:00:01-08:00:00)内,不进入今天的备份逻辑
+[2018-11-12 10:52:12] 进入备份主函数
+[2018-11-12 10:52:12] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:52:12] [TestDB_20181112]当前事件点1541991132不在备份时间点(00:00:01-08:00:00)内,不进入今天的备份逻辑
+[2018-11-12 10:52:32] 进入备份主函数
+[2018-11-12 10:52:32] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:52:32] [TestDB_20181112]当前事件点1541991152不在备份时间点(00:00:01-08:00:00)内,不进入今天的备份逻辑
+[2018-11-12 10:52:54] 进入备份主函数
+[2018-11-12 10:52:54] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:53:02] 进入备份主函数
+[2018-11-12 10:53:02] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 10:53:03] [TestDB_20181112]当前事件点1541991183不在备份时间点(00:00:01-08:00:00)内,不进入今天的备份逻辑
+[2018-11-12 11:28:34] 进入备份主函数
+[2018-11-12 11:28:34] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 11:28:34] [TestDB_20181112]当前事件点1541993314不在备份时间点(00:00:01-08:00:00)内,不进入今天的备份逻辑
+[2018-11-12 11:31:57] 进入备份主函数
+[2018-11-12 11:31:57] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 11:31:57] [TestDB_20181112]当前事件点1541993517不在备份时间点(00:00:01-08:00:00)内,不进入今天的备份逻辑
+[2018-11-12 11:34:13] 进入备份主函数
+[2018-11-12 11:34:13] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 11:34:13] [TestDB_20181112]当前事件点1541993653不在备份时间点(00:00:01-08:00:00)内,不进入今天的备份逻辑
+[2018-11-12 11:34:13] 进入检测逻辑,可以ctrl+c
+[2018-11-12 11:34:13] 退出备份主函数,进入下一轮循环
+[2018-11-12 11:34:36] 进入备份主函数
+[2018-11-12 11:34:36] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 11:34:36] [TestDB_20181112]当前事件点11:34:36不在备份时间点(00:00:01-08:00:00)内,不进入今天的备份逻辑
+[2018-11-12 11:34:36] 进入检测逻辑,可以ctrl+c
+[2018-11-12 11:34:36] 退出备份主函数,进入下一轮循环
+[2018-11-12 11:35:49] 进入备份主函数
+[2018-11-12 11:35:49] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 11:35:49] [TestDB_20181112]当前事件点11:35:49在备份时间点(00:00:01-23:59:59)内,开始进入今天的备份逻辑
+[2018-11-12 11:35:49] [TestDB_20181112]当前备份状态为:,进入备份逻辑
+[2018-11-12 11:35:49] ###############开始备份数据
+[2018-11-12 11:35:49] /usr/local/xtrabackup/bin/innobackupex --defaults-file=/data/mysql/10000/my.cnf --user=dump_user --password=dump_user --host=172.16.112.10 --port=10000 --slave-info --no-timestamp /tmp/full_1541993749 --tmpdir=/tmp/full_1541993749 --stream=tar | ssh -p 22 root@'172.16.112.10'  'gzip - > /data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181112/backup.tar' 
+[2018-11-12 11:35:49] [TestDB_20181112 TestDB 172.16.112.10:10000] 尝试备份Succ
+181112 11:35:50 innobackupex: Starting the backup operation
+
+IMPORTANT: Please check that the backup run completes successfully.
+           At the end of a successful backup run innobackupex
+           prints "completed OK!".
+
+Can't locate Digest/MD5.pm in @INC (@INC contains: /usr/local/lib64/perl5 /usr/local/share/perl5 /usr/lib64/perl5/vendor_perl /usr/share/perl5/vendor_perl /usr/lib64/perl5 /usr/share/perl5 .) at - line 693.
+BEGIN failed--compilation aborted at - line 693.
+181112 11:35:50 Connecting to MySQL server host: 172.16.112.10, user: dump_user, password: set, port: 10000, socket: /data/mysql/10000/mysql.sock
+Using server version 5.7.22-log
+/usr/local/xtrabackup/bin/innobackupex version 2.4.9 based on MySQL server 5.7.13 Linux (x86_64) (revision id: a467167cdd4)
+xtrabackup: uses posix_fadvise().
+xtrabackup: cd to /data/mysql/10000/
+xtrabackup: open files limit requested 204800, set to 204800
+xtrabackup: using the following InnoDB configuration:
+xtrabackup:   innodb_data_home_dir = .
+xtrabackup:   innodb_data_file_path = ibdata1:12M:autoextend
+xtrabackup:   innodb_log_group_home_dir = ./
+xtrabackup:   innodb_log_files_in_group = 2
+xtrabackup:   innodb_log_file_size = 536870912
+xtrabackup: using O_DIRECT
+InnoDB: Number of pools: 1
+181112 11:35:50 >> log scanned up to (3773970502)
+xtrabackup: Generating a list of tablespaces
+InnoDB: Allocated tablespace ID 55 for monitor_script_db/t_common_cnf, old maximum was 0
+181112 11:35:51 [01] Streaming ./ibdata1
+181112 11:35:51 >> log scanned up to (3773970894)
+181112 11:35:52 >> log scanned up to (3773971302)
+181112 11:35:53 >> log scanned up to (3773972333)
+181112 11:35:53 [01]        ...done
+181112 11:35:53 [01] Streaming ./monitor_script_db/t_common_cnf.ibd
+181112 11:35:53 [01]        ...done
+181112 11:35:53 [01] Streaming ./monitor_script_db/t_person_cnf.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./monitor_script_db/t_script_common_cnf.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./monitor_script_db/t_script_person_cnf.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./monitor_script_db/t_script_status.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/slave_master_info.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/help_topic.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/innodb_index_stats.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/innodb_table_stats.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/plugin.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/time_zone_leap_second.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/time_zone_name.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/time_zone_transition.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/time_zone_transition_type.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/slave_relay_log_info.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/slave_worker_info.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/time_zone.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/server_cost.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/servers.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/engine_cost.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/gtid_executed.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/help_category.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/help_keyword.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql/help_relation.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_backup_db/t_mysql_fullbackup_result.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_backup_db/t_mysql_binarylog_info.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_backup_db/t_mysql_binarylog_result.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_backup_db/t_mysql_check_result.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_backup_db/t_mysql_check_info.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_backup_db/t_mysql_fullbackup_info.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_info_db/t_mysql_machine_info.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_info_db/t_mysql_proxy_machine_info.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_info_db/t_mysql_instance_info.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_info_db/t_mysql_resource_pool.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_info_db/t_mysql_proxy_resource_pool.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_info_db/t_mysql_info.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_monitor_db/t_mysql_machine_disk.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_monitor_db/t_mysql_instance_disk.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./mysql_monitor_db/t_monitor_mysql_slow.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./sys/sys_config.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./test_db/t_test.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./test_db/t_test_info_old_RENAME.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./synchronization_db/t_synchronization.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./synchronization_db/t_synchronization_test.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./django_db/django_migrations.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./django_db/auth_group.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./django_db/auth_permission.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./django_db/auth_group_permissions.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./django_db/auth_user_groups.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./django_db/auth_user_user_permissions.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./django_db/django_admin_log.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./django_db/django_content_type.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./django_db/auth_user.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./django_db/django_session.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 [01] Streaming ./django_db/blog_t_blog.ibd
+181112 11:35:54 [01]        ...done
+181112 11:35:54 >> log scanned up to (3773972739)
+181112 11:35:55 Executing FLUSH NO_WRITE_TO_BINLOG TABLES...
+181112 11:35:55 Executing FLUSH TABLES WITH READ LOCK...
+181112 11:35:55 Starting to backup non-InnoDB tables and files
+181112 11:35:55 [01] Streaming ./monitor_script_db/db.opt to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./monitor_script_db/t_common_cnf.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./monitor_script_db/t_person_cnf.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./monitor_script_db/t_script_common_cnf.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./monitor_script_db/t_script_person_cnf.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./monitor_script_db/t_script_status.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/db.opt to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/tables_priv.MYI to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/time_zone.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/time_zone_leap_second.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/proc.MYD to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/procs_priv.MYD to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/time_zone_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/time_zone_transition.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/time_zone_transition_type.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/user.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/user.MYI to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/user.MYD to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/proxies_priv.MYD to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/general_log.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/general_log.CSM to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/general_log.CSV to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/slow_log.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/slow_log.CSM to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/slow_log.CSV to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/ndb_binlog_index.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/ndb_binlog_index.MYI to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/plugin.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/proc.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/procs_priv.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/proxies_priv.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/slave_relay_log_info.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/slave_worker_info.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/tables_priv.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/tables_priv.MYD to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/server_cost.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/servers.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/slave_master_info.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/columns_priv.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/columns_priv.MYI to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/columns_priv.MYD to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/db.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/db.MYI to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/db.MYD to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/engine_cost.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/event.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/event.MYI to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/event.MYD to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/func.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/func.MYI to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/func.MYD to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/gtid_executed.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/help_category.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/help_keyword.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/help_relation.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/help_topic.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/innodb_index_stats.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/innodb_table_stats.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/ndb_binlog_index.MYD to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/proc.MYI to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/procs_priv.MYI to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql/proxies_priv.MYI to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_backup_db/db.opt to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_backup_db/t_mysql_fullbackup_info.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_backup_db/t_mysql_fullbackup_result.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_backup_db/t_mysql_binarylog_info.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_backup_db/t_mysql_binarylog_result.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_backup_db/t_mysql_check_info.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_backup_db/t_mysql_check_result.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_info_db/db.opt to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_info_db/t_mysql_machine_info.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_info_db/t_mysql_proxy_machine_info.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_info_db/t_mysql_instance_info.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_info_db/t_mysql_resource_pool.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_info_db/t_mysql_proxy_resource_pool.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_info_db/t_mysql_info.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_monitor_db/db.opt to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_monitor_db/t_mysql_machine_disk.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_monitor_db/t_mysql_instance_disk.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_monitor_db/t_monitor_mysql_slow.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/db.opt to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/wait_classes_global_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/sys_config.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/sys_config.TRG to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/statements_with_full_table_scans.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/processlist.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/user_summary.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/statements_with_sorting.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/innodb_buffer_stats_by_schema.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/schema_index_statistics.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024innodb_buffer_stats_by_schema.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/statements_with_temp_tables.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/innodb_buffer_stats_by_table.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024schema_index_statistics.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024innodb_buffer_stats_by_table.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/host_summary.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/innodb_lock_waits.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024host_summary.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024innodb_lock_waits.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/waits_by_user_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/schema_object_overview.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/user_summary_by_file_io_type.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/schema_auto_increment_columns.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/user_summary_by_file_io.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024schema_flattened_keys.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024user_summary_by_file_io.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/schema_redundant_indexes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/user_summary_by_statement_type.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/ps_check_lost_instrumentation.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/latest_file_io.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024io_global_by_file_by_bytes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024latest_file_io.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/waits_global_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/io_by_thread_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/user_summary_by_stages.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024io_by_thread_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024user_summary_by_stages.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/io_global_by_file_by_bytes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024session.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024processlist.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/io_global_by_file_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/schema_table_statistics.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024io_global_by_file_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024user_summary.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/io_global_by_wait_by_bytes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024schema_table_statistics.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024io_global_by_wait_by_bytes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/host_summary_by_statement_type.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/io_global_by_wait_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/schema_tables_with_full_table_scans.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024io_global_by_wait_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/metrics.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/memory_global_total.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/schema_table_lock_waits.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024memory_by_user_by_current_bytes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024host_summary_by_file_io.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/memory_by_host_by_current_bytes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024schema_table_lock_waits.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024memory_by_host_by_current_bytes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/statement_analysis.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/memory_by_thread_by_current_bytes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024statement_analysis.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024memory_by_thread_by_current_bytes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/memory_by_user_by_current_bytes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/memory_global_by_current_bytes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/waits_by_host_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024memory_global_by_current_bytes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/schema_table_statistics_with_buffer.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/host_summary_by_stages.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024memory_global_total.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/statements_with_errors_or_warnings.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024schema_table_statistics_with_buffer.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024statements_with_errors_or_warnings.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/session.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/schema_unused_indexes.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/version.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024schema_tables_with_full_table_scans.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024host_summary_by_stages.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024waits_by_user_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024waits_global_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/host_summary_by_file_io.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/host_summary_by_file_io_type.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/host_summary_by_statement_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/session_ssl_status.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/statements_with_runtimes_in_95th_percentile.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/user_summary_by_statement_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/wait_classes_global_by_avg_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024host_summary_by_file_io_type.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024host_summary_by_statement_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024host_summary_by_statement_type.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024ps_digest_95th_percentile_by_avg_us.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024ps_digest_avg_latency_distribution.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024ps_schema_table_statistics_io.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024statements_with_full_table_scans.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024statements_with_runtimes_in_95th_percentile.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024statements_with_sorting.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024statements_with_temp_tables.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024user_summary_by_file_io_type.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024user_summary_by_statement_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024user_summary_by_statement_type.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024wait_classes_global_by_avg_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024wait_classes_global_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/x@0024waits_by_host_by_latency.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/sys_config_insert_set_user.TRN to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./sys/sys_config_update_set_user.TRN to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./test_db/db.opt to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./test_db/t_test.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./test_db/t_test_info_old_RENAME.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/db.opt to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/cond_instances.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_waits_current.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_waits_history.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_waits_history_long.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_waits_summary_by_instance.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_waits_summary_by_host_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_waits_summary_by_user_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_waits_summary_by_account_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_waits_summary_by_thread_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_waits_summary_global_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/file_instances.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/file_summary_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/file_summary_by_instance.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/socket_instances.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/socket_summary_by_instance.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/socket_summary_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/host_cache.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/mutex_instances.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/objects_summary_global_by_type.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/performance_timers.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/rwlock_instances.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/setup_actors.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/setup_consumers.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/setup_instruments.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/setup_objects.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/setup_timers.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/table_io_waits_summary_by_index_usage.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/table_io_waits_summary_by_table.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/table_lock_waits_summary_by_table.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/threads.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_stages_current.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_stages_history.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_stages_history_long.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_stages_summary_by_thread_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_stages_summary_by_host_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_stages_summary_by_user_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_stages_summary_by_account_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_stages_summary_global_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_statements_current.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_statements_history.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_statements_history_long.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_statements_summary_by_thread_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_statements_summary_by_host_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_statements_summary_by_user_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_statements_summary_by_account_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_statements_summary_global_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_transactions_current.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_transactions_history.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_transactions_history_long.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_transactions_summary_by_thread_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_transactions_summary_by_host_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_transactions_summary_by_user_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_transactions_summary_by_account_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_transactions_summary_global_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/hosts.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/users.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/accounts.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/memory_summary_global_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/memory_summary_by_thread_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/memory_summary_by_account_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/memory_summary_by_host_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/memory_summary_by_user_by_event_name.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_statements_summary_by_digest.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/events_statements_summary_by_program.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/prepared_statements_instances.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/replication_connection_configuration.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/replication_group_member_stats.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/replication_group_members.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/replication_connection_status.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/replication_applier_configuration.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/replication_applier_status.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/replication_applier_status_by_coordinator.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/replication_applier_status_by_worker.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/session_connect_attrs.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/session_account_connect_attrs.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/table_handles.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/metadata_locks.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/user_variables_by_thread.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/variables_by_thread.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/global_variables.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/session_variables.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/status_by_thread.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/status_by_user.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/status_by_host.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/status_by_account.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/global_status.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./performance_schema/session_status.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./synchronization_db/db.opt to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./synchronization_db/t_synchronization.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./synchronization_db/t_synchronization_test.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./mysql_info_db_new/db.opt to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./django_db/db.opt to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./django_db/django_migrations.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./django_db/django_content_type.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./django_db/auth_group.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./django_db/auth_user.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./django_db/auth_permission.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./django_db/auth_group_permissions.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./django_db/auth_user_groups.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./django_db/auth_user_user_permissions.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./django_db/django_admin_log.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./django_db/django_session.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 [01] Streaming ./django_db/blog_t_blog.frm to <STDOUT>
+181112 11:35:55 [01]        ...done
+181112 11:35:55 Finished backing up non-InnoDB tables and files
+181112 11:35:55 [00] Streaming <STDOUT>
+181112 11:35:55 [00]        ...done
+181112 11:35:55 [00] Streaming <STDOUT>
+181112 11:35:55 [00]        ...done
+181112 11:35:55 Executing FLUSH NO_WRITE_TO_BINLOG ENGINE LOGS...
+xtrabackup: The latest check point (for incremental): '3773929865'
+xtrabackup: Stopping log copying thread.
+.181112 11:35:55 >> log scanned up to (3773972849)
+
+181112 11:35:55 Executing UNLOCK TABLES
+181112 11:35:55 All tables unlocked
+181112 11:35:55 [00] Streaming ib_buffer_pool to <STDOUT>
+181112 11:35:55 [00]        ...done
+181112 11:35:55 Backup created in directory '/tmp/full_1541993749/'
+MySQL binlog position: filename 'binlog.000006', position '249859689'
+181112 11:35:55 [00] Streaming <STDOUT>
+181112 11:35:55 [00]        ...done
+181112 11:35:55 [00] Streaming <STDOUT>
+181112 11:35:55 [00]        ...done
+xtrabackup: Transaction log of lsn (3773929865) to (3773972849) was copied.
+181112 11:35:55 completed OK!
+[2018-11-12 11:36:49] 进入检测逻辑,可以ctrl+c
+[2018-11-12 11:36:49] ###检测备份集是否正常
+[2018-11-12 11:36:49] innobackupex执行失败,找不到xtrabackup_info或xtrabackup_binlog_info
+[2018-11-12 11:36:50] 退出备份主函数,进入下一轮循环
+[2018-11-12 11:38:26] 进入备份主函数
+[2018-11-12 11:38:26] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 11:39:26] 进入检测逻辑,可以ctrl+c
+[2018-11-12 11:39:26] ###检测备份集是否正常
+[2018-11-12 11:39:26] innobackupex执行失败,找不到xtrabackup_info或xtrabackup_binlog_info
+[2018-11-12 11:39:26] 退出备份主函数,进入下一轮循环,可以ctrl+c
+[2018-11-12 11:42:46] 进入备份主函数
+[2018-11-12 11:42:46] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 11:42:46] 进入检测逻辑,可以ctrl+c
+[2018-11-12 11:42:46] ###检测备份集是否正常
+[2018-11-12 11:42:46] innobackupex执行失败,找不到xtrabackup_info或xtrabackup_binlog_info
+[2018-11-12 11:42:46] 退出备份主函数,进入下一轮循环,可以ctrl+c
+[2018-11-12 11:48:18] 进入备份主函数
+[2018-11-12 11:48:18] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 11:48:18] 进入检测逻辑,可以ctrl+c
+[2018-11-12 11:48:33] 进入备份主函数
+[2018-11-12 11:48:33] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 11:48:33] 进入检测逻辑,可以ctrl+c
+xtrabackup_info
+[2018-11-12 11:48:34] 退出备份主函数,进入下一轮循环,可以ctrl+c
+[2018-11-12 12:16:38] 进入备份主函数
+[2018-11-12 12:16:38] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 12:16:38] [TestDB_20181112]当前事件点12:16:38在备份时间点(00:00:01-23:59:59)内,开始进入今天的备份逻辑
+[2018-11-12 12:16:38] [TestDB_20181112]当前备份状态为:Succ,不进入备份逻辑
+[2018-11-12 12:24:27] 进入备份主函数
+[2018-11-12 12:24:27] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 12:24:27] [TestDB_20181112]当前事件点12:24:27在备份时间点(00:00:01-23:59:59)内,开始进入今天的备份逻辑
+[2018-11-12 12:24:27] [TestDB_20181112]当前备份状态为:,进入备份逻辑
+[2018-11-12 12:24:27] ===检测备份目录
+[2018-11-12 12:24:27] ===检测数据库
+[2018-11-12 12:24:27] MySQL连接失败:ERROR 1054 (42S22) at line 1: Unknown column 'k' in 'field list'
+[2018-11-12 12:24:27] [TestDB_20181112 TestDB 172.16.112.10:10000] 尝试备份Fail
+[2018-11-12 12:24:55] 进入备份主函数
+[2018-11-12 12:24:55] 进入备份逻辑,在进入检测逻辑前不可以Ctrl+C
+[2018-11-12 12:24:55] [TestDB_20181112]当前事件点12:24:55在备份时间点(00:00:01-23:59:59)内,开始进入今天的备份逻辑
+[2018-11-12 12:24:55] [TestDB_20181112]当前备份状态为:Fail,进入备份逻辑
+[2018-11-12 12:24:55] ===检测备份目录
+[2018-11-12 12:24:55] ===检测数据库
+[2018-11-12 12:24:55] ===检测活跃连接数
+[2018-11-12 12:24:55] [172.16.112.10:10000] ====开始备份,实例表总数:315,大于1000000行的表数目:0
+[2018-11-12 12:24:55] [TestDB_20181112 TestDB 172.16.112.10:10000] 尝试备份Succ
+** Message: Connected to a MySQL server
+** Message: Started dump at: 2018-11-12 12:24:55
+
+** Message: Written master status
+** Message: Thread 1 connected using MySQL connection ID 1499148
+** Message: Thread 2 connected using MySQL connection ID 1499149
+** Message: Thread 3 connected using MySQL connection ID 1499150
+** Message: Thread 4 connected using MySQL connection ID 1499151
+** Message: Thread 1 dumping data for `mysql`.`columns_priv`
+** Message: Empty table mysql.columns_priv
+** Message: Thread 2 dumping data for `mysql`.`db`
+** Message: Thread 3 dumping data for `mysql`.`event`
+** Message: Empty table mysql.event
+** Message: Thread 4 dumping data for `mysql`.`func`
+** Message: Empty table mysql.func
+** Message: Thread 1 dumping data for `mysql`.`ndb_binlog_index`
+** Message: Empty table mysql.ndb_binlog_index
+** Message: Thread 2 dumping data for `mysql`.`proc`
+** Message: Thread 3 dumping data for `mysql`.`procs_priv`
+** Message: Empty table mysql.procs_priv
+** Message: Thread 4 dumping data for `mysql`.`proxies_priv`
+** Message: Thread 1 dumping data for `mysql`.`tables_priv`
+** Message: Thread 3 dumping data for `mysql`.`user`
+** Message: Thread 3 dumping data for `django_db`.`auth_group`
+** Message: Empty table django_db.auth_group
+** Message: Thread 1 dumping data for `django_db`.`auth_group_permissions`
+** Message: Empty table django_db.auth_group_permissions
+** Message: Thread 4 dumping data for `django_db`.`auth_permission`
+** Message: Thread 2 dumping data for `django_db`.`auth_user`
+** Message: Empty table django_db.auth_user
+** Message: Thread 3 dumping data for `django_db`.`auth_user_groups`
+** Message: Thread 1 dumping data for `django_db`.`auth_user_user_permissions`
+** Message: Empty table django_db.auth_user_user_permissions
+** Message: Empty table django_db.auth_user_groups
+** Message: Thread 2 dumping data for `django_db`.`blog_t_blog`
+** Message: Thread 1 dumping data for `django_db`.`django_admin_log`
+** Message: Empty table django_db.django_admin_log
+** Message: Thread 3 dumping data for `django_db`.`django_content_type`
+** Message: Thread 2 dumping data for `django_db`.`django_migrations`
+** Message: Thread 1 dumping data for `django_db`.`django_session`
+** Message: Empty table django_db.django_session
+** Message: Thread 3 dumping data for `monitor_script_db`.`t_common_cnf`
+** Message: Thread 4 dumping data for `monitor_script_db`.`t_person_cnf`
+** Message: Empty table monitor_script_db.t_person_cnf
+** Message: Thread 2 dumping data for `monitor_script_db`.`t_script_common_cnf`
+** Message: Empty table monitor_script_db.t_script_common_cnf
+** Message: Thread 1 dumping data for `monitor_script_db`.`t_script_person_cnf`
+** Message: Empty table monitor_script_db.t_script_person_cnf
+** Message: Thread 3 dumping data for `monitor_script_db`.`t_script_status`
+** Message: Empty table monitor_script_db.t_script_status
+** Message: Thread 4 dumping data for `mysql`.`engine_cost`
+** Message: Thread 2 dumping data for `mysql`.`gtid_executed`
+** Message: Thread 1 dumping data for `mysql`.`help_category`
+** Message: Thread 3 dumping data for `mysql`.`help_keyword`
+** Message: Thread 4 dumping data for `mysql`.`help_relation`
+** Message: Thread 2 dumping data for `mysql`.`help_topic`
+** Message: Thread 1 dumping data for `mysql`.`plugin`
+** Message: Empty table mysql.plugin
+** Message: Thread 3 dumping data for `mysql`.`server_cost`
+** Message: Thread 4 dumping data for `mysql`.`servers`
+** Message: Empty table mysql.servers
+** Message: Thread 1 dumping data for `mysql`.`slave_master_info`
+** Message: Empty table mysql.slave_master_info
+** Message: Thread 3 dumping data for `mysql`.`slave_relay_log_info`
+** Message: Empty table mysql.slave_relay_log_info
+** Message: Thread 4 dumping data for `mysql`.`slave_worker_info`
+** Message: Thread 1 dumping data for `mysql`.`time_zone`
+** Message: Empty table mysql.time_zone
+** Message: Empty table mysql.slave_worker_info
+** Message: Thread 3 dumping data for `mysql`.`time_zone_leap_second`
+** Message: Empty table mysql.time_zone_leap_second
+** Message: Thread 1 dumping data for `mysql`.`time_zone_name`
+** Message: Empty table mysql.time_zone_name
+** Message: Thread 4 dumping data for `mysql`.`time_zone_transition`
+** Message: Empty table mysql.time_zone_transition
+** Message: Thread 3 dumping data for `mysql`.`time_zone_transition_type`
+** Message: Empty table mysql.time_zone_transition_type
+** Message: Thread 1 dumping data for `mysql_backup_db`.`t_mysql_binarylog_info`
+** Message: Thread 4 dumping data for `mysql_backup_db`.`t_mysql_binarylog_result`
+** Message: Thread 3 dumping data for `mysql_backup_db`.`t_mysql_check_info`
+** Message: Thread 1 dumping data for `mysql_backup_db`.`t_mysql_check_result`
+** Message: Thread 2 dumping data for `mysql_backup_db`.`t_mysql_fullbackup_info`
+** Message: Thread 4 dumping data for `mysql_backup_db`.`t_mysql_fullbackup_result`
+** Message: Thread 3 dumping data for `mysql_info_db`.`t_mysql_info`
+** Message: Thread 1 dumping data for `mysql_info_db`.`t_mysql_instance_info`
+** Message: Empty table mysql_info_db.t_mysql_instance_info
+** Message: Thread 3 dumping data for `mysql_info_db`.`t_mysql_machine_info`
+** Message: Empty table mysql_info_db.t_mysql_machine_info
+** Message: Thread 2 dumping data for `mysql_info_db`.`t_mysql_proxy_machine_info`
+** Message: Empty table mysql_info_db.t_mysql_proxy_machine_info
+** Message: Thread 4 dumping data for `mysql_info_db`.`t_mysql_proxy_resource_pool`
+** Message: Empty table mysql_info_db.t_mysql_proxy_resource_pool
+** Message: Thread 1 dumping data for `mysql_info_db`.`t_mysql_resource_pool`
+** Message: Empty table mysql_info_db.t_mysql_resource_pool
+** Message: Thread 3 dumping data for `mysql_monitor_db`.`t_monitor_mysql_slow`
+** Message: Empty table mysql_monitor_db.t_monitor_mysql_slow
+** Message: Thread 2 dumping data for `mysql_monitor_db`.`t_mysql_instance_disk`
+** Message: Empty table mysql_monitor_db.t_mysql_instance_disk
+** Message: Thread 4 dumping data for `mysql_monitor_db`.`t_mysql_machine_disk`
+** Message: Thread 1 dumping data for `synchronization_db`.`t_synchronization`
+** Message: Empty table mysql_monitor_db.t_mysql_machine_disk
+** Message: Thread 3 dumping data for `synchronization_db`.`t_synchronization_test`
+** Message: Thread 2 dumping data for `sys`.`sys_config`
+** Message: Thread 1 dumping data for `test_db`.`t_test`
+** Message: Non-InnoDB dump complete, unlocking tables
+** Message: Thread 4 dumping data for `test_db`.`t_test_info_old_RENAME`
+** Message: Thread 3 dumping schema for `django_db`.`auth_group`
+** Message: Thread 2 dumping schema for `django_db`.`auth_group_permissions`
+** Message: Thread 1 dumping schema for `django_db`.`auth_permission`
+** Message: Thread 3 dumping schema for `django_db`.`auth_user`
+** Message: Empty table test_db.t_test_info_old_RENAME
+** Message: Thread 4 dumping schema for `django_db`.`auth_user_groups`
+** Message: Thread 2 dumping schema for `django_db`.`auth_user_user_permissions`
+** Message: Thread 1 dumping schema for `django_db`.`blog_t_blog`
+** Message: Thread 3 dumping schema for `django_db`.`django_admin_log`
+** Message: Thread 4 dumping schema for `django_db`.`django_content_type`
+** Message: Thread 2 dumping schema for `django_db`.`django_migrations`
+** Message: Thread 1 dumping schema for `django_db`.`django_session`
+** Message: Thread 1 dumping schema for `monitor_script_db`.`t_common_cnf`
+** Message: Thread 3 dumping schema for `monitor_script_db`.`t_person_cnf`
+** Message: Thread 2 dumping schema for `monitor_script_db`.`t_script_common_cnf`
+** Message: Thread 2 dumping schema for `monitor_script_db`.`t_script_person_cnf`
+** Message: Thread 1 dumping schema for `monitor_script_db`.`t_script_status`
+** Message: Thread 4 dumping schema for `mysql`.`columns_priv`
+** Message: Thread 3 dumping schema for `mysql`.`db`
+** Message: Thread 3 dumping schema for `mysql`.`engine_cost`
+** Message: Thread 2 dumping schema for `mysql`.`event`
+** Message: Thread 4 dumping schema for `mysql`.`func`
+** Message: Thread 2 dumping schema for `mysql`.`gtid_executed`
+** Message: Thread 1 dumping schema for `mysql`.`help_category`
+** Message: Thread 3 dumping schema for `mysql`.`help_keyword`
+** Message: Thread 4 dumping schema for `mysql`.`help_relation`
+** Message: Thread 2 dumping schema for `mysql`.`help_topic`
+** Message: Thread 3 dumping schema for `mysql`.`ndb_binlog_index`
+** Message: Thread 1 dumping schema for `mysql`.`plugin`
+** Message: Thread 4 dumping schema for `mysql`.`proc`
+** Message: Thread 2 dumping schema for `mysql`.`procs_priv`
+** Message: Thread 3 dumping schema for `mysql`.`proxies_priv`
+** Message: Thread 1 dumping schema for `mysql`.`server_cost`
+** Message: Thread 2 dumping schema for `mysql`.`servers`
+** Message: Thread 1 dumping schema for `mysql`.`slave_master_info`
+** Message: Thread 3 dumping schema for `mysql`.`slave_relay_log_info`
+** Message: Thread 2 dumping schema for `mysql`.`slave_worker_info`
+** Message: Thread 1 dumping schema for `mysql`.`tables_priv`
+** Message: Thread 3 dumping schema for `mysql`.`time_zone`
+** Message: Thread 2 dumping schema for `mysql`.`time_zone_leap_second`
+** Message: Thread 1 dumping schema for `mysql`.`time_zone_name`
+** Message: Thread 3 dumping schema for `mysql`.`time_zone_transition`
+** Message: Thread 2 dumping schema for `mysql`.`time_zone_transition_type`
+** Message: Thread 3 dumping schema for `mysql`.`user`
+** Message: Thread 1 dumping schema for `mysql_backup_db`.`t_mysql_binarylog_info`
+** Message: Thread 2 dumping schema for `mysql_backup_db`.`t_mysql_binarylog_result`
+** Message: Thread 3 dumping schema for `mysql_backup_db`.`t_mysql_check_info`
+** Message: Thread 1 dumping schema for `mysql_backup_db`.`t_mysql_check_result`
+** Message: Thread 2 dumping schema for `mysql_backup_db`.`t_mysql_fullbackup_info`
+** Message: Thread 3 dumping schema for `mysql_backup_db`.`t_mysql_fullbackup_result`
+** Message: Thread 1 dumping schema for `mysql_info_db`.`t_mysql_info`
+** Message: Thread 2 dumping schema for `mysql_info_db`.`t_mysql_instance_info`
+** Message: Thread 3 dumping schema for `mysql_info_db`.`t_mysql_machine_info`
+** Message: Thread 3 dumping schema for `mysql_info_db`.`t_mysql_proxy_machine_info`
+** Message: Thread 4 dumping schema for `mysql_info_db`.`t_mysql_proxy_resource_pool`
+** Message: Thread 4 dumping schema for `mysql_info_db`.`t_mysql_resource_pool`
+** Message: Thread 1 dumping schema for `mysql_monitor_db`.`t_monitor_mysql_slow`
+** Message: Thread 2 dumping schema for `mysql_monitor_db`.`t_mysql_instance_disk`
+** Message: Thread 4 dumping schema for `mysql_monitor_db`.`t_mysql_machine_disk`
+** Message: Thread 4 dumping schema for `synchronization_db`.`t_synchronization`
+** Message: Thread 1 dumping schema for `synchronization_db`.`t_synchronization_test`
+** Message: Thread 3 dumping schema for `sys`.`sys_config`
+** Message: Thread 2 dumping schema for `test_db`.`t_test`
+** Message: Thread 1 dumping schema for `test_db`.`t_test_info_old_RENAME`
+** Message: Thread 3 dumping view for `sys`.`host_summary`
+** Message: Thread 3 dumping view for `sys`.`host_summary_by_file_io`
+** Message: Thread 3 dumping view for `sys`.`host_summary_by_file_io_type`
+** Message: Thread 3 dumping view for `sys`.`host_summary_by_stages`
+** Message: Thread 3 dumping view for `sys`.`host_summary_by_statement_latency`
+** Message: Thread 3 dumping view for `sys`.`host_summary_by_statement_type`
+** Message: Thread 4 dumping view for `sys`.`innodb_buffer_stats_by_schema`
+** Message: Thread 1 dumping view for `sys`.`innodb_buffer_stats_by_table`
+** Message: Thread 2 dumping view for `sys`.`innodb_lock_waits`
+** Message: Thread 1 dumping view for `sys`.`io_by_thread_by_latency`
+** Message: Thread 2 dumping view for `sys`.`io_global_by_file_by_bytes`
+** Message: Thread 3 dumping view for `sys`.`io_global_by_file_by_latency`
+** Message: Thread 1 dumping view for `sys`.`io_global_by_wait_by_bytes`
+** Message: Thread 2 dumping view for `sys`.`io_global_by_wait_by_latency`
+** Message: Thread 1 dumping view for `sys`.`latest_file_io`
+** Message: Thread 2 dumping view for `sys`.`memory_by_host_by_current_bytes`
+** Message: Thread 1 dumping view for `sys`.`memory_by_thread_by_current_bytes`
+** Message: Thread 1 dumping view for `sys`.`memory_by_user_by_current_bytes`
+** Message: Thread 3 dumping view for `sys`.`memory_global_by_current_bytes`
+** Message: Thread 1 dumping view for `sys`.`memory_global_total`
+** Message: Thread 3 dumping view for `sys`.`metrics`
+** Message: Thread 1 dumping view for `sys`.`processlist`
+** Message: Thread 2 dumping view for `sys`.`ps_check_lost_instrumentation`
+** Message: Thread 3 dumping view for `sys`.`schema_auto_increment_columns`
+** Message: Thread 1 dumping view for `sys`.`schema_index_statistics`
+** Message: Thread 3 dumping view for `sys`.`schema_object_overview`
+** Message: Thread 2 dumping view for `sys`.`schema_redundant_indexes`
+** Message: Thread 1 dumping view for `sys`.`schema_table_lock_waits`
+** Message: Thread 2 dumping view for `sys`.`schema_table_statistics`
+** Message: Thread 4 dumping view for `sys`.`schema_table_statistics_with_buffer`
+** Message: Thread 2 dumping view for `sys`.`schema_tables_with_full_table_scans`
+** Message: Thread 2 dumping view for `sys`.`schema_unused_indexes`
+** Message: Thread 2 dumping view for `sys`.`session`
+** Message: Thread 2 dumping view for `sys`.`session_ssl_status`
+** Message: Thread 2 dumping view for `sys`.`statement_analysis`
+** Message: Thread 2 dumping view for `sys`.`statements_with_errors_or_warnings`
+** Message: Thread 2 dumping view for `sys`.`statements_with_full_table_scans`
+** Message: Thread 2 dumping view for `sys`.`statements_with_runtimes_in_95th_percentile`
+** Message: Thread 2 dumping view for `sys`.`statements_with_sorting`
+** Message: Thread 2 dumping view for `sys`.`statements_with_temp_tables`
+** Message: Thread 2 dumping view for `sys`.`user_summary`
+** Message: Thread 2 dumping view for `sys`.`user_summary_by_file_io`
+** Message: Thread 2 dumping view for `sys`.`user_summary_by_file_io_type`
+** Message: Thread 2 dumping view for `sys`.`user_summary_by_stages`
+** Message: Thread 2 dumping view for `sys`.`user_summary_by_statement_latency`
+** Message: Thread 2 dumping view for `sys`.`user_summary_by_statement_type`
+** Message: Thread 2 dumping view for `sys`.`version`
+** Message: Thread 2 dumping view for `sys`.`wait_classes_global_by_avg_latency`
+** Message: Thread 2 dumping view for `sys`.`wait_classes_global_by_latency`
+** Message: Thread 3 dumping view for `sys`.`waits_by_host_by_latency`
+** Message: Thread 2 dumping view for `sys`.`waits_by_user_by_latency`
+** Message: Thread 2 dumping view for `sys`.`waits_global_by_latency`
+** Message: Thread 3 dumping view for `sys`.`x$host_summary`
+** Message: Thread 2 dumping view for `sys`.`x$host_summary_by_file_io`
+** Message: Thread 1 dumping view for `sys`.`x$host_summary_by_file_io_type`
+** Message: Thread 1 dumping view for `sys`.`x$host_summary_by_stages`
+** Message: Thread 1 dumping view for `sys`.`x$host_summary_by_statement_latency`
+** Message: Thread 1 dumping view for `sys`.`x$host_summary_by_statement_type`
+** Message: Thread 1 dumping view for `sys`.`x$innodb_buffer_stats_by_schema`
+** Message: Thread 1 dumping view for `sys`.`x$innodb_buffer_stats_by_table`
+** Message: Thread 1 dumping view for `sys`.`x$innodb_lock_waits`
+** Message: Thread 1 dumping view for `sys`.`x$io_by_thread_by_latency`
+** Message: Thread 1 dumping view for `sys`.`x$io_global_by_file_by_bytes`
+** Message: Thread 1 dumping view for `sys`.`x$io_global_by_file_by_latency`
+** Message: Thread 1 dumping view for `sys`.`x$io_global_by_wait_by_bytes`
+** Message: Thread 1 dumping view for `sys`.`x$io_global_by_wait_by_latency`
+** Message: Thread 1 dumping view for `sys`.`x$latest_file_io`
+** Message: Thread 1 dumping view for `sys`.`x$memory_by_host_by_current_bytes`
+** Message: Thread 1 dumping view for `sys`.`x$memory_by_thread_by_current_bytes`
+** Message: Thread 1 dumping view for `sys`.`x$memory_by_user_by_current_bytes`
+** Message: Thread 1 dumping view for `sys`.`x$memory_global_by_current_bytes`
+** Message: Thread 1 dumping view for `sys`.`x$memory_global_total`
+** Message: Thread 1 dumping view for `sys`.`x$processlist`
+** Message: Thread 4 dumping view for `sys`.`x$ps_digest_95th_percentile_by_avg_us`
+** Message: Thread 4 dumping view for `sys`.`x$ps_digest_avg_latency_distribution`
+** Message: Thread 4 dumping view for `sys`.`x$ps_schema_table_statistics_io`
+** Message: Thread 4 dumping view for `sys`.`x$schema_flattened_keys`
+** Message: Thread 4 dumping view for `sys`.`x$schema_index_statistics`
+** Message: Thread 4 dumping view for `sys`.`x$schema_table_lock_waits`
+** Message: Thread 1 dumping view for `sys`.`x$schema_table_statistics`
+** Message: Thread 1 dumping view for `sys`.`x$schema_table_statistics_with_buffer`
+** Message: Thread 1 dumping view for `sys`.`x$schema_tables_with_full_table_scans`
+** Message: Thread 4 dumping view for `sys`.`x$session`
+** Message: Thread 3 dumping view for `sys`.`x$statement_analysis`
+** Message: Thread 1 dumping view for `sys`.`x$statements_with_errors_or_warnings`
+** Message: Thread 2 dumping view for `sys`.`x$statements_with_full_table_scans`
+** Message: Thread 2 dumping view for `sys`.`x$statements_with_runtimes_in_95th_percentile`
+** Message: Thread 3 dumping view for `sys`.`x$statements_with_sorting`
+** Message: Thread 1 dumping view for `sys`.`x$statements_with_temp_tables`
+** Message: Thread 1 dumping view for `sys`.`x$user_summary`
+** Message: Thread 3 dumping view for `sys`.`x$user_summary_by_file_io`
+** Message: Thread 2 dumping view for `sys`.`x$user_summary_by_file_io_type`
+** Message: Thread 3 dumping view for `sys`.`x$user_summary_by_stages`
+** Message: Thread 2 dumping view for `sys`.`x$user_summary_by_statement_latency`
+** Message: Thread 1 dumping view for `sys`.`x$user_summary_by_statement_type`
+** Message: Thread 2 dumping view for `sys`.`x$wait_classes_global_by_avg_latency`
+** Message: Thread 3 dumping view for `sys`.`x$wait_classes_global_by_latency`
+** Message: Thread 4 dumping view for `sys`.`x$waits_by_host_by_latency`
+** Message: Thread 4 dumping view for `sys`.`x$waits_by_user_by_latency`
+** Message: Thread 4 dumping view for `sys`.`x$waits_global_by_latency`
+** Message: Thread 4 shutting down
+** Message: Thread 1 shutting down
+** Message: Thread 2 shutting down
+** Message: Thread 3 shutting down
+** Message: Finished dump at: 2018-11-12 12:24:57
+
+[2018-11-12 12:25:56] 进入检测逻辑,可以ctrl+c
+[2018-11-12 12:25:57] 退出备份主函数,进入下一轮循环,可以ctrl+c

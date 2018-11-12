@@ -14,6 +14,7 @@ function logRatate()
     yesterday=$(date +%Y%m%d --date="-1 day") 
     today=$(date +%Y%m%d) 
     backup_path="$log_dir/backup/$yesterday"
+    mkdir -p $log_dir/backup
 
     cd $log_dir/backup
     if [ -d "$backup_path" ] || [ -f "${backup_path}.tar.gz" ];then

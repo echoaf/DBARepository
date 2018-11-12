@@ -30,7 +30,7 @@ function checkMySQLConnection()
     mysql_user="$3"
     mysql_pass="$4"
     normal_log="$5"
-    value=$($mysql -h$mysql_host -P$mysql_port -u$mysql_user -p$mysql_pass -e "select k" -N 2>&1)
+    value=$($mysql -h$mysql_host -P$mysql_port -u$mysql_user -p$mysql_pass -e "select 'k'" -N 2>&1)
     if [ "$value" == "k" ];then
         return 0
     else
@@ -306,34 +306,68 @@ $tmp_dir --tmpdir=$tmp_dir \
 function mydumperResultCheck()
 {
     f_metadata="$1"
-	if [ -f "$f_metadata" ];then
+    if [ -f "$f_metadata" ];then
         return_info="备份成功"
-		f_start_time=$(cat "$f_metadata" | grep -w "Started dump at:"| awk -F"Started dump at: " '{print $2}')
-		f_end_time=$(cat "$f_metadata" | grep -w "Finished dump at:"| awk -F"Finished dump at: " '{print $2}')
-		f_slave_host=$(echo "$data_source"| awk -F":" '{print $1}')
-		f_slave_port=$(echo "$data_source"| awk -F":" '{print $2}')
-		f_slave_log_file=$(cat "$f_metadata"| grep -w "SHOW MASTER STATUS:" -A 3 | grep -w "Log:"| awk -F"Log:" '{print $2}' | sed 's/ //g')
-		f_slave_log_pos=$(cat "$f_metadata"| grep -w "SHOW MASTER STATUS:" -A 3 | grep -w "Pos:"| awk -F"Pos:" '{print $2}' | sed 's/ //g')
-		f_slave_gtid=$(cat "$f_metadata"| grep -w "SHOW MASTER STATUS:" -A 3 | grep -w "GTID:"| awk -F"GTID:" '{print $2}' | sed 's/ //g')
-		f_master_host=$(cat "$f_metadata"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "Host:"| awk -F"Host:" '{print $2}' | sed 's/ //g')
+        f_start_time=$(cat "$f_metadata" | grep -w "Started dump at:"| awk -F"Started dump at: " '{print $2}')
+        f_end_time=$(cat "$f_metadata" | grep -w "Finished dump at:"| awk -F"Finished dump at: " '{print $2}')
+        f_slave_host=$(echo "$data_source"| awk -F":" '{print $1}')
+        f_slave_port=$(echo "$data_source"| awk -F":" '{print $2}')
+        f_slave_log_file=$(cat "$f_metadata"| grep -w "SHOW MASTER STATUS:" -A 3 | grep -w "Log:"| awk -F"Log:" '{print $2}' | sed 's/ //g')
+        f_slave_log_pos=$(cat "$f_metadata"| grep -w "SHOW MASTER STATUS:" -A 3 | grep -w "Pos:"| awk -F"Pos:" '{print $2}' | sed 's/ //g')
+        f_slave_gtid=$(cat "$f_metadata"| grep -w "SHOW MASTER STATUS:" -A 3 | grep -w "GTID:"| awk -F"GTID:" '{print $2}' | sed 's/ //g')
+        f_master_host=$(cat "$f_metadata"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "Host:"| awk -F"Host:" '{print $2}' | sed 's/ //g')
         repl_conn="$mysql -u$repl_user -p$repl_pass -h$f_slave_host -P$f_slave_port"
-		f_master_port=$(echo "show slave status\G" | $repl_conn | grep -w "Master_Port:"| awk -F"Master_Port:" '{print $2}'| sed 's/ //g')
-		f_master_log_file=$(cat "$f_metadata"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "Log:"| awk -F"Log:" '{print $2}' | sed 's/ //g')
-		f_master_log_pos=$(cat "$f_metadata"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "Pos:"| awk -F"Pos:" '{print $2}' | sed 's/ //g')
-		f_master_gtid=$(cat "$f_metadata"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "GTID:"| awk -F"GTID:" '{print $2}' | sed 's/ //g')
-		metadata_jason="{'start_time':'$f_start_time','end_time':'$f_end_time','slave_host':'$f_slave_host','slave_port':'$f_slave_port','slave_log_file':'$f_slave_log_file','slave_log_pos':'$f_slave_log_pos','slave_gtid':'$f_slave_gtid','master_host':'$f_master_host','master_port':'$f_master_port','master_log_file':'$f_master_log_file','master_log_pos':'$f_master_log_pos','master_gitd':'$f_master_gtid'}"
-		size=$(du -shm $backup_path | awk '{print $1}') 
+        f_master_port=$(echo "show slave status\G" | $repl_conn | grep -w "Master_Port:"| awk -F"Master_Port:" '{print $2}'| sed 's/ //g')
+        f_master_log_file=$(cat "$f_metadata"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "Log:"| awk -F"Log:" '{print $2}' | sed 's/ //g')
+        f_master_log_pos=$(cat "$f_metadata"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "Pos:"| awk -F"Pos:" '{print $2}' | sed 's/ //g')
+        f_master_gtid=$(cat "$f_metadata"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "GTID:"| awk -F"GTID:" '{print $2}' | sed 's/ //g')
+        metadata_jason="{'start_time':'$f_start_time','end_time':'$f_end_time','slave_host':'$f_slave_host','slave_port':'$f_slave_port','slave_log_file':'$f_slave_log_file','slave_log_pos':'$f_slave_log_pos','slave_gtid':'$f_slave_gtid','master_host':'$f_master_host','master_port':'$f_master_port','master_log_file':'$f_master_log_file','master_log_pos':'$f_master_log_pos','master_gitd':'$f_master_gtid'}"
+        size=$(du -shm $backup_path | awk '{print $1}') 
         E_VALUE=0
-	else
-		if ps -ef | grep -v grep | grep "mydumper" | grep -q "$backup_path" ;then
+    else
+        if ps -ef | grep -v grep | grep "mydumper" | grep -q "$backup_path" ;then
             return_info="备份中"
             E_VALUE=1
-		else
-            return_info="备份失败,找不到metadata"
+        else
+            return_info="备份失败,找不到$f_metadata"
             E_VALUE=2
-		fi
-	fi
+        fi
+    fi
     return $E_VALUE
 }
 
 
+
+#function xtrabackupResultCheck()
+#{
+#    # 检测逻辑,检测备份tar包下是否有xtrabackup_info文件,有则成功
+#    # 备份文件写死为backup.tar
+#    backup_tar="$1"
+#    backup_path=$(dirname "$backup_tar") # 备份路径
+#    backup_file=$(basename "$backup_tar") # 备份文件,按理说写死了backup.tar
+#    echo "$backup_path,$backup_file"
+#    exit
+#    if tar -tf $backup_path/$backup_file xtrabackup_info >>$normal_log 2>&1 ;then
+#        # Tips:这里cd到另外一个目录了
+#        cd $backup_path && tar -xvf $backup_file xtrabackup_info
+#        f_start_time=$(cat xtrabackup_info | grep -w "start_time"| awk -F"= " '{print $2}')
+#        f_end_time=$(cat xtrabackup_info | grep -w "end_time"| awk -F"= " '{print $2}')
+#        f_slave_host=$(echo "$data_source" | awk -F":" '{print $1}')
+#        f_slave_port=$(echo "$data_source" | awk -F":" '{print $2}')
+#        f_slave_log_file=$(cat xtrabackup_info | grep -w "binlog_pos"| awk -F"= " '{print $2}'| awk -F"," '{print $1}'| awk '{print $2}'| sed "s/'//g")
+#        f_slave_log_pos=$(cat xtrabackup_info | grep -w "binlog_pos"| awk -F"= " '{print $2}'| awk -F"," '{print $2}'| awk '{print $2}'| sed "s/'//g")
+#        metadata_jason="{'start_time':'$f_start_time','end_time':'$f_end_time','slave_host':'$f_slave_host','slave_port':'$f_slave_port','slave_log_file':'$f_slave_log_file','slave_log_pos':'$f_slave_log_pos','slave_gtid':'','master_host':'','master_port':'','master_log_file':'','master_log_pos':'','master_gitd':''}"
+#        size=$(du -shm $backup_path | awk '{print $1}') 
+#        return_info="备份成功"
+#        E_VALUE=0
+#    else
+#        if [ -f "$backup_path/$backup_file" ];then
+#            return_info="备份中"
+#            E_VALUE=1
+#        else
+#            return_info="备份失败,找不到$backup_tar"
+#            E_VALUE=2
+#        fi
+#        return $E_VALUE
+#    fi
+#}

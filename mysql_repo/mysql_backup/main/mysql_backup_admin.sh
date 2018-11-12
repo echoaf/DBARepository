@@ -24,6 +24,7 @@ main_binarylogbackup_sh="$github_dir/main/binarylog_backup/main_binarylogbackup.
 
 function main()
 {
+    lockFile "$0" "$f_lock" "$$"
     while ((1))
     do
         sh $main_fullbackup_sh &

@@ -2,47 +2,12 @@
 # 2018-10-26
 # arthur
 
-一、目录结构
-├── common
-│   ├── mysqlbinlog
-│   ├── python_cnf.py
-│   └── shell.cnf
-├── log_dir
-├── README
-└── script
-    ├── binarylog_backup
-    │   └── main_binarylogbackup.sh
-    ├── check_backup
-    │   ├── main_check.sh
-    │   └── mysql_full_check.py
-    ├── full_backup
-    │   ├── backupXtrabackup
-    │   │   ├── backupXtrabackupCheck.sh
-    │   │   ├── backupXtrabackup.sh
-    │   │   ├── my.cnf
-    │   │   ├── restoreXtrabackupCheck.sh
-    │   │   └── restoreXtrabackup.sh
-    │   ├── fullbackup_correct.sh
-    │   ├── main_fullbackup.sh
-    │   ├── mydumper_backup.sh
-    │   └── xtrabackup_backup.sh
-    ├── other
-    │   ├── __init__.py
-    │   ├── log_ratate.sh
-    │   ├── mysql_backup_build.py
-    │   ├── mysql_restore_main.py
-    │   └── mysql_restore.py
-    └── t.sql
+# 初始化
+1、sed
+2、crontab
+3、init_schema.sql
 
-
-二、功能函数
-
-# full_backup
-# binarylog_backup
-# check_backup
-
-
-#################################### MySQL Binary Log Backup ##################################
+################# MySQL Binary Log Backup 
 一、监控进程函数
 
 判断进程是否存在，并且在mysql processlist能查看到对应进程
@@ -67,8 +32,6 @@ select * from information_schema.processlist where user='dump_user' and host='17
 
 /usr/local/mysql/bin/mysqlbinlog -h172.16.112.10 -P10001 -udump_user -pdump_user binlog.000001 --read-from-remote-server --raw --stop-never  --result-file /data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/REPORTED/
 
-
-
 二、检测binlog函数
 
 1、binlog数据上报 
@@ -92,8 +55,6 @@ Tips：
 只检测上报结果为fail的binlog
 如果binlog不存在，更新info信息
 如果binlog存在，重新拉取，并且上报状态为report，然后做调用检测函数
-
-
 
 三、一个拉取示例
 /usr/local/mysql/bin/mysqlbinlog -h172.16.112.10 -P10001 -udump_user -pdump_user binlog.000001 --read-from-remote-server --raw --stop-never  --result-file /data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/REPORTED/
