@@ -9,6 +9,9 @@
 # /data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/FAIL
 # /data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/SUCC/20181017/ -- 时间为binlog执行时间，如果获取异常则放在最后一个日期目录
 
+# version2.0 | arthur | 2018-11-12
+# 1、优化binlog名:通过show binary logs获取binlog前缀名,代替写死了前缀为"binlog."
+
 
 github_dir="/data/code/github/repository/mysql_repo/mysql_backup"
 shell_function_cnf="$github_dir/main/shell_function.cnf"
@@ -37,8 +40,9 @@ function pullProcess()
     # 不存在binary file:初始化逻辑
     # 存在binary file:从最后一个binlog file开始拉取,在此步骤不检测是否binlog拉取正确,留给检测函数
     # Tips:binlog name前缀写死,为binlog.
-    if ls ${report_dir}/binlog.* >/dev/null 2>&1;then
-        first_binlog=$(ls ${report_dir}/binlog.* -ht | head -1 | awk -F"/" '{print $NF}')
+    if ls ${report_dir}/${binlog_pre}.* >/dev/null 2>&1;then
+        ls ${report_dir}/${binlog_pre}.* -ht
+        first_binlog=$(ls ${report_dir}/${binlog_pre}.* -ht | head -1 | awk -F"/" '{print $NF}')
     else
         first_binlog=$(echo "show binary logs;"| $mysql -u$repl_user -p$repl_pass -h$source_host -P$source_port -N | awk '{print $1}'| head -1)
     fi
@@ -60,6 +64,11 @@ function monitorProcess()
     
     info="$instance $source_host:$source_port"
 
+    # TIPS:binlog前缀不一致    
+    SOURCE_CONNECTION="$mysql -u$repl_user -p$repl_pass -h$source_host -P$source_port"
+    tmp=$(echo "show global variables like 'log_bin_basename';"| $SOURCE_CONNECTION | grep -w "log_bin_basename"| awk '{print $2}')    
+    binlog_pre=$(echo "$tmp"|awk -F"/" '{print $NF}')
+
     pid=$(ps aux| grep "$mysqlbinlog -h$source_host -P$source_port -u$repl_user"|grep -v grep| awk '{print $2}')
     if [ -z "$pid" ];then
         printLog "[$info] mysqlbinlog进程不存在,准备拉起" "$normal_log" "red"
@@ -67,7 +76,7 @@ function monitorProcess()
     else
         netstat_status=$(netstat -antpl| grep $pid | awk '{print $4}')
         if echo "show processlist"| $mysql -u$repl_user -p$repl_pass -h$source_host -P$source_port | grep "$netstat_status" >/dev/null 2>&1;then
-            printLog "[$info] mysqlbinlog进程正常" "$normal_log" "red"
+            printLog "[$info] mysqlbinlog进程正常" "$normal_log" "green"
         else
             printLog "[$info] mysqlbinlog进程假死,kill $pid,异常重启" "$normal_log" "red"
             kill $pid
@@ -82,7 +91,7 @@ function reportBinaryLog()
     # 只负责上报REPORT目录下的binary log
     # 已REPORT目录为准
     report_dir="$1"
-    binlogs=$(ls ${report_dir}/binlog.* -lht | sed 1d | awk '{print $NF}'| sort)
+    binlogs=$(ls ${report_dir}/${binlog_pre}.* -lht | sed 1d | awk '{print $NF}'| sort)
     for binlog in $(echo "$binlogs")
     do
         base_name=$(basename "$binlog")
@@ -127,12 +136,16 @@ function updateBinaryLog()
         backup_path=$(echo "select Fbackup_path from $t_mysql_binarylog_result where Findex='$index';"| $DBA_MYSQL)    
         dir_size=$(ls $backup_path/$binarylog_name -l | awk '{print $5}')
         slave_size=$(echo "$slave_sizes" | grep "$binarylog_name" -w | awk '{print $2}')
-        printLog "dir_size:$dir_size,slave_size:$slave_size" "$normal_log"
+        #printLog "dir_size:$dir_size,slave_size:$slave_size" "$normal_log"
+
+        start_time=$($mysqlbinlog -vv $backup_path/$binarylog_name 2>&1 | grep "server id "| head -1 | awk -F"server id" '{print $1}'| sed 's/#//g')
+        start_time=$(date -d "$start_time" +"%F %T")
+        if [ -z "$start_time" ];then
+            start_time="1991-01-01 00:00:00"
+        fi
+
         # 判断文件大小
         if [ "$dir_size" = "$slave_size" ];then
-            start_time=$($mysqlbinlog -vv $backup_path/$binarylog_name 2>&1 | grep "server id "| head -1 | awk -F"server id" '{print $1}'| sed 's/#//g')
-            start_time=$(date -d "$start_time" +"%F %T")
-
             # 优化succ_dir,不存放到today,存放到binlog实际执行时间
             # 比如今天是2018-10-20,但是binlog实际执行时间是2018-01-01,则succ_dir为SUCC/20180101/
             succ_base_dir=$(date -d "$start_time" +"%Y%m%d")
@@ -149,6 +162,7 @@ function updateBinaryLog()
             Fbackup_path='$succ_dir',
             Fmodify_time=now()
             where Findex='$index';"
+            #echo "$sql"
             echo "$sql"| $DBA_MYSQL && mv -vf $backup_path/$binarylog_name $succ_dir/ >>$normal_log 2>&1 # 原子操作
         else
             back_status="Fail"
@@ -158,6 +172,7 @@ function updateBinaryLog()
             Fbackup_path='$fail_dir',
             Fmodify_time=now()
             where Findex='$index';"
+            #echo "$sql"
             echo "$sql"| $DBA_MYSQL && mv -vf $backup_path/$binarylog_name $fail_dir  >>$normal_log 2>&1
         fi
     done
@@ -226,7 +241,12 @@ function checkBinaryLog()
     report_dir="$binarylog_backup_dir/$tmp_i/$tmp_h/REPORTED"
     fail_dir="$binarylog_backup_dir/$tmp_i/$tmp_h/FAIL"
     succ_parent_dir="$binarylog_backup_dir/$tmp_i/$tmp_h/SUCC"
-    
+
+    # TIPS:binlog前缀不一致    
+    SOURCE_CONNECTION="$mysql -u$repl_user -p$repl_pass -h$source_host -P$source_port"
+    tmp=$(echo "show global variables like 'log_bin_basename';"| $SOURCE_CONNECTION | grep -w "log_bin_basename"| awk '{print $2}')    
+    binlog_pre=$(echo "$tmp"|awk -F"/" '{print $NF}')
+
     reportBinaryLog "$report_dir"
     mkdir -p $fail_dir $succ_parent_dir
     updateBinaryLog "$report_dir" "$succ_parent_dir" "$fail_dir"
