@@ -14079,3 +14079,18 @@ mv: cannot stat ‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_1000
 mv: cannot stat ‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/SUCC/20181113/FAIL’: No such file or directory
 mv: cannot stat ‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/SUCC/20181113/SUCC’: No such file or directory
 [2018-11-13 17:40:07] ======开始sleep,进入下一次循环
+[2018-11-13 17:41:07] ======进入mysqlbinlog监控逻辑
+[2018-11-13 17:41:07] [TestDB-172.16.112.10:10001] 进入mysqlbinlog监控逻辑
+[2018-11-13 17:41:07] [TestDB 172.16.112.10:10001] mysqlbinlog进程不存在,准备拉起
+[2018-11-13 17:41:07] 开始打开mysqlbinlog
+[2018-11-13 17:41:07] /data/code/github/repository/mysql_repo/mysql_backup/common/mysqlbinlog -h172.16.112.10 -P10001 -urepl_user -prepl_user ..: --read-from-remote-server --raw --stop-never --result-file /data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/REPORTED/
+mysqlbinlog: [Warning] Using a password on the command line interface can be insecure.
+[2018-11-13 17:41:07] ======进入binlog上报逻辑,不能使用ctrl+c
+ERROR: Failed on connect: Can't connect to MySQL server on '172.16.112.10' (111)
+[2018-11-13 17:41:07] [TestDB-172.16.112.10:10001] 进入binlog上报逻辑
+mv: cannot stat ‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/SUCC/20181113/0’: No such file or directory
+mv: cannot stat ‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/SUCC/20181113/REPORTED’: No such file or directory
+mv: cannot stat ‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/SUCC/20181113/.:’: No such file or directory
+mv: cannot stat ‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/SUCC/20181113/FAIL’: No such file or directory
+mv: cannot stat ‘/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/SUCC/20181113/SUCC’: No such file or directory
+[2018-11-13 17:41:08] ======开始sleep,进入下一次循环
