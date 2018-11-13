@@ -104,8 +104,7 @@ CREATE TABLE mysql_backup_db.t_mysql_fullbackup_info (
   Fend_time time NOT NULL DEFAULT '08:00:00' COMMENT '结束备份时间点(已经在备份的并不会终止)|arthur|2018-11-13',
   Fnice int(11) NOT NULL DEFAULT '0' COMMENT '备份优先级(目前累计连续备份失败的次数):此值越高,说明连续失败次数越大,如果最近有一次备份成功,则刷新为0|arthur|2018-11-13',
   Fclear_rule varchar(64) NOT NULL DEFAULT '0-7-365-3650' COMMENT '清理规则:0-7保留一份最新的,7-365保留一份最新的,365-3650保留一份最老的|arthur|2018-11-13',
-  Fstate varchar(16) NOT NULL DEFAULT '' COMMENT '该行状态是否有效(online|非
-nline)|arthur|2018-11-13',
+  Fstate varchar(16) NOT NULL DEFAULT '' COMMENT '该行状态是否有效(online|非online)|arthur|2018-11-13',
   Fcreate_time datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT '创建时间|arthur|2018-11-13',
   Fmodify_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间|arthur|2018-11-13',
   PRIMARY KEY (Findex),
