@@ -80,7 +80,7 @@ def doRestoreMydumper(dest_host,dest_port,load_threads,backup_path,normal_log):
     printLog(tmp_cmd,normal_log,'green')   
     connMySQL("set global slow_query_log='off';",dest_host,int(dest_port),admin_user,admin_pass) # 关闭慢日志
     subprocess.call(tmp_cmd,stdout=subprocess.PIPE,shell=True) # 等待命令执行完
-    connMySQL("set global slow_query_log='on';",int(dest_host),dest_port,admin_user,admin_pass) # 关闭慢日志
+    connMySQL("set global slow_query_log='on';",dest_host,int(dest_port),admin_user,admin_pass) # 关闭慢日志
     printLog("====结束load",normal_log,'green')
 
 

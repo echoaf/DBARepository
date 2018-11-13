@@ -4,8 +4,15 @@
 
 # 一、初始化
 1、sed
+#find . -regex '.*\.cnf\|.*\.sh\|.*\.py' | xargs -i sed -i "s|/data/code/github/repository/mysql_repo/mysql_backup|/home/code/mysql_backup|g" {}
 2、crontab
+################ 冷备计划任务管理
+#* * * * * cd /data/code/github/repository/mysql_repo/mysql_backup/main && sh mysql_backup_admin.sh >/dev/null 2>&1
+#1 0 * * * cd /data/code/github/repository/mysql_repo/mysql_backup/main && sh log_ratate.sh >/dev/null 2>&1
+#1 10 * * * cd /data/code/github/repository/mysql_repo/mysql_backup/main && sync_backup_info >/dev/null 2>&1
+################ 冷备计划任务管理
 3、init_schema.sql
+4、find . -name "*" -type d | xargs -i /bin/cp -avf .gitignore {}
 
 # 二、功能实现
 1、全量备份
@@ -13,57 +20,4 @@
 3、全备恢复校验
 4、备份数据过期清理
 5、备份信息表自动同步
-
-################# MySQL Binary Log Backup 
-一、监控进程函数
-
-判断进程是否存在，并且在mysql processlist能查看到对应进程
-若不存在或者假死则进行异常拉取
-
-binlog变量获取
-判断目录是否存在
-1、不存在说明要初始化，从show binary logs里的第一个拉取，也能解决数据源变更这种问题
-2、若目录存在
-不存在binary file：初始化逻辑
-存在binary file：从最后一个binlog file开始拉取，在此步骤不检测是否binlog拉取正确，留给检测函数
-
-
-2、进程存在，二进制没有变化，可能也是事务太大，堵住了
-
-Tips：
-怎么判断拉取进程挂掉了？
-1、进程不存在
-ps aux| grep "/usr/local/mysql/bin/mysqlbinlog -h172.16.112.10 -P10001 -udump_user -px"| grep -v grep
-netstat -nap | grep 76824
-select * from information_schema.processlist where user='dump_user' and host='172.16.112.10:51858';
-
-/usr/local/mysql/bin/mysqlbinlog -h172.16.112.10 -P10001 -udump_user -pdump_user binlog.000001 --read-from-remote-server --raw --stop-never  --result-file /data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/REPORTED/
-
-二、检测binlog函数
-
-1、binlog数据上报 
-上报在最后一个之前的所有二进制binlog，并且结果不为succ -- 更新结果表为report状态
-Tips：
-怎么保证所有的备份数据都会上报？
-理论上数据库里面不存在但是备份集中已有的都要上报，但是当数据量越来越大，不可能每次都全部检测一次
-不同的目录，每次比较，只比较REPORTED里面的binlog
-/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/REPORTED
-/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/FAIL
-/data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/SUCC/20181017/ -- 时间为binlog执行时间，如果获取异常则放在最后一个日期目录
-
-2、检测函数
-检测函数只检测上报结果为report状态的binlog，如果是正常的更新状态为succ，如果异常更新状态为fail，并行更新info信息
-
-怎么验证binlog是正常的 
--通过show binary log文件大小和ls -l大小来判断
-
-
-3、重新拉取函数
-只检测上报结果为fail的binlog
-如果binlog不存在，更新info信息
-如果binlog存在，重新拉取，并且上报状态为report，然后做调用检测函数
-
-三、一个拉取示例
-/usr/local/mysql/bin/mysqlbinlog -h172.16.112.10 -P10001 -udump_user -pdump_user binlog.000001 --read-from-remote-server --raw --stop-never  --result-file /data/MySQL_BACKUP/BINARYLOG_BACKUP/TESTDB/172.16.112.10_10001/REPORTED/
-
 
