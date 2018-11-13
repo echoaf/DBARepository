@@ -1,0 +1,64 @@
+清理逻辑
+
+磁盘达到82触发清理逻辑
+
+以结果为导向，同步到信息表
+
+最老的一份数据不清理
+
+result表
+Fclear_state not(不能清理)|todo(待清理)|done(已清理)
+info表
+Fclear_rule '0-365-3650'  
+最新的一份数据不清理
+
+{"name":value}
+
+
+/data/MySQL_BACKUP/FULL_BACKUP/TESTDB/
+
+
+
+clearBackup "$type_name" "15" "30" # 最近半个月
+clearBackup "$type_name" "30" "360" # 最近一年
+clearBackup "$type_name" "360" "720" # 一年到两年之间
+clearBackup "$type_name" "720" "36500" # 两年以上
+
+
+function clearBackup()
+{
+    type_name="$1"
+    start_pos="$2"
+    end_pos="$3"
+
+    # 最少保留一份数据
+    count=$(echo "select count(*) from $t_mysql_full_backup_result where Fhadoop_status='Y' and Ftype='$type_name';" | $DBA_MYSQL)
+    if ((${count}<=1));then
+        return
+    fi
+
+    indexs=$(echo "select Findex from $t_mysql_full_backup_result where Fback_status='Succ' and Fhadoop_status='Y' 
+            and Ftype='$type_name' and datediff(now(),Ftime)>'$start_pos' and datediff(now(),Ftime)<='$end_pos' 
+            and Findex=(select Findex from $t_mysql_full_backup_result where Fback_status='Succ' and Fhadoop_status='Y' 
+            and Ftype='$type_name' and datediff(now(),Ftime)>'$start_pos' and datediff(now(),Ftime)<='$end_pos' 
+            order by Findex limit 1);"| $DBA_MYSQL)
+
+    if [ -z "$indexs" ];then
+        return
+    fi
+
+    upper_type_name=$(echo "$type_name"| tr 'a-z' 'A-Z')
+
+    for index in $(echo "$indexs")
+    do
+        hadoop_path=$(echo "select Fhadoop_path from $t_mysql_full_backup_result where Findex='$index'"| $DBA_MYSQL)
+        $hdfs dfs -ls $hadoop_path >>$normal_log 2>&1
+        if (($?==0));then
+            # Tips:hadoop_path应该等于/MySQL_Backup/BACKUP/$upper_type_name/$base_path
+            # 拆分避免误删除整个hadoop的风险
+            base_path=$(basename $hadoop_path)
+            $hdfs dfs -rm -r /MySQL_Backup/BACKUP/$upper_type_name/$base_path >>$normal_log 2>&1
+        fi
+        echo "update $t_mysql_full_backup_result set Fhadoop_status='N',Fmodify_time=now() where Findex='$index'" | $DBA_MYSQL
+    done
+}

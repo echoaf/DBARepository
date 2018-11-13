@@ -27,7 +27,7 @@ function main()
     lockFile "$0" "$f_lock" "$$"
     while ((1))
     do
-        sh $main_fullbackup_sh &
+        #sh $main_fullbackup_sh &
         sh $main_binarylogbackup_sh &
         sleep 60
         lastExit $bd $maxr_second

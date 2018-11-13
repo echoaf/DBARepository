@@ -143,22 +143,6 @@ function restoreXtrabackupCheck()
 }
 
 
-
-#function xtrabackupResultCheck()
-#{
-#    backupdir="$1"
-#    
-#    printLog "###检测备份集是否正常" "$normal_log"
-#    cd $backupdir
-#    tmp_value=$(tar -tf backup.tar 2>&1 | grep -E "xtrabackup_info|xtrabackup_binlog_info"| wc -l)
-#    if ((${tmp_value}!=2));then
-#        printLog "innobackupex执行失败,找不到xtrabackup_info或xtrabackup_binlog_info" "$normal_log"
-#        return 64
-#    else
-#        printLog "备份成功" "$normal_log"
-#    fi
-#}
-
 #######################################
 # xtrabackup check result
 # Globals:
@@ -192,8 +176,14 @@ function xtrabackupResultCheck()
         E_VALUE=0
     else
         if [ -f "$backup_path/$backup_file" ];then
-            return_info="备份中"
-            E_VALUE=1
+            cnt=$(tar -tf "$backup_path/$backup_file"| wc -l)
+            if ((${cnt}==0));then
+                return_info="备份失败,$backup_tar是空文件"
+                E_VALUE=2
+            else
+                return_info="备份中"
+                E_VALUE=1
+            fi
         else
             return_info="备份失败,找不到$backup_tar"
             E_VALUE=2
