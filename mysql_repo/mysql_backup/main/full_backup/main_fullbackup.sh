@@ -141,7 +141,7 @@ function backupMain()
     # 今天之前需要备份，但是没有在备份成功或者备份中的数据库
     indexs=$(echo "select Findex from $t_mysql_fullbackup_info 
     where Fstate='online' and Fbackup_address='$local_ip'
-    and Fbackup_weekday<='$weekday'
+    and Fbackup_weekday<='$curweek'
     and Ftype not in 
     (select Ftype from $t_mysql_fullbackup_result
     where Fdate_time>='$monday' and Fdate_time<='$sunday' and Fback_status in ('Succ','Backing'));"| $DBA_MYSQL)
