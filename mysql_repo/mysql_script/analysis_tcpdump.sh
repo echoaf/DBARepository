@@ -132,7 +132,7 @@ function main()
             analysisTcpdump
             deal_status=1
         else
-            range_time=$(randNum 300 600) #5分钟到10分钟内随机sleep
+            range_time=$(randNum $sleep_min_time $sleep_max_time) #5分钟到10分钟内随机sleep
             printLog "休眠${range_time}s后再次执行抓包" "$normal_log"
             sleep $range_time
             deal_status=0
