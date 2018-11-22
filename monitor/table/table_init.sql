@@ -40,7 +40,7 @@ UNIQUE KEY Fip_port_datatime(Fip,Fport,Fdate_time),
 KEY idx_Fmodify_time (Fmodify_time)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='MySQL-Slave信息表';
 
-create table t_mysql_table_info(
+create table monitor_db.t_mysql_table_info(
 Findex int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
 Fip varchar(16) not null default '' comment '',
 Fport int not null default '0' comment '',

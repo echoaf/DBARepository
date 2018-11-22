@@ -9,28 +9,95 @@ common_dir="$base_dir/common"
 log_dir="$base_dir/log" && mkdir -p $log_dir
 tmp_dir="$base_dir/tmp" && mkdir -p $tmp_dir
 mysql="$common_dir/mysql" # Ver 15.1 Distrib 5.5.60-MariaDB, for Linux (x86_64) using readline 5.1
-chmod a+x $mysql $mysqlbinlog
 normal_log="$log_dir/shell.log"
 
 ######################## MySQL连接方式 ##############################
-dba_host="192.168.112.10"
+dba_host="172.16.112.10"
 dba_port="10000"
 dba_user="dba_master" # DML权限
 dba_pass="dba_master"
+read_user='read_user' # 实例读用户
+read_pass='read_user'
+admin_user='admin_user' # 管理员账号,远程
+admin_pass='admin_user'
 DBA_MYSQL="$mysql -h$dba_host -P$dba_port -u$dba_user -p$dba_pass --default-character-set=utf8 -N"
 
 
 ######################## MySQL TABLE ##############################
 t_mysql_info="mysql_info_db.t_mysql_info" # MySQL信息表
-
+t_mysql_slow="mysql_slow_db.t_mysql_slow"
 
 ######################## ##############################
 collection_path_1_min="$base_dir/collection/1_min"
 #collection_py_1_min=("mysql_status.py" "mysql_system_info.py" "system_info.py" "mysql_slave_status.py")
 collection_py_1_min=("mysql_slave_status.py")
 
+###################
+max_slowlog_len=2000000
+
+
 
 ######################## Functions ##############################
+
+function connMySQL()
+{
+    sql="$1"
+    db_port="$2"
+    is_N="$3"
+    db_host="$4"
+    db_user="$5"
+    db_pass="$6"
+    if [ -z "$db_host" ];then
+        db_host="$local_ip"
+        db_user="$dba_user"
+        db_pass="$dba_pass"
+    fi
+    if [ -z "$db_user" ] || [ -z "$db_pass" ];then
+        db_user="$dba_user"
+        db_pass="$dba_pass"
+    fi
+    if [ "$is_N" = "1" ];then
+        value=$($mysql -h$db_host -P$db_port -u$db_user -p$db_pass --default-character-set=utf8 -N -e "$sql" 2>&1) 
+    else
+        value=$($mysql -h$db_host -P$db_port -u$db_user -p$db_pass --default-character-set=utf8 -e "$sql" 2>&1)
+    fi
+    if (($?==0));then
+        echo "$value"
+    else
+        echo ""
+        return 64
+    fi
+}
+
+
+function getMySQLOnlinePort()
+{
+    sql="select Fserver_port from $t_mysql_info where Fstate='online' and Fserver_host='$local_ip';"
+    ports=$(echo "$sql" | $DBA_MYSQL)
+    echo "$ports"
+}
+
+
+function getymdTable()
+{
+    table="$1"
+    cur_y=$(date +"%Y") 
+    cur_md=$(date +"%m%d")
+    table_ymd=$(echo "$table"| sed -e "s/_db\./_${cur_y}_db\./g" -e "s/$/_${cur_md}/g")
+    echo "$table_ymd"
+}
+
+
+function getymTable()
+{
+    table="$1"
+    cur_y=$(date +"%Y") 
+    cur_m=$(date +"%m")
+    table_ym=$(echo "$table"| sed -e "s/_db\./_${cur_y}_db\./g" -e "s/$/_${cur_m}/g")
+    echo "$table_ym"
+}
+
+
 function printLog()
 {
 	content="$1"

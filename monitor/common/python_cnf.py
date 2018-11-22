@@ -181,7 +181,6 @@ def connMySQL(exec_sql,dict_status=1,db_host=dba_host,db_port=dba_port,db_user=d
         conn.close()
         return values
     except Exception,e:
-        #print(e)
         raise ValueError(e)
 
     #return values
