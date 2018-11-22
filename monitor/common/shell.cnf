@@ -4,7 +4,7 @@
 
 ######################## 变量 ##############################
 local_ip=$(/sbin/ifconfig|grep "inet "|awk '{print $2}'|grep -Ev "127.0.0.1|172.17"|head -1) # centos-7
-base_dir="/data/repo/repository/monitor"
+base_dir="/data/repository/monitor"
 common_dir="$base_dir/common"
 log_dir="$base_dir/log" && mkdir -p $log_dir
 tmp_dir="$base_dir/tmp" && mkdir -p $tmp_dir
@@ -26,7 +26,8 @@ t_mysql_info="mysql_info_db.t_mysql_info" # MySQL信息表
 
 ######################## ##############################
 collection_path_1_min="$base_dir/collection/1_min"
-collection_py_1_min=("mysql_status.py" "mysql_system_info.py" "system_info.py")
+#collection_py_1_min=("mysql_status.py" "mysql_system_info.py" "system_info.py" "mysql_slave_status.py")
+collection_py_1_min=("mysql_slave_status.py")
 
 
 ######################## Functions ##############################

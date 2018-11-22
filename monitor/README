@@ -1,0 +1,17 @@
+
+
+
+./mysql_repo/mysql_cloud/entry/mysql/deploy_mysql/tools/monitor_script/local_report_monitor/mysql/resident/shell_dir/max_connections.sh
+./mysql_repo/mysql_cloud/entry/mysql/deploy_mysql/tools/monitor_script/local_report_monitor/mysql/resident/shell_dir/lock_monitor.sh
+./mysql_repo/mysql_cloud/entry/mysql/deploy_mysql/tools/monitor_script/local_report_monitor/mysql/resident/shell_dir/long_connection.sh
+./mysql_repo/mysql_cloud/entry/mysql/deploy_mysql/tools/monitor_script/local_report_monitor/mysql/resident/shell_dir/admin_active_conn.sh
+./mysql_repo/mysql_cloud/entry/mysql/deploy_mysql/tools/monitor_script/local_report_monitor/mysql/resident/shell_dir/purge_master_log.sh
+./mysql_repo/mysql_cloud/entry/mysql/deploy_mysql/tools/monitor_script/local_report_monitor/mysql/resident/shell_dir/repl_delay_report.sh
+./mysql_repo/mysql_cloud/entry/mysql/deploy_mysql/tools/monitor_script/local_report_monitor/mysql/resident/shell_dir/mysql_pull.sh
+./mysql_repo/mysql_cloud/entry/mysql/deploy_mysql/tools/monitor_script/local_report_monitor/mysql/crontab/shell_dir/mysql_slow_report.sh
+./mysql_repo/mysql_cloud/entry/mysql/deploy_mysql/tools/monitor_script/local_report_monitor/mysql/crontab/admin_log_ratate.sh
+
+
+./mysql_repo/mysql_cloud/entry/mysql/deploy_mysql/tools/monitor_script/local_report_monitor/mysql/crontab/shell_dir/mysql_slow_report.sh
+抓包
+库表信息上报

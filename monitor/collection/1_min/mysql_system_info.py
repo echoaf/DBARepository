@@ -11,7 +11,7 @@ import sys
 import commands
 import psutil
 
-base_dir = '/data/repo/repository/monitor'
+base_dir = '/data/repository/monitor'
 common_dir = '%s/common'%base_dir
 sys.path.append(common_dir)
 from python_cnf import *

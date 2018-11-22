@@ -10,7 +10,7 @@ import logging
 import MySQLdb,MySQLdb.cursors
 import subprocess
 
-base_dir = '/data/repo/repository/monitor'
+base_dir = '/data/repository/monitor'
 common_dir = '%s/common'%base_dir
 sys.path.append(common_dir)
 
@@ -20,7 +20,7 @@ tmp_cmd = "/sbin/ifconfig|grep 'inet '|awk '{print $2}'|grep -Ev '127.0.0.1|172.
 value = subprocess.Popen(tmp_cmd,stdout=subprocess.PIPE,shell=True) 
 local_ip = (value.stdout.read()).replace('\n','')
 
-base_dir = '/data/repo/repository/monitor'
+base_dir = '/data/repository/monitor'
 common_dir = '%s/common'%base_dir
 mysql = '%s/mysql'%(common_dir)
 log_dir = '%s/log'%(base_dir)
@@ -31,6 +31,52 @@ if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 if not os.path.exists(tmp_dir):
     os.makedirs(tmp_dir)
+
+
+mysql_table_infos_keys=(
+    'table_schema',
+    'table_name',
+    'table_type',
+    'engine',
+    'version',
+    'row_format',
+    'table_rows',
+    'data_length',
+    'index_length',
+    'data_free',
+    'auto_increment',
+    'create_options',
+    'table_comment',
+)
+
+
+mysql_slave_status_keys=(
+    'Master_Host',
+    'Master_User',
+    'Master_Port',
+    'Master_Log_File',
+    'Read_Master_Log_Pos',
+    'Relay_Log_File',
+    'Relay_Log_Pos',
+    'Relay_Master_Log_File',
+    'Slave_IO_Running',
+    'Slave_SQL_Running',
+    'Replicate_Do_DB',
+    'Replicate_Ignore_DB',
+    'Replicate_Do_Table',
+    'Replicate_Ignore_Table',
+    'Replicate_Wild_Do_Table',
+    'Replicate_Wild_Ignore_Table',
+    'Exec_Master_Log_Pos',
+    'Relay_Log_Space',
+    'Seconds_Behind_Master',
+    'Master_Server_Id',
+    'Master_UUID',
+    'Slave_SQL_Running_State',
+    'Executed_Gtid_Set',
+    'Auto_Position',
+    'Channel_Name',
+)
 
 
 mysql_status_keys=(
@@ -91,13 +137,15 @@ mysql_status_keys=(
 
 
 ######################## MySQL相关权限 ##############################
-#dba_host = '172.16.112.10'
-dba_host = '192.168.112.11'
+dba_host = '172.16.112.10'
+#dba_host = '192.168.112.11'
 dba_port = 10000
 dba_user = 'dba_master' # DML权限
 dba_pass = 'dba_master'
 read_user = 'read_user' # 实例读用户
 read_pass = 'read_user'
+admin_user = 'admin_user' # 管理员账号,远程
+admin_pass = 'admin_user'
 
 
 ############## 基础信息表 #######################
@@ -111,6 +159,8 @@ t_machine_net_io_counters_info = 'monitor_db.t_machine_net_io_counters_info'
 t_mysql_cpu_info = 'monitor_db.t_mysql_cpu_info'
 t_mysql_disk_io_counters_info = 'monitor_db.t_mysql_disk_io_counters_info'
 t_mysql_memory_info = 'monitor_db.t_mysql_memory_info'
+t_mysql_slave_info = 'monitor_db.t_mysql_slave_info'
+t_mysql_table_info = 'monitor_db.t_mysql_table_info'
 
 
 def connMySQL(exec_sql,dict_status=1,db_host=dba_host,db_port=dba_port,db_user=dba_user,db_pass=dba_pass):
@@ -157,6 +207,9 @@ def printLog(content,normal_log,color='normal'):
 
 def getAcceptOrReject():
     return time.strftime('%F %H:%M:00',time.localtime())
+
+def getTodayTime():
+    return time.strftime('%F',time.localtime())
 
 
 def getMySQLAllPort():
