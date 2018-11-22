@@ -1,0 +1,119 @@
+#!/bin/bash
+
+# SHELL配置文件
+
+######################## 变量 ##############################
+local_ip=$(/sbin/ifconfig|grep "inet "|awk '{print $2}'|grep -Ev "127.0.0.1|172.17"|head -1) # centos-7
+base_dir="/data/repo/repository/monitor"
+common_dir="$base_dir/common"
+log_dir="$base_dir/log" && mkdir -p $log_dir
+tmp_dir="$base_dir/tmp" && mkdir -p $tmp_dir
+mysql="$common_dir/mysql" # Ver 15.1 Distrib 5.5.60-MariaDB, for Linux (x86_64) using readline 5.1
+chmod a+x $mysql $mysqlbinlog
+normal_log="$log_dir/shell.log"
+
+######################## MySQL连接方式 ##############################
+dba_host="192.168.112.10"
+dba_port="10000"
+dba_user="dba_master" # DML权限
+dba_pass="dba_master"
+DBA_MYSQL="$mysql -h$dba_host -P$dba_port -u$dba_user -p$dba_pass --default-character-set=utf8 -N"
+
+
+######################## MySQL TABLE ##############################
+t_mysql_info="mysql_info_db.t_mysql_info" # MySQL信息表
+
+
+######################## ##############################
+collection_path_1_min="$base_dir/collection/1_min"
+collection_py_1_min=("mysql_status.py" "mysql_system_info.py" "system_info.py")
+
+
+######################## Functions ##############################
+function printLog()
+{
+	content="$1"
+	normal_log="$2"
+	color="$3"
+    filename="$4"
+	if [ -z "$normal_log" ];then
+        normal_log="$log_dir/shell.log"
+	fi
+	if [ -z "$color" ];then
+		color="green"
+	fi		
+	echo "[$(date +"%F %T")$filename] $content" >>$normal_log 2>&1
+	case "$color" in
+		green) echo -e "[$(date +"%F %T")] \033[32m$content \033[0m";;
+		red) echo -e "[$(date +"%F %T")] \033[31m$content \033[0m";;
+		normal) echo -e "[$(date +"%F %T")] $content";;
+		*) echo -e "[$(date +"%F %T")] \033[32m$content \033[0m";;
+	esac
+}
+
+
+function lockFile()
+{
+	shell_name="$1"
+	sock_file="$2"
+	pid="$3"
+
+	# 检测是否还存在除了$pid的其他进程,如果存在需要kill
+	is_pids=$(ps aux| grep -w "$shell_name"| grep -v grep | grep -v "$pid"| awk '{print $2}')
+
+	# 判断是否存在sock_file
+	if [ ! -f "$sock_file" ];then
+		if [ "$is_pids" ];then
+			for is_pid in $(echo "$is_pids")
+			do
+				# kill前再次判断是否存在当前pid,避免异常
+				if ps aux| grep $is_pid| grep -w "$shell_name"| grep -v grep >/dev/null 2>&1; then
+					echo "[$(date +"%F %T")]$shell_name存在异常进程,开始执行kill $is_pid"
+					kill $is_pid
+				fi
+			done
+		fi
+		echo "[$(date +"%F %T")]$shell_name进程没有在运行,准备拉起" 
+		echo "$pid" >$sock_file
+
+	else
+		value=$(cat $sock_file 2>&1)
+		is_num=$(ps aux | grep $value | grep $shell_name | wc -l)
+		# 唯一一种正常情况
+		if ((${is_num}==1));then
+			echo "[$(date +"%F %T")]$shell_name进程在运行" 
+			exit 0
+		else
+			if [ "$is_pids" ];then
+				for is_pid in $(echo "$is_pids")
+				do
+					if ps aux| grep $is_pid| grep -w $shell_name |grep -v grep >/dev/null 2>&1; then
+						echo "[$(date +"%F %T")]$shell_name存在异常进程,开始执行kill $is_pid"
+						kill $is_pid
+					fi
+				done
+			fi
+			echo "[$(date +"%F %T")]$shell_name进程运行异常($sock_file异常),准备重启" 
+			echo "$pid" >$sock_file
+		fi
+	fi
+}
+
+
+function lastExit()
+{
+    bd="$1"
+    maxr_second="$2"
+    if [ -z "$bd" ];then
+        bd="0"
+    fi
+    if [ -z "$maxr_second" ];then
+        maxr_second="1"
+    fi
+    ed=$(date +%s)
+    vd=$(echo "$ed -$bd" | bc)
+    if ((${vd}>=${maxr_second}));then #执行超过时间推出
+        exit
+    fi
+}
+
