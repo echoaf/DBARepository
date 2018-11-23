@@ -7,7 +7,8 @@ General
     落盘到本地一份
 
 Collection
-
+    如果不上报，会生成一条标记数据
+    来标记数据上报异常
     Machine
         系统性能抖升问题现场捕捉 -- done
     
@@ -19,3 +20,5 @@ Collection
 
 Alarm
 
+    一段时间内数据上报中断则触发告警
+    数据补值功能
