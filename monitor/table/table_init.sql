@@ -64,3 +64,33 @@ UNIQUE KEY Fip_port_date_table (Fip,Fport,Fdate,Ftable_schema,Ftable_name),
 KEY idx_Fmodify_time (Fmodify_time)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='MySQL-TABLE信息表|arthur|2018-11-22';
 
+
+CREATE TABLE t_conf_common (
+  Findex int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+  Fkey varchar(64) NOT NULL DEFAULT '' COMMENT '配置参数',
+  Fvalue varchar(1024) NOT NULL DEFAULT '' COMMENT '配置值',
+  Fmemo varchar(2048) NOT NULL DEFAULT '' COMMENT '注解',
+  Fstate varchar(32) NOT NULL DEFAULT '' COMMENT '该行是否有效(online|offline)',
+  Fcreate_time datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT '创建时间',
+  Fmodify_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (Findex),
+  UNIQUE KEY uniq_Fkey (Fkey),
+  KEY i_Fmodify_time (Fmodify_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '配置公共表';
+
+
+CREATE TABLE t_conf_person (
+  Findex int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+  Fkey varchar(64) NOT NULL DEFAULT '' COMMENT '配置参数',
+  Fvalue varchar(1024) NOT NULL DEFAULT '' COMMENT '配置值',
+  Ftype varchar(32) NOT NULL DEFAULT 'system' COMMENT '配置类型(system|mysql|redis)',
+  Fserver_host varchar(32) NOT NULL DEFAULT '' COMMENT '服务器IP',
+  Fserver_port int NOT NULL DEFAULT '0' COMMENT '服务器PORT',
+  Fmemo varchar(2048) NOT NULL DEFAULT '' COMMENT '注解',
+  Fstate varchar(32) NOT NULL DEFAULT '' COMMENT '该行是否有效(online|offline)',
+  Fcreate_time datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT '创建时间',
+  Fmodify_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (Findex),
+  UNIQUE KEY uniq_Fkey_type_host_port (Fkey,Ftype,Fserver_host,Fserver_port),
+  KEY i_Fmodify_time (Fmodify_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '配置特性表';

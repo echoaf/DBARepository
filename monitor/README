@@ -2,12 +2,14 @@
 General
     共性配置表
     特性配置表 -- 支持IP和IP+PORT级别
-
+    共性告警表
+    特性告警表
+    落盘到本地一份
 
 Collection
 
     Machine
-        系统性能抖升问题现场捕捉
+        系统性能抖升问题现场捕捉 -- done
     
     MySQL
         定时抓取tcpdump上报到库表 -- done

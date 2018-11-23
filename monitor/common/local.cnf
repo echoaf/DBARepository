@@ -1,0 +1,7 @@
+
+
+
+max_slowlog_len=2000000
+catch_tcpdump_time=20
+catch_tcpdump_size=20000
+tcpdump_gaplock_time=60

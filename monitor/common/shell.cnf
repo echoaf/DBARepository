@@ -2,6 +2,10 @@
 
 # SHELL配置文件
 
+base_dir="/data/repository/monitor"
+common_dir="$base_dir/common"
+local_cnf="$common_dir/local.cnf" # 本地配置文件
+
 ######################## 变量 ##############################
 local_ip=$(/sbin/ifconfig|grep "inet "|awk '{print $2}'|grep -Ev "127.0.0.1|172.17"|head -1) # centos-7
 base_dir="/data/repository/monitor"
@@ -27,6 +31,10 @@ DBA_MYSQL="$mysql -h$dba_host -P$dba_port -u$dba_user -p$dba_pass --default-char
 t_mysql_info="mysql_info_db.t_mysql_info" # MySQL信息表
 t_mysql_slow="mysql_slow_db.t_mysql_slow"
 t_mysql_tcpdump="mysql_tcpdump_db.t_mysql_tcpdump"
+t_conf_common="monitor_db.t_conf_common"
+# 如果需要对某个IP的所有实例添加规则,Ftype写成system,Fport默认值
+# 如果只对某个IP的单个实例添加规则,Ftype写成mysql,Fport需要填写值,并且以mysql优先
+t_conf_person="monitor_db.t_conf_person" 
 
 ######################## ##############################
 collection_path_1_min="$base_dir/collection/1_min"
@@ -37,17 +45,47 @@ collection_sh_system_1_sec=("top.sh" "vmstat.sh" "iotop.sh" "iostat.sh" "ps.sh" 
 collection_sh_mysql_1_sec=("mysql_processlist.sh" "mysql_innodb_status.sh" "mysql_information.sh")
 
 ###################
-max_slowlog_len=2000000 # pt工具分析慢日志最大行
+max_slowlog_len="2000000" # pt工具分析慢日志最大行
 catch_tcpdump_time="20" # 每次抓包时长
 catch_tcpdump_size="20000" # 每次抓包大小
 tcpdump_gaplock_time="60" # 间隔时间
 
 ############## log
-#top_log="top_snapshot_20181123000000_172_16_112_10.log"
-top_log="top_snapshot.log"
 
 
 ######################## Functions ##############################
+
+function getLocalValue()
+{
+    key="$1"
+    value=$(cat $local_cnf | grep -w "$key" | awk -F"${key}=" '{print $2}'| sed -e 's/ /"/g' -e "s/'//g" -e "s/ //g")
+    echo "$value"
+}
+
+
+function getKV()
+{
+    key="$1"
+    host="$2"
+    port="$3"
+    key_type="$4"
+    sql="select Fvalue from $t_conf_person where Fstate='online' 
+        and Fkey='$key' and Ftype='$key_type' and Fserver_host='$host' and Fserver_port='$port';"
+    value=(connMySQL "$sql" "$dba_port" "Y")
+    if [ -z "$value" ];then
+        sql="select Fvalue from $t_conf_common where Fstate='online' and Fkey='$key';"
+        value=(connMySQL "$sql" "$dba_port" "Y")
+        if [ -z "$value" ];then # 从本地获取配置文件
+            value=$(getLocalValue "$key")
+            if [ -z "$value" ];then # 退出,防止获取错误的值程序异常
+                printLog "[$key]获取不到value,exit"
+                exit 64
+            fi
+        fi
+    fi
+    echo "$value"
+}
+
 
 function getToday()
 {
