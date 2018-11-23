@@ -1,6 +1,7 @@
 #!/bin/bash
 
-#description:慢日志收集
+# description:慢日志收集
+# BUGS:大文件慢日志使用工具分析瞬时吃很多CPU
 
 base_dir="/data/repository/monitor"
 common_dir="$base_dir/common"
@@ -39,8 +40,9 @@ function getSlowLog()
             return 64
         fi
     fi 
+    i=$(echo "$local_ip"| sed 's/\./_/g')
     t=$(date +"%Y%m%d")
-	slow_log="$tmp_dir/${port}_${t}.log"
+	slow_log="$tmp_dir/mysql_slow_${port}_${i}_${t}.log"
     #cat $slow_query_log_file | head -$max_slowlog_len >$slow_log # 优化慢日志太大perl脚本执行过长影响机器性能
     cat $slow_query_log_file > $slow_log && >$slow_query_log_file
     connMySQL "flush slow logs;" "$port" "0" "$local_ip" "$admin_user" "$admin_pass"
@@ -71,15 +73,15 @@ $slow_log"
 --no-report --limit=0%  \
 --filter=" \$event->{Bytes} = length(\$event->{arg}) and \$event->{hostname}=\"$HOSTNAME\"" \
 $slow_log
-    cd $log_dir && mv -vf $slow_log $log_dir
+    cd $log_dir && mv -f $slow_log $log_dir
 }
 
 
-t_mysql_slow_ymd=$(getymdTable "$t_mysql_slow")
 ports=$(getMySQLOnlinePort)
 for port in $(echo "$ports")
 do
     v=$(echo "${local_ip}_${port}"| sed 's/\./_/g')
+    t_mysql_slow_ymd=$(getymdTable "$t_mysql_slow")
     t_mysql_slow_ymd=$(echo "$t_mysql_slow_ymd"|sed "s/t_mysql_slow/t_mysql_slow_${v}/g")
     printLog "[$f_name][$local_ip:$port]开始收集慢日志到$t_mysql_slow_ymd" "$normal_log"
     getSlowLog "$port"

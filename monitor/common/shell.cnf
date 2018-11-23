@@ -26,6 +26,7 @@ DBA_MYSQL="$mysql -h$dba_host -P$dba_port -u$dba_user -p$dba_pass --default-char
 ######################## MySQL TABLE ##############################
 t_mysql_info="mysql_info_db.t_mysql_info" # MySQL信息表
 t_mysql_slow="mysql_slow_db.t_mysql_slow"
+t_mysql_tcpdump="mysql_tcpdump_db.t_mysql_tcpdump"
 
 ######################## ##############################
 collection_path_1_min="$base_dir/collection/1_min"
@@ -33,11 +34,55 @@ collection_path_1_min="$base_dir/collection/1_min"
 collection_py_1_min=("mysql_slave_status.py")
 
 ###################
-max_slowlog_len=2000000
+max_slowlog_len=2000000 # pt工具分析慢日志最大行
+catch_tcpdump_time="20" # 每次抓包时长
+catch_tcpdump_size="20000" # 每次抓包大小
+tcpdump_gaplock_time="60" # 间隔时间
 
 
 
 ######################## Functions ##############################
+
+# Returns:0 or 1
+#   0:可以进入执行脚本状态
+#   1:正在执行脚本
+function lookSockFile()
+{
+    sock_file="$1"
+    if [ ! -f "$sock_file" ];then
+        E="0"
+    else
+        E=$(cat "$sock_file" 2>&1)
+        if [ "$E" = "1" ];then
+            E="1"
+        else
+            E="0"
+        fi
+    fi
+    return "$E"
+}
+
+function updateSockFile()
+{
+    sock_file="$1"
+    deal_status="$2"
+    if [ "$deal_status" = "1" ];then
+        deal_status="1"
+    else
+        deal_status="0"
+    fi
+    echo "$deal_status" > "$sock_file"
+}
+
+
+# 返回随机数据
+function randNum(){
+    min=$1
+    max=$(($2-$min+1))
+    num=$(date +%s%N)
+    echo $(($num%$max+$min))
+}   
+
 
 function connMySQL()
 {
