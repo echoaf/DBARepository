@@ -9,5 +9,5 @@ file="$log_dir/${h}_${local_name}.log"
 
 # top不能置于&后台
 echo "" >>$file
-top -c -d 1 -n 1 >>$file 
+top -b -c -d 1 -n 1 >>$file 
 

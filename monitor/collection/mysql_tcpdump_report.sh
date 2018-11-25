@@ -9,7 +9,6 @@ common_dir="$base_dir/common"
 source $common_dir/shell.cnf
 
 f_name=$(basename "$0")
-
 pt_query_digest=$(which pt-query-digest 2>&1)
 tcpdump=$(which tcpdump 2>&1)
 timeout=$(which timeout 2>&1)
@@ -18,6 +17,10 @@ if [ ! -f $pt_query_digest ] || [ ! -f "$tcpdump" ] || [ ! -f "$timeout" ];then
     exit 64
 fi
 
+max_slowlog_len=$(getKV "max_slowlog_len" "$local_ip" "$port" "mysql")
+catch_tcpdump_time=$(getKV "catch_tcpdump_time" "$local_ip" "$port" "mysql")
+catch_tcpdump_size=$(getKV "catch_tcpdump_size" "$local_ip" "$port" "mysql")
+tcpdump_gaplock_time=$(getKV "tcpdump_gaplock_time" "$local_ip" "$port" "mysql")
 
 function reportPackages()
 {
@@ -88,11 +91,11 @@ function main()
         updateSockFile "$sock_file" "1"
     fi
     
-    #$timeout $catch_tcpdump_time $tcpdump -s 65535 -x -nn -q -tttt -i any -c $catch_tcpdump_size \(port 10000 or port 11000\) -w dump_file    
     h=$(echo "$local_ip"| sed 's/\./_/g')
     t=$(date +"%Y%m%d_%H%M%S")
     dump_file="$tmp_dir/mysql_tcpdump_${h}_${t}.log"
     ports=$(getMySQLOnlinePort)
+
 
     catchPackages "$ports" "$dump_file"
     HOSTNAME=$(hostname)

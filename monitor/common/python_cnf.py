@@ -137,8 +137,8 @@ mysql_status_keys=(
 
 
 ######################## MySQL相关权限 ##############################
-dba_host = '172.16.112.10'
-#dba_host = '192.168.112.11'
+#dba_host = '172.16.112.10'
+dba_host = '172.16.112.11'
 dba_port = 10000
 dba_user = 'dba_master' # DML权限
 dba_pass = 'dba_master'

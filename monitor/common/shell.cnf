@@ -16,7 +16,8 @@ mysql="$common_dir/mysql" # Ver 15.1 Distrib 5.5.60-MariaDB, for Linux (x86_64) 
 normal_log="$log_dir/shell.log"
 
 ######################## MySQL连接方式 ##############################
-dba_host="172.16.112.10"
+#dba_host="172.16.112.10"
+dba_host="172.16.112.11"
 dba_port="10000"
 dba_user="dba_master" # DML权限
 dba_pass="dba_master"
@@ -31,112 +32,155 @@ DBA_MYSQL="$mysql -h$dba_host -P$dba_port -u$dba_user -p$dba_pass --default-char
 t_mysql_info="mysql_info_db.t_mysql_info" # MySQL信息表
 t_mysql_slow="mysql_slow_db.t_mysql_slow"
 t_mysql_tcpdump="mysql_tcpdump_db.t_mysql_tcpdump"
-t_conf_common="monitor_db.t_conf_common"
 # 如果需要对某个IP的所有实例添加规则,Ftype写成system,Fport默认值
 # 如果只对某个IP的单个实例添加规则,Ftype写成mysql,Fport需要填写值,并且以mysql优先
+t_conf_common="monitor_db.t_conf_common"
 t_conf_person="monitor_db.t_conf_person" 
+t_script_common="monitor_db.t_script_common"
+t_script_person="monitor_db.t_script_person"
+t_script_running_info="monitor_db.t_script_running_info"
 
 ######################## ##############################
-collection_path_1_min="$base_dir/collection/1_min"
-collection_path_1_sec="$base_dir/collection/1_sec"
-#collection_py_1_min=("mysql_status.py" "mysql_system_info.py" "system_info.py" "mysql_slave_status.py")
-collection_py_1_min=("mysql_slave_status.py")
+collection_path="$base_dir/collection"
 collection_sh_system_1_sec=("top.sh" "vmstat.sh" "iotop.sh" "iostat.sh" "ps.sh" "lsof.sh" "ss.sh")
-collection_sh_mysql_1_sec=("mysql_processlist.sh" "mysql_innodb_status.sh" "mysql_information.sh")
 
 ###################
-max_slowlog_len="2000000" # pt工具分析慢日志最大行
-catch_tcpdump_time="20" # 每次抓包时长
-catch_tcpdump_size="20000" # 每次抓包大小
-tcpdump_gaplock_time="60" # 间隔时间
+#max_slowlog_len="2000000" # pt工具分析慢日志最大行
+#catch_tcpdump_time="20" # 每次抓包时长
+#catch_tcpdump_size="20000" # 每次抓包大小
+#tcpdump_gaplock_time="60" # 间隔时间
 
 ############## log
 
 
 ######################## Functions ##############################
 
-function getLocalValue()
-{
-    key="$1"
-    value=$(cat $local_cnf | grep -w "$key" | awk -F"${key}=" '{print $2}'| sed -e 's/ /"/g' -e "s/'//g" -e "s/ //g")
-    echo "$value"
-}
 
-
-function getKV()
+function updateDealStatus()
 {
-    key="$1"
-    host="$2"
-    port="$3"
-    key_type="$4"
-    sql="select Fvalue from $t_conf_person where Fstate='online' 
-        and Fkey='$key' and Ftype='$key_type' and Fserver_host='$host' and Fserver_port='$port';"
-    value=(connMySQL "$sql" "$dba_port" "Y")
-    if [ -z "$value" ];then
-        sql="select Fvalue from $t_conf_common where Fstate='online' and Fkey='$key';"
-        value=(connMySQL "$sql" "$dba_port" "Y")
-        if [ -z "$value" ];then # 从本地获取配置文件
-            value=$(getLocalValue "$key")
-            if [ -z "$value" ];then # 退出,防止获取错误的值程序异常
-                printLog "[$key]获取不到value,exit"
-                exit 64
-            fi
+    ip="$1"
+    basename="$2"
+    is_deal="$3"
+    sql="select count(*) from $t_script_running_info where Fip='$ip' and Fbasename='$basename';"
+    values=$(connMySQL "$sql" "$dba_port" "1")
+    if (($values==1));then
+        if [ -z "$is_deal" ];then
+            sql="update $t_script_running_info set Fmodify_time=now() 
+                where Fip='$ip' and Fbasename='$basename';"
+        else
+            sql="update $t_script_running_info set Fis_deal='$is_deal',Fdeal_time=now(),Fmodify_time=now() 
+                where Fip='$ip' and Fbasename='$basename';"
+        fi
+    else
+        if [ -z "$is_deal" ];then
+            sql="insert into $t_script_running_info (Fip,Fbasename,Fmodify_time) 
+                values 
+                ('$ip','$basename',now());"
+        else
+            sql="insert into $t_script_running_info (Fip,Fbasename,Fis_deal,Fdeal_time,Fmodify_time) 
+                values 
+                ('$ip','$basename','$is_deal',now(),now());"
         fi
     fi
-    echo "$value"
+    values=$(connMySQL "$sql" "$dba_port" "1")
 }
 
 
-function getToday()
+# Returns
+#   1,已执行
+#   2,未执行
+function getDealStatus()
 {
-    echo $(date +"%Y%m%d")
+    ip="$1"
+    basename="$2"
+    frequency="$3"
+    sql="select count(*) from $t_script_running_info 
+        where Fis_deal=1 and Fbasename='$basename' and Fip='$ip'
+        and Fdeal_time>DATE_SUB(NOW(),INTERVAL $frequency);"
+    values=$(connMySQL "$sql" "$dba_port" "1")
+    if ((${values}>0));then
+        E="1"
+    else
+        E="0"
+    fi
+    return "$E"
 }
 
-function getCurtimestamp()
-{
-    echo $(date +"%Y%m%d%H%M%S")
-}
 
-
-# Returns:0 or 1
-#   0:可以进入执行脚本状态
-#   1:正在执行脚本
-function lookSockFile()
+# Returns
+#   1,已执行
+#   2,未执行
+function getDealStatusDay()
 {
-    sock_file="$1"
-    if [ ! -f "$sock_file" ];then
+    ip="$1"
+    basename="$2"
+    sql="select Fdeal_time from $t_script_running_info 
+        where Fis_deal=1 and Fbasename='$basename' and Fip='$ip'"
+    values=$(connMySQL "$sql" "$dba_port" "1")
+    if [ -z "$values" ];then
         E="0"
     else
-        E=$(cat "$sock_file" 2>&1)
-        if [ "$E" = "1" ];then
-            E="1"
+        time_interval=$(getTimeinterval "$basename")
+        begin_time=$(echo "$time_interval"| awk -F"-" '{print $1}')
+        end_time=$(echo "$time_interval"| awk -F"-" '{print $2}')
+        begin_unixtime=$(getPersonUnixtime $begin_time)
+        end_unixtime=$(getPersonUnixtime $end_time)
+        cur_unixtime=$(date +"%s")
+        cur_time=$(date +"%F %T")
+        deal_unixtime=$(date -d"$values" +"%s")
+        deal_time=$(date -d"$values" +"%F %T")
+        printLog "begin_time:$begin_time,end_time:$end_time,cur_time:$cur_time,last_deal_time:$deal_time" "$normal_log"
+        if ((${cur_unixtime}>$begin_unixtime)) && ((${cur_unixtime}<=$end_unixtime));then
+            if ((${deal_unixtime}>$begin_unixtime)) && ((${deal_unixtime}<=$end_unixtime));then # 表示已经处理过了
+                E="1"
+            else
+                E="0"
+            fi
         else
-            E="0"
+            E="1"
         fi
     fi
     return "$E"
 }
 
-function updateSockFile()
+
+function getTimeinterval()
 {
-    sock_file="$1"
-    deal_status="$2"
-    if [ "$deal_status" = "1" ];then
-        deal_status="1"
-    else
-        deal_status="0"
-    fi
-    echo "$deal_status" > "$sock_file"
+    basename="$1"
+    sql="select Ftime_interval from $t_script_common where Fbasename='$basename';"
+    values=$(connMySQL "$sql" "$dba_port" "1")
+    echo "$values"
 }
 
 
-# 返回随机数据
-function randNum(){
-    min=$1
-    max=$(($2-$min+1))
-    num=$(date +%s%N)
-    echo $(($num%$max+$min))
-}   
+function getCommonScript()
+{
+    frequency="$1"
+    sql="select concat(Fbasename,':',Frunning_state) from $t_script_common
+        where Fstate='online' and Ffrequency='$frequency';"
+    values=$(connMySQL "$sql" "$dba_port" "1")
+    echo "$values"
+}
+
+
+function getPersonScript()
+{
+    value="$1"
+    frequency="$2"
+    ip="$3"
+    basename=$(echo "$value" | awk -F":" '{print $1}')
+    running_state=$(echo "$value" | awk -F":" '{print $2}')
+    sql="select Frunning_state from $t_script_person
+        where Fstate='online' and Ffrequency='$frequency' and Fserver_host='$ip'
+        and Fbasename='$basename';"
+    running_state=$(connMySQL "$sql" "$dba_port" "1")
+    if [ ! -z "$running_state" ];then
+        person_value="$basename:$running_state"
+    else
+        person_value="$value"
+    fi
+    echo "$person_value"
+}
 
 
 function connMySQL()
@@ -186,6 +230,100 @@ function getymdTable()
     table_ymd=$(echo "$table"| sed -e "s/_db\./_${cur_y}_db\./g" -e "s/$/_${cur_md}/g")
     echo "$table_ymd"
 }
+
+
+
+
+function getLocalValue()
+{
+    key="$1"
+    value=$(cat $local_cnf | grep -w "$key" | awk -F"${key}=" '{print $2}'| sed -e 's/ /"/g' -e "s/'//g" -e "s/ //g")
+    echo "$value"
+}
+
+
+function getKV()
+{
+    key="$1"
+    host="$2"
+    port="$3"
+    key_type="$4"
+    sql="select Fvalue from $t_conf_person where Fstate='online' 
+        and Fkey='$key' and Ftype='$key_type' and Fserver_host='$host' and Fserver_port='$port';"
+    value=$(connMySQL "$sql" "$dba_port" "1")
+    if [ -z "$value" ];then
+        sql="select Fvalue from $t_conf_common where Fstate='online' and Fkey='$key';"
+        value=$(connMySQL "$sql" "$dba_port" "1")
+        if [ -z "$value" ];then # 从本地获取配置文件
+            value=$(getLocalValue "$key")
+            if [ -z "$value" ];then # 退出,防止获取错误的值程序异常
+                printLog "[$key]获取不到value,exit"
+                exit 64
+            fi
+        fi
+    fi
+    echo "$value"
+}
+
+
+function getToday()
+{
+    echo $(date +"%Y%m%d")
+}
+
+function getCurtimestamp()
+{
+    echo $(date +"%Y%m%d%H%M%S")
+}
+
+
+function getPersonUnixtime()
+{
+    curtime="$1"
+    echo $(date -d"$curtime" +"%s")
+}
+
+
+# Returns:0 or 1
+#   0:可以进入执行脚本状态
+#   1:正在执行脚本
+function lookSockFile()
+{
+    sock_file="$1"
+    if [ ! -f "$sock_file" ];then
+        E="0"
+    else
+        E=$(cat "$sock_file" 2>&1)
+        if [ "$E" = "1" ];then
+            E="1"
+        else
+            E="0"
+        fi
+    fi
+    return "$E"
+}
+
+function updateSockFile()
+{
+    sock_file="$1"
+    deal_status="$2"
+    if [ "$deal_status" = "1" ];then
+        deal_status="1"
+    else
+        deal_status="0"
+    fi
+    echo "$deal_status" > "$sock_file"
+}
+
+
+# 返回随机数据
+function randNum(){
+    min=$1
+    max=$(($2-$min+1))
+    num=$(date +%s%N)
+    echo $(($num%$max+$min))
+}   
+
 
 
 function getymTable()
@@ -285,3 +423,104 @@ function lastExit()
     fi
 }
 
+
+function jugePid()
+{
+    p_name="$1"
+    p_value=$(ps aux| grep -w "$p_name" | grep -v grep)
+    if [ -z "$p_value" ];then
+        E=0
+    else
+        E=1
+    fi
+    return "$E"
+}
+
+
+function stopScript()
+{
+    script_file="$1"
+    if [ -f "$script_file" ];then
+        basename=$(basename "$script_file")
+        dirname=$(dirname "$script_file")
+        jugePid "$basename"
+        if (($?==0));then
+            printLog "file is not running($script_file)" "$normal_log"
+            E="1"
+        else
+            p_value=$(ps aux| grep $basename | grep -v grep)
+            printLog "file is running($script_file),ready stop..." "$normal_log"
+            printLog "$p_value" "$normal_log" 
+            ps aux| grep $basename | grep -v grep | awk '{print $2}' | xargs kill
+            E="0"
+        fi
+    else
+        printLog "can't find file($script_file)" "$normal_log"
+        E="1"
+    fi
+    return $E
+}
+
+
+function startScript()
+{
+    script_file="$1"
+    if [ -f "$script_file" ];then
+        basename=$(basename "$script_file")
+        dirname=$(dirname "$script_file")
+        jugePid "$basename"
+        if (($?==0));then
+            printLog "file is running($script_file)" "$normal_log"
+            # Tips:置于后台执行
+            cd $dirname && chmod a+x $basename && ./$basename &
+            E="0"
+        else
+            printLog "file is running($script_file)" "$normal_log"
+            E="1"
+        fi
+    else
+        printLog "can't find file($script_file)" "$normal_log"
+        E="1"
+    fi
+    return $E
+}
+
+
+function updateRunningState()
+{
+    basename="$1"
+    running_state="$2"
+    ip="$3"
+    sql="update $t_script_person set Frunning_state='$running_state' where Fbasename='$basename' and Fserver_host='$ip';"
+    value=$(connMySQL "$sql" "$dba_port" "1")
+    sql="update $t_script_common set Frunning_state='$running_state' where Fbasename='$basename';"
+    value=$(connMySQL "$sql" "$dba_port" "1")
+}
+
+function dealScript()
+{
+    script_file="$1"
+    running_state="$2"
+    basename=$(basename "$script_file")
+    if [ "$running_state" == "start" ];then
+        startScript "$script_file"
+        if (($?==0));then
+            updateRunningState "$basename" "start" "$local_ip"
+        fi
+    elif [ "$running_state" == "stop" ];then
+        stopScript "$script_file"
+        if (($?==0));then
+            updateRunningState "$basename" "stop" "$local_ip"
+        fi
+    elif [ "$running_state" == "restart" ];then
+        stopScript "$script_file"
+        sleep 0.5
+        startScript "$script_file"
+        if (($?==0));then
+            updateRunningState "$basename" "start" "$local_ip"
+        fi
+    else
+        printLog "$script_file执行状态异常($running_state),return" "$normal_log"
+        return 1
+    fi
+}
