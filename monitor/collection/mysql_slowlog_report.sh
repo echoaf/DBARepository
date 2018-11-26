@@ -8,7 +8,7 @@ common_dir="$base_dir/common"
 source $common_dir/shell.cnf
 
 f_name=$(basename "$0")
-pt_query_digest=$(which pt-query-digest 2>&1)
+pt_query_digest="/usr/local/bin/pt-query-digest"
 if (($?!=0));then
     printLog "[$f_name][$local_ip]找不到pt工具:$pt_query_digest" "$normal_log"
     exit 64

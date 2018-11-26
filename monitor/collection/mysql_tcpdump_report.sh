@@ -4,14 +4,17 @@
 # arthur
 # 2018-11-14
 
+#source /etc/profile
+
 base_dir="/data/repository/monitor"
 common_dir="$base_dir/common"
 source $common_dir/shell.cnf
 
 f_name=$(basename "$0")
-pt_query_digest=$(which pt-query-digest 2>&1)
-tcpdump=$(which tcpdump 2>&1)
-timeout=$(which timeout 2>&1)
+pt_query_digest="/usr/local/bin/pt-query-digest"
+tcpdump="/usr/sbin/tcpdump"
+timeout="/usr/bin/timeout"
+echo "hello,$pt_query_digest,$tcpdump,$timeout"
 if [ ! -f $pt_query_digest ] || [ ! -f "$tcpdump" ] || [ ! -f "$timeout" ];then
     printLog "[$f_name][$local_ip]找不到工具,exit" "$normal_log"
     exit 64

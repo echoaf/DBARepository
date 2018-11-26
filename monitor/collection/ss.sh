@@ -7,7 +7,7 @@ h=$(echo "$local_ip"| sed 's/\./_/g')
 local_name=$(basename $0)
 
 file="$log_dir/${h}_${local_name}.log"
-ss=$(which ss)
+ss="/usr/sbin/ss"
 
 if [ ! -f "$ss" ];then
     echo "找不到ss命令,exit" >>$file
