@@ -137,8 +137,8 @@ mysql_status_keys=(
 
 
 ######################## MySQL相关权限 ##############################
-#dba_host = '172.16.112.10'
-dba_host = '172.16.112.11'
+dba_host = '172.16.112.10'
+#dba_host = '172.16.112.11'
 dba_port = 10000
 dba_user = 'dba_master' # DML权限
 dba_pass = 'dba_master'
@@ -161,6 +161,9 @@ t_mysql_disk_io_counters_info = 'monitor_db.t_mysql_disk_io_counters_info'
 t_mysql_memory_info = 'monitor_db.t_mysql_memory_info'
 t_mysql_slave_info = 'monitor_db.t_mysql_slave_info'
 t_mysql_table_info = 'monitor_db.t_mysql_table_info'
+
+
+####################### Function #######################
 
 
 def connMySQL(exec_sql,dict_status=1,db_host=dba_host,db_port=dba_port,db_user=dba_user,db_pass=dba_pass):

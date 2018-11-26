@@ -16,8 +16,8 @@ mysql="$common_dir/mysql" # Ver 15.1 Distrib 5.5.60-MariaDB, for Linux (x86_64) 
 normal_log="$log_dir/shell.log"
 
 ######################## MySQL连接方式 ##############################
-#dba_host="172.16.112.10"
-dba_host="172.16.112.11"
+dba_host="172.16.112.10"
+#dba_host="172.16.112.11"
 dba_port="10000"
 dba_user="dba_master" # DML权限
 dba_pass="dba_master"

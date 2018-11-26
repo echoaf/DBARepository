@@ -7,7 +7,7 @@ local_name=$(basename $0)
 
 file="$log_dir/${h}_${local_name}.log"
 
-# top不能置于&后台
+# Tips:top加-b参数置于&后台
 echo "" >>$file
 top -b -c -d 1 -n 1 >>$file 
 

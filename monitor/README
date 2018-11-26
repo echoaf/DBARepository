@@ -1,4 +1,14 @@
 
+# optimization
+1)2018112601
+description:添加多线程模块,优化mysql_table_info.py使用多线程
+    对不同的库使用多线程
+    不同的port还是单线程;同个库下面的不同表也还是单线程
+time:2018-11-26
+person:arthur
+
+
+
 General
     共性配置表
     特性配置表 -- 支持IP和IP+PORT级别

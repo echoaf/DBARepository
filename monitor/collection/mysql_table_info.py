@@ -3,7 +3,8 @@
 
 
 import sys
-
+import threading
+from threading import Thread, Semaphore
 base_dir = '/data/repository/monitor'
 common_dir = '%s/common'%base_dir
 sys.path.append(common_dir)
@@ -13,7 +14,6 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 mysql_table_infos_keys=sorted(mysql_table_infos_keys)
-
 
 def getTableSchemaInfo(host,port,user,password):
 
@@ -56,30 +56,78 @@ def getTableInfo(table_schema,host,port,user,password):
     return table_info
 
 
+def reportSchema(table_schema,db_host,db_port,db_user,db_pass,sem):
 
+    table_infos = getTableInfo(table_schema,db_host,db_port,db_user,db_pass)
+    if table_infos:
+        for table_info in table_infos:
+            sql = ("""replace into %s set Fip='%s',Fport='%s',Fdate='%s',Fmodify_time=now()"""%
+                (t_mysql_table_info,db_host,db_port,cur_time))
+            needStatus = getStatusNeed(table_info)
+            for k,v in needStatus.items():
+                k_name = "F%s"%(k.lower())
+                sql = "%s ,%s='%s'"%(sql,k_name,v)
+            sql = "%s;"%sql
+            connMySQL(str(sql),1,dba_host,dba_port,dba_user,dba_pass)
+    sem.release() # 释放 semaphore
+
+
+"""
+使用多线程上报
+"""
 def reportSQL(db_host,db_port,db_user,db_pass,cur_time):
 
     # Tips:使用管理员账号
     table_schemas = getTableSchemaInfo(db_host,db_port,db_user,db_pass)
+    thread_num = 10 # 同时跑的线程数
+    sem = Semaphore(thread_num) # 设置计数器的值为
+    threads = []
+    printLog('starting report %s:%s'%(db_host,db_port),normal_log)
     for table_schema in table_schemas:
         table_schema = table_schema['SCHEMA_NAME']
-        table_infos = getTableInfo(table_schema,db_host,db_port,db_user,db_pass)
-        if table_infos:
-            for table_info in table_infos:
-                sql = ("""replace into %s set Fip='%s',Fport='%s',Fdate='%s',Fmodify_time=now()"""%
-                    (t_mysql_table_info,db_host,db_port,cur_time))
-                needStatus = getStatusNeed(table_info)
-                for k,v in needStatus.items():
-                    k_name = "F%s"%(k.lower())
-                    sql = "%s ,%s='%s'"%(sql,k_name,v)
-                sql = "%s;"%sql
-                connMySQL(str(sql),1,dba_host,dba_port,dba_user,dba_pass)
+        # ID:2018112601
+        #reportSchema(table_schema,db_host,db_port,db_user,db_pass)
+        t = threading.Thread(target=reportSchema,args=(table_schema,db_host,db_port,db_user,db_pass,sem))
+        threads.append(t)
 
+    length = len(threads)
+    for i in range(length): # start threads
+        sem.acquire() # 获取一个semaphore
+        threads[i].start()
+                 
+    for i in range(length): # wait for all
+        threads[i].join() # threads to finish
+                     
+    printLog('all DONE %s:%s'%(db_host,db_port),normal_log)
+
+
+"""
+单线程上报
+"""
+#def reportSQL(db_host,db_port,db_user,db_pass,cur_time):
+#
+#    # Tips:使用管理员账号
+#    table_schemas = getTableSchemaInfo(db_host,db_port,db_user,db_pass)
+#    for table_schema in table_schemas:
+#        table_schema = table_schema['SCHEMA_NAME']
+#        # ID:2018112601
+#        table_infos = getTableInfo(table_schema,db_host,db_port,db_user,db_pass)
+#        if table_infos:
+#            for table_info in table_infos:
+#                sql = ("""replace into %s set Fip='%s',Fport='%s',Fdate='%s',Fmodify_time=now()"""%
+#                    (t_mysql_table_info,db_host,db_port,cur_time))
+#                needStatus = getStatusNeed(table_info)
+#                for k,v in needStatus.items():
+#                    k_name = "F%s"%(k.lower())
+#                    sql = "%s ,%s='%s'"%(sql,k_name,v)
+#                sql = "%s;"%sql
+#                connMySQL(str(sql),1,dba_host,dba_port,dba_user,dba_pass)
+#
 
 cur_time = getTodayTime()
 ports = getMySQLOnlinePort()
 for port in ports:
-    printLog("[%s:%s]开始上报mysql table info"%(local_ip,port),normal_log,'green')
+    printLog("[%s:%s]======start report mysql table info"%(local_ip,port),normal_log,'green')
     reportSQL(local_ip,int(port),dba_user,dba_pass,cur_time)
 
 
