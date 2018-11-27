@@ -8,15 +8,17 @@ time:2018-11-26
 person:arthur
 
 
-
 General
+
     共性配置表
     特性配置表 -- 支持IP和IP+PORT级别
     共性告警表
     特性告警表
     落盘到本地一份
 
+
 Collection
+
     如果不上报，会生成一条标记数据
     来标记数据上报异常
     Machine
@@ -32,3 +34,28 @@ Alarm
 
     一段时间内数据上报中断则触发告警
     数据补值功能
+    告警收敛规则 -- todo
+        第一次告警发送
+        1、根据时间维度收敛
+            1min内，5min内
+        2、根据条数收敛
+            1条，10条
+    故障自愈系统
+
+    MySQL
+
+        1、慢查询个数   slow_queries    The number of queries that have taken more than long_query_time seconds
+        2、活跃连接数   Threads_running     The number of threads that are not sleeping.
+        3、OPS      queries     The number of statements executed by the server. This variable includes statements executed within stored programs, unlike the Questions variable. It does not count COM_PING or COM_STATISTICS commands. QPS计算公式:Questions/Uptime(Uptime换成自己定义的时间单位)
+        
+        4、QPS      Com_select
+        5、TPS      (COM_COMMIT + COM_ROLLBACK)
+        
+        Com_select：查询次数，实际操作数据库的
+        Com_insert：插入次数
+        Com_delete：删除次数
+        Com_update：更新次数
+        Com_commit：事务次数
+        Com_rollback：回滚次数
+        6、主从延迟
+        

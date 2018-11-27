@@ -49,7 +49,7 @@ def reportStatusSQL(db_host,db_port,db_user,db_pass,cur_time):
 
     #cur_time = getAcceptOrReject()
     sql=("""replace into %s set Fip='%s',Fport='%s',Fdatetime='%s',Fmodify_time=now()"""%
-        (t_mysql_status,dba_host,dba_port,cur_time))
+        (t_mysql_status,db_host,db_port,cur_time))
     for k,v in needStatus.items():
         k_name = "F%s"%(k.lower())
         sql = "%s ,%s='%s'"%(sql,k_name,v)

@@ -1,0 +1,17 @@
+CREATE TABLE t_alarm_conf_common (
+  Findex int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+  Faid int(11) NOT NULL DEFAULT '0' COMMENT 'Alarm ID',
+  Ftitle varchar(64) NOT NULL DEFAULT '0' COMMENT '标题,和t_conf_common关联',
+  Ftrigger tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否合并告警(1:合并,0:不合并)',
+  Fmerge_trigger tinyint(1) NOT NULL DEFAULT '1' COMMENT '',
+  Ffreq int(11) NOT NULL DEFAULT '0' COMMENT '发送频率',
+  Fsendtype varchar(100) NOT NULL DEFAULT 'rtx,wx,mail' COMMENT '发送方式',
+  Freceiver varchar(1024) NOT NULL DEFAULT '' COMMENT '告警接收人',
+  Fremove_receiver varchar(1024) NOT NULL DEFAULT '' COMMENT '排除某些人',
+  Fstate varchar(16) NOT NULL DEFAULT 'online' COMMENT '当前行是否有效',
+  Fcreate_time datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT '创建时间',
+  Fmodify_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  UNIQUE KEY uniq_Faid(Faid,
+  UNIQUE KEY uniq_Faid(Faid,
+  PRIMARY KEY (Findex),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

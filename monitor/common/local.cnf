@@ -1,4 +1,4 @@
-[shell]
+[conf]
 max_slowlog_len=2000000
 catch_tcpdump_time=20
 catch_tcpdump_size=20000
@@ -8,3 +8,4 @@ loadavg_max=20
 loadavg_percent=70
 cpu_percent=85
 log_large=30
+mysql_slow_queries=10
