@@ -7,3 +7,4 @@ maxr_second=3600
 loadavg_max=20
 loadavg_percent=70
 cpu_percent=85
+log_large=30

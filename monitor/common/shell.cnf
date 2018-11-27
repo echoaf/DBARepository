@@ -42,6 +42,7 @@ t_script_running_info="monitor_db.t_script_running_info"
 
 ######################## ##############################
 collection_path="$base_dir/collection"
+common_path="$base_dir/common"
 collection_sh_system_1_sec=("top.sh" "vmstat.sh" "iotop.sh" "iostat.sh" "ps.sh" "lsof.sh" "ss.sh")
 
 ###################

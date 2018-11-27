@@ -20,10 +20,14 @@ if [ ! -f $pt_query_digest ] || [ ! -f "$tcpdump" ] || [ ! -f "$timeout" ];then
     exit 64
 fi
 
+tcpdump_dir="$log_dir/mysql_tcpdump"
+mkdir -p $tcpdump_dir
+
 max_slowlog_len=$(getKV "max_slowlog_len" "$local_ip" "$port" "mysql")
 catch_tcpdump_time=$(getKV "catch_tcpdump_time" "$local_ip" "$port" "mysql")
 catch_tcpdump_size=$(getKV "catch_tcpdump_size" "$local_ip" "$port" "mysql")
 tcpdump_gaplock_time=$(getKV "tcpdump_gaplock_time" "$local_ip" "$port" "mysql")
+
 
 function reportPackages()
 {
@@ -96,7 +100,7 @@ function main()
     
     h=$(echo "$local_ip"| sed 's/\./_/g')
     t=$(date +"%Y%m%d_%H%M%S")
-    dump_file="$tmp_dir/mysql_tcpdump_${h}_${t}.log"
+    dump_file="$tcpdump_dir/mysql_tcpdump_${h}_${t}.log"
     ports=$(getMySQLOnlinePort)
 
 

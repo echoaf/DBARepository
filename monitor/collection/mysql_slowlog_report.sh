@@ -14,6 +14,8 @@ if (($?!=0));then
     exit 64
 fi
 
+slow_dir="$log_dir/mysql_slow"
+mkdir -p $slow_dir
 
 :<<comment
 description:copy慢日志文件,并且清空日志
@@ -42,7 +44,7 @@ function getSlowLog()
     fi 
     i=$(echo "$local_ip"| sed 's/\./_/g')
     t=$(date +"%Y%m%d")
-	slow_log="$tmp_dir/mysql_slow_${port}_${i}_${t}.log"
+	slow_log="$slow_dir/mysql_slow_${port}_${i}_${t}.log"
     #cat $slow_query_log_file | head -$max_slowlog_len >$slow_log # 优化慢日志太大perl脚本执行过长影响机器性能
     cat $slow_query_log_file > $slow_log && >$slow_query_log_file
     connMySQL "flush slow logs;" "$port" "0" "$local_ip" "$admin_user" "$admin_pass"
@@ -73,7 +75,7 @@ $slow_log"
 --no-report --limit=0%  \
 --filter=" \$event->{Bytes} = length(\$event->{arg}) and \$event->{hostname}=\"$HOSTNAME\"" \
 $slow_log
-    cd $log_dir && mv -f $slow_log $log_dir
+    #cd $log_dir && mv -f $slow_log $slow_dir
 }
 
 
