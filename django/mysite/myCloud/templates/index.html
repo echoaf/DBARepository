@@ -1,0 +1,21 @@
+{% load render_table from django_tables2 %}
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Home Page</title>
+</head>
+<body>
+  <img src="/static/logo.png" />
+  <p>Welcome</p>
+  <p>{{ baoshi }}</p>
+  <form action="result.html" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="myfile" required />
+    <br> 
+    <input type="submit" name="" value="OK" />
+  </form> 
+  {% render_table biaoge %}
+  <a href="/logout/">Sign Out</a>
+</body>
+</html>

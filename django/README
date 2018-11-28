@@ -1,0 +1,15 @@
+mysite/
+├── manage.py
+└── mysite
+    ├── __init__.py
+    ├── settings.py
+    ├── urls.py
+    └── wsgi.py
+
+外层的mysite 这是根目录,项目的容器。它的名字与Django无关;你可以将它重命名为任何你喜欢的东西。
+    manage.py： 一个命令行工具,可让您以各种方式与此Django项目进行交互。项目的管理指令就是通过这个文件下达的,以后会讲到。
+    内部mysite 该目录是您的项目的实际Python包。它的名字是你需要用来导入任何内容的Python包名(例如mysite.urls)。
+        mysite/ init.py：一个空文件,告诉Python这个目录应该被视为一个Python包。这是Python的一个规范,不用去管
+        mysite / settings.py：这个Django项目的设置/配置。这个文件很重要,将来会说到
+        mysite / urls.py：这个Django项目的URL声明;我们之前讲了一大堆URL的东西,就是要在这里实现。
+        mysite / wsgi.py：WSGI兼容的Web服务器为您的项目提供服务的入口点。这是部署的时候会用的到,我们离用到这个文件还远的呢,先别管了.
