@@ -1,0 +1,20 @@
+INSERT INTO monitor_db.t_conf_common VALUES (1,'max_slowlog_len','2000000','','online','2018-11-23 21:21:57','2018-11-23 13:21:57');
+INSERT INTO monitor_db.t_conf_common VALUES (2,'tcpdump_gaplock_time','60','','online','2018-11-23 21:27:52','2018-11-23 13:27:52');
+INSERT INTO monitor_db.t_conf_common VALUES (3,'catch_tcpdump_time','20','','online','2018-11-23 21:28:06','2018-11-23 13:28:06');
+INSERT INTO monitor_db.t_conf_common VALUES (4,'catch_tcpdump_size','20000','','online','2018-11-23 21:28:07','2018-11-23 13:28:07');
+INSERT INTO monitor_db.t_conf_common VALUES (5,'maxr_second','3600','','online','2018-11-25 23:45:47','2018-11-25 15:45:47');
+INSERT INTO monitor_db.t_conf_common VALUES (6,'loadavg_max','20','系统负载阈值','online','2018-11-26 17:12:29','2018-11-26 09:12:29');
+INSERT INTO monitor_db.t_conf_common VALUES (7,'loadavg_percent','70','系统负载阈值占比','online','2018-11-26 17:13:24','2018-11-26 09:13:24');
+INSERT INTO monitor_db.t_conf_common VALUES (8,'cpu_percent','85','系统CPU使用率','online','2018-11-26 17:13:25','2018-11-26 09:13:25');
+INSERT INTO monitor_db.t_conf_common VALUES (9,'log_large','30','保留日志时间','online','2018-11-27 09:21:44','2018-11-27 01:21:44');
+INSERT INTO monitor_db.t_conf_common VALUES (10,'mysql_slow_queries','10','MySQL slow_queries告警阈值','online','2018-11-27 16:49:25','2018-11-27 10:02:10');
+
+INSERT INTO monitor_db.t_script_common VALUES (1,'mysql_slowlog_report.sh','1_day','00:00:01-23:59:59','start','慢日志上报','online','2018-11-25 06:10:43','2018-11-26 11:51:01');
+INSERT INTO monitor_db.t_script_common VALUES (2,'mysql_table_info.py','1_day','00:00:01-23:00:00','start','库表信息上报','online','2018-11-25 06:13:23','2018-11-26 11:49:32');
+INSERT INTO monitor_db.t_script_common VALUES (3,'mysql_slave_status.py','1_min','','start','mysql-slave-status上报','online','2018-11-25 06:16:42','2018-11-25 07:01:01');
+INSERT INTO monitor_db.t_script_common VALUES (4,'mysql_status.py','1_min','','start','mysql-global-status上报','online','2018-11-25 06:16:42','2018-11-26 11:51:43');
+INSERT INTO monitor_db.t_script_common VALUES (5,'mysql_system_info.py','1_min','','start','mysql系统信息收集','online','2018-11-25 06:16:42','2018-11-25 07:01:02');
+INSERT INTO monitor_db.t_script_common VALUES (6,'system_info.py','1_min','00:00:01-22:23:00','start','机器系统信息收集','online','2018-11-25 06:16:43','2018-11-26 11:51:43');
+INSERT INTO monitor_db.t_script_common VALUES (7,'mysql_tcpdump_report.sh','1_sec','','stop','mysql tcpdump抓包','online','2018-11-25 06:21:17','2018-11-28 01:02:41');
+INSERT INTO monitor_db.t_script_common VALUES (8,'capture_snapshot.sh','1_sec','','stop','系统捕捉快照','online','2018-11-25 06:21:17','2018-11-27 01:20:02');
+INSERT INTO monitor_db.t_script_common VALUES (9,'log_ratate.sh','1_day','00:00:01-01:00:01','start','日志备份','offline','2018-11-27 09:39:45','2018-11-27 01:41:40');
