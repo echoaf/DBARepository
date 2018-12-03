@@ -1,0 +1,134 @@
+{% extends 'dba_platform/base.html' %}
+{% load mytags %}
+{% load humanize %}
+{% block content %}
+{% include 'nav_cat_bar.html' %}
+<div class="ibox-content">
+    <form class="form-inline" id='db_table_query_form'>
+        <div class="form-group" id="date_5">
+            <label class="">起始日期:</label>
+            <div class="input-daterange input-group" id="datepicker">
+                <input type="text" class="input-sm form-control" style="width: 100px;" id="date_start" name="date_start" value="{{date_start}}">
+            </div>  
+        </div>
+        <div class="form-group" id="date_5">
+            <label class="">截止日期:</label>
+            <div class="input-daterange input-group" id="datepicker">
+                <input type="text" class="input-sm form-control" style="width: 100px;" id="date_end" name="date_end" value="{{date_end}}">
+            </div>  
+        </div>
+        <input type="hidden" id="Fdb_name" name="Fdb_name" value="{{Fdb_name}}">
+        <input type="hidden" id="Ftb_name" name="Ftb_name" value="{{Ftb_name}}">
+        <input type="hidden" id="Ftype" name="Ftype" value="{{Ftype}}">
+    </form>
+</div>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div id="table_rows" style="height:400px"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div id="table_size" style="height:400px"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div id="daily_grow" style="height:400px"></div>
+                </div>
+            </div>
+        </div>   
+    </div> 
+</div>
+
+{% endblock %}
+
+{% block self_footer_js %}
+<script src="/static/js/echarts/echarts.min.js"></script>
+<script src="/static/js/cropper/cropper.min.js"></script>
+<script src="/static/js/datapicker/bootstrap-datepicker.js"></script>
+<script>
+
+$('#date_5 .input-daterange').datepicker({
+    format: 'yyyy-mm-dd',
+    keyboardNavigation: false,
+    forceParse: false,
+    autoclose: true
+});
+
+function show_chart(x_time, echarts_data, type, text){
+    var myChart = echarts.init(document.getElementById(type));
+    var option = {
+    title: {
+        text: text,
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data:[]
+    },
+    toolbox: {
+        show: true,
+        feature: {
+            dataView: {readOnly: false},
+            magicType: {type: ['line', 'bar']},
+            saveAsImage: {show: true}
+        }
+    },
+    xAxis: {
+        name: '时间',
+        type: 'category',
+        boundaryGap: false,
+        data: x_time,
+
+    },
+    yAxis: {
+        name: text,
+        type: 'value'
+    },
+    series: [{
+        name: text,
+        type: 'line',
+        smooth: true,
+        data: echarts_data
+    }]
+};
+    myChart.setOption(option);
+}
+
+function post_data(){
+    $.ajax({
+        type:'POST',
+        url:"{% url 'db_table_query_api'%}",
+        data:$('#db_table_query_form').serialize(),
+        success:function(data,status){
+            show_chart(data['x_time'], data['data1'], 'table_rows', '表行数');
+            show_chart(data['x_time'], data['data2'], 'table_size', '表大小');
+            show_chart(data['x_time'], data['data3'], 'daily_grow', '昨日增长');
+        },
+        error:function(data, status){
+            alert('错误');
+        }
+    });
+}
+
+$('#date_start, #date_end').change(function(){
+    post_data();
+});
+
+$(function(){
+    //初始化的时候就调用
+    post_data();
+});
+</script>
+
+{% endblock %}

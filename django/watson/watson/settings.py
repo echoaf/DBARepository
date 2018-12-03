@@ -91,7 +91,8 @@ DATABASES = {
         'NAME': 'watson_db',
         'USER':'django_master',
         'PASSWORD':'django_master',
-        'HOST':'172.16.112.10',
+        #'HOST':'172.16.112.10',
+        'HOST':'172.16.112.11',
         'PORT':'10000'
     }
 }

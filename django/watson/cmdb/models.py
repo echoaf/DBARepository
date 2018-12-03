@@ -6,7 +6,6 @@ from django.db import models
 # Create your models here.
 
 
-
 # DBA CMDB table
 class t_machine_info(models.Model):
     Ftype = models.CharField('服务器类型', max_length=64)
@@ -32,6 +31,11 @@ class t_machine_info(models.Model):
     #    pc = Prpcrypt()  # 初始化
     #    self.master_password = pc.encrypt(self.master_password)
     #    super(master_config, self).save(*args, **kwargs)
+
+
+
+
+##########################
 
 
 
