@@ -4,18 +4,14 @@
 
 ######################## 变量 ##############################
 local_ip=$(/sbin/ifconfig|grep "inet "|awk '{print $2}'|grep -Ev "127.0.0.1|172.17"|head -1) # centos-7
-#local_ip=$(/sbin/ifconfig|grep "inet addr"|awk '{print $2}'|awk -F":" '{print $2}'|grep -Ev "127.0.0.1|172.17"|head -1) # centos-6
-#present_dir=$(cd $(dirname "$0") && pwd)
-#present_dir="/data/code/github/repository/mysql_repo/mysql_backup/common" # 写死
 github_dir="/data/code/github/repository/mysql_repo/mysql_backup"
 common_dir="$github_dir/common"
-log_dir="$github_dir/log_dir" && mkdir -p $log_dir
-tmp_dir="$github_dir/tmp_dir" && mkdir -p $tmp_dir
+log_dir="$github_dir/log" && mkdir -p $log
+tmp_dir="$github_dir/tmp" && mkdir -p $tmp_dir
 mysql="$common_dir/mysql" # Ver 15.1 Distrib 5.5.60-MariaDB, for Linux (x86_64) using readline 5.1
 mysqlbinlog="$common_dir/mysqlbinlog" # Ver 3.4 for Linux at x86_64
 chmod a+x $mysql $mysqlbinlog
 normal_log="$log_dir/shell.log"
-
 mydumper="/usr/local/bin/mydumper"
 myloader="/usr/local/bin/myloader"
 innobackupex="/usr/local/xtrabackup/bin/innobackupex"
@@ -27,7 +23,6 @@ binarylog_backup_dir="$backup_parent_dir/BINARYLOG_BACKUP"
 dump_dir="$backup_parent_dir/DUMP"
 mkdir -p $backup_parent_dir $full_backup_dir $binarylog_backup_dir $dump_dir
 
-# 功能变量
 max_table_rows=1000000 # 大于此数对表分块dump
 
 ######################## MySQL连接方式 ##############################
@@ -47,7 +42,6 @@ restore_user="restore_user" # 检测恢复校验是否成功用户,只有恢复�
 restore_pass="restore_user"
 DBA_MYSQL="$mysql -h$dba_host -P$dba_port -u$dba_user -p$dba_pass --default-character-set=utf8 -N"
 
-
 ######################## MySQL TABLE ##############################
 t_mysql_info="mysql_info_db.t_mysql_info" # MySQL信息表
 t_mysql_fullbackup_info="mysql_backup_db.t_mysql_fullbackup_info" # 全备信息表
@@ -56,8 +50,6 @@ t_mysql_binarylog_info="mysql_backup_db.t_mysql_binarylog_info" # 增备信息�
 t_mysql_binarylog_result="mysql_backup_db.t_mysql_binarylog_result" # 增备结果表
 t_mysql_check_info="mysql_backup_db.t_mysql_check_info" # 校验信息表
 t_mysql_check_result="mysql_backup_db.t_mysql_check_result" # 校验结果表
-
-
 
 ######################## Functions ##############################
 function printLog()
@@ -79,7 +71,6 @@ function printLog()
 		*) echo -e "[$(date +"%F %T")] \033[32m$content \033[0m";;
 	esac
 }
-
 
 
 function checkShell()

@@ -3,18 +3,27 @@
 # arthur
 
 # 一、初始化
-1、sed
-#find . -regex '.*\.cnf\|.*\.sh\|.*\.py' | xargs -i sed -i "s|/data/code/github/repository/mysql_repo/mysql_backup|/home/code/mysql_backup|g" {}
+
+1、备份之前替换以下目录
+# 脚本安装目录:/data/repository/mysql_repo/mysql_backup
+# 备份目录:/data/MySQL_BACKUP
+# 使用如下命令替换
+find . -regex '.*\.cnf\|.*\.sh\|.*\.py' | xargs -i sed -i "s|/data/code/github/repository/mysql_repo/mysql_backup|/data/repository/mysql_repo/mysql_backup|g" {}
+find . -regex '.*\.cnf\|.*\.sh\|.*\.py' | xargs -i sed -i "s|/data/MySQL_BACKUP|/data/MySQL_BACKUP|g" {}
+
 2、crontab
 ################ 冷备计划任务管理
-#* * * * * cd /data/code/github/repository/mysql_repo/mysql_backup/main && sh mysql_backup_admin.sh >/dev/null 2>&1
-#1 0 * * * cd /data/code/github/repository/mysql_repo/mysql_backup/main && sh log_ratate.sh >/dev/null 2>&1
-#1 10 * * * cd /data/code/github/repository/mysql_repo/mysql_backup/main && sync_backup_info >/dev/null 2>&1
+* * * * * cd /data/code/github/repository/mysql_repo/mysql_backup/main && sh mysql_backup_admin.sh >/dev/null 2>&1
+1 0 * * * cd /data/code/github/repository/mysql_repo/mysql_backup/main && sh log_ratate.sh >/dev/null 2>&1
+1 10 * * * cd /data/code/github/repository/mysql_repo/mysql_backup/main && sync_backup_info >/dev/null 2>&1
 ################ 冷备计划任务管理
-3、init_schema.sql
-4、find . -name "*" -type d | xargs -i /bin/cp -avf .gitignore {}
+
+3、删除".gitignore"
+find . -name "*gitignore" -type f | xargs -i rm -rfv {}
+find . -name "*" -type d | xargs -i /bin/cp -avf .gitignore {}
 
 # 二、功能实现
+
 1、全量备份
 2、增量备份
 3、全备恢复校验

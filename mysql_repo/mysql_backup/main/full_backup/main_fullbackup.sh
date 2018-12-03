@@ -214,15 +214,8 @@ function main()
     do
         curday=$(date +"%F")
         curweek=$(date +"%w") # 今天周几
-        #start_pos=$(date -d "$curday 00:00:00" +"%s") # 每天开始启动备份时间点
-        #end_pos=$(date -d "$curday 23:59:00" +"%s") # 每天结束备份时间点,但是已经在备份的事件不会退出
-        #end_pos=$(date -d "$curday 10:00:00" +"%s") # 备份结束时间点
-        #cur_pos=$(date +"%s")
         sunday="$(date -d "$(($(date +%w)-6)) days ago" +"%Y-%m-%d")" # 本周周六日期
         monday="$(date -d "$(($(date +%w)-0)) days ago" +"%Y-%m-%d")" # 本周周日日期
-                
-
-        printLog "进入备份主函数" "$normal_log" "green"
 
         # 备份主函数
         # 今天需要备份的Ftype如下:
