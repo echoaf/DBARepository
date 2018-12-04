@@ -2,8 +2,8 @@
 
 # 清理日志
 
-github_dir="/data/code/github/repository/mysql_repo/mysql_backup"
-log_dir="$github_dir/log_dir" # 待处理的日志目录
+base_dir="/data/repository/mysql_repo/mysql_backup"
+log_dir="$base_dir/log_dir" # 待处理的日志目录
 normal_log="${log_dir}/log_ratate.log"
 log_large=30 # 保留30天的备份日志
 

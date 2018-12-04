@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-
 import sys
 import os
 import time
@@ -12,29 +11,33 @@ import subprocess
 tmp_cmd = "/sbin/ifconfig|grep 'inet '|awk '{print $2}'|grep -Ev '127.0.0.1|172.17'|head -1"
 value = subprocess.Popen(tmp_cmd,stdout=subprocess.PIPE,shell=True) 
 local_ip = (value.stdout.read()).replace('\n','')
+
+base_dir = '/data/repository/mysql_repo/mysql_backup'
+common_dir = '%s/common'%base_dir
+log_dir = '%s/log_dir'%(base_dir)
+tmp_dir = '%s/tmp_dir'%(base_dir)
+
+mysql = '%s/mysql'%(common_dir)
+mysqlbinlog = '%s/mysqlbinlog'%(common_dir)
 mydumper = '/usr/local/bin/mydumper'
 myloader = '/usr/local/bin/myloader'
 innobackupex = '/usr/local/xtrabackup/bin/innobackupex'
 
-github_dir = '/data/code/github/repository/mysql_repo/mysql_backup'
-common_dir = '%s/common'%github_dir
-mysql = '%s/mysql'%(common_dir)
-mysqlbinlog = '%s/mysqlbinlog'%(common_dir)
-log_dir = '%s/log_dir'%(github_dir)
-tmp_dir = '%s/tmp_dir'%(github_dir)
 normal_log = '%s/python.log'%(log_dir)
+
 
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 if not os.path.exists(tmp_dir):
     os.makedirs(tmp_dir)
 
-backup_parent_dir = '/data/MySQL_BACKUP'
+
+backup_parent_dir = '/data/MySQL_BACKUP' # 需要调整的参数
 full_backup_dir = '%s/FULL_BACKUP'%(backup_parent_dir)
 binarylog_backup_dir = '%s/BINARYLOG_BACKUP'%(backup_parent_dir)
 dump_dir = '%s/DUMP'%(backup_parent_dir)
 
-######################## MySQL相关权限 ##############################
+
 dba_host = '172.16.112.10'
 dba_port = 10000
 dba_user = 'dba_master' # DML权限
@@ -48,7 +51,6 @@ repl_pass = 'repl_user'
 dump_user = 'dump_user' # 备份用户
 dump_pass = 'dump_user'
 
-############## 基础信息表 #######################
 t_mysql_info = 'mysql_info_db.t_mysql_info' # MySQL信息表
 t_mysql_fullbackup_info = 'mysql_backup_db.t_mysql_fullbackup_info' # 全备信息表
 t_mysql_fullbackup_result = 'mysql_backup_db.t_mysql_fullbackup_result' # 全备结果表
@@ -57,7 +59,8 @@ t_mysql_binarylog_result = 'mysql_backup_db.t_mysql_binarylog_result' # 增备�
 t_mysql_check_info = 'mysql_backup_db.t_mysql_check_info' # 校验信息表
 t_mysql_check_result = 'mysql_backup_db.t_mysql_check_result' # 校验结果表
 
-############## 基础函数 #######################
+
+# Functions
 def connMySQL(exec_sql,db_host=dba_host,db_port=dba_port,db_user=dba_user,db_pass=dba_pass):
     conn = MySQLdb.connect(host=db_host,port=db_port,user=db_user,passwd=db_pass,
         db='information_schema',charset='utf8', 

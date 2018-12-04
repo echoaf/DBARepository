@@ -8,8 +8,8 @@
 # 脚本安装目录:/data/repository/mysql_repo/mysql_backup
 # 备份目录:/data/MySQL_BACKUP
 # 使用如下命令替换
-find . -regex '.*\.cnf\|.*\.sh\|.*\.py' | xargs -i sed -i "s|/data/code/github/repository/mysql_repo/mysql_backup|/data/repository/mysql_repo/mysql_backup|g" {}
-find . -regex '.*\.cnf\|.*\.sh\|.*\.py' | xargs -i sed -i "s|/data/MySQL_BACKUP|/data/MySQL_BACKUP|g" {}
+find . -regex '.*\.cnf\|.*\.sh\|.*\.py' | xargs -i sed -i "s|old_mysql_backup|new_mysql_backup|g" {}
+find . -regex '.*\.cnf\|.*\.sh\|.*\.py' | xargs -i sed -i "s|old_MySQL_BACKUP|new_MySQL_BACKUP|g" {}
 
 2、crontab
 ################ 冷备计划任务管理

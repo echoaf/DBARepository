@@ -1,20 +1,19 @@
 #!/bin/bash
 
-# SHELL配置文件
-
-######################## 变量 ##############################
 local_ip=$(/sbin/ifconfig|grep "inet "|awk '{print $2}'|grep -Ev "127.0.0.1|172.17"|head -1) # centos-7
-github_dir="/data/code/github/repository/mysql_repo/mysql_backup"
-common_dir="$github_dir/common"
-log_dir="$github_dir/log" && mkdir -p $log
-tmp_dir="$github_dir/tmp" && mkdir -p $tmp_dir
+base_dir="/data/repository/mysql_repo/mysql_backup"
+common_dir="$base_dir/common"
+log_dir="$base_dir/log" && mkdir -p $log_dir
+tmp_dir="$base_dir/tmp" && mkdir -p $tmp_dir
+
 mysql="$common_dir/mysql" # Ver 15.1 Distrib 5.5.60-MariaDB, for Linux (x86_64) using readline 5.1
 mysqlbinlog="$common_dir/mysqlbinlog" # Ver 3.4 for Linux at x86_64
-chmod a+x $mysql $mysqlbinlog
-normal_log="$log_dir/shell.log"
 mydumper="/usr/local/bin/mydumper"
 myloader="/usr/local/bin/myloader"
 innobackupex="/usr/local/xtrabackup/bin/innobackupex"
+chmod a+x $mysql $mysqlbinlog
+
+normal_log="$log_dir/shell.log"
 
 # 备份目录
 backup_parent_dir="/data/MySQL_BACKUP"
@@ -23,9 +22,8 @@ binarylog_backup_dir="$backup_parent_dir/BINARYLOG_BACKUP"
 dump_dir="$backup_parent_dir/DUMP"
 mkdir -p $backup_parent_dir $full_backup_dir $binarylog_backup_dir $dump_dir
 
-max_table_rows=1000000 # 大于此数对表分块dump
+#max_table_rows=1000000 # 大于此数对表分块dump
 
-######################## MySQL连接方式 ##############################
 dba_host="172.16.112.10"
 dba_port="10000"
 dba_user="dba_master" # DML权限
@@ -38,11 +36,8 @@ repl_user="repl_user" # 复制用户
 repl_pass="repl_user"
 dump_user="dump_user" # 备份用户
 dump_pass="dump_user"
-restore_user="restore_user" # 检测恢复校验是否成功用户,只有恢复的实例才会存在此用户
-restore_pass="restore_user"
 DBA_MYSQL="$mysql -h$dba_host -P$dba_port -u$dba_user -p$dba_pass --default-character-set=utf8 -N"
 
-######################## MySQL TABLE ##############################
 t_mysql_info="mysql_info_db.t_mysql_info" # MySQL信息表
 t_mysql_fullbackup_info="mysql_backup_db.t_mysql_fullbackup_info" # 全备信息表
 t_mysql_fullbackup_result="mysql_backup_db.t_mysql_fullbackup_result" # 全备结果表
@@ -51,36 +46,18 @@ t_mysql_binarylog_result="mysql_backup_db.t_mysql_binarylog_result" # 增备结�
 t_mysql_check_info="mysql_backup_db.t_mysql_check_info" # 校验信息表
 t_mysql_check_result="mysql_backup_db.t_mysql_check_result" # 校验结果表
 
-######################## Functions ##############################
+
+
+# Functions
 function printLog()
 {
 	content="$1"
 	normal_log="$2"
-	color="$3"
 	if [ -z "$normal_log" ];then
         normal_log="$log_dir/shell.log"
 	fi
-	if [ -z "$color" ];then
-		color="green"
-	fi		
-	echo "[$(date +"%F %T")] $content" >>$normal_log 2>&1
-	case "$color" in
-		green) echo -e "[$(date +"%F %T")] \033[32m$content \033[0m";;
-		red) echo -e "[$(date +"%F %T")] \033[31m$content \033[0m";;
-		normal) echo -e "[$(date +"%F %T")] $content";;
-		*) echo -e "[$(date +"%F %T")] \033[32m$content \033[0m";;
-	esac
-}
-
-
-function checkShell()
-{
-	shell_name="$0"
-	shell_id=$(ps aux| grep "$shell_name"| grep -v grep | awk '{print $2}')
-	shell_num=$(echo "$shell_id" | wc -l)
-	if ((${shell_num}>3));then
-		exit 1
-	fi
+	echo "[$(date +"%F %T")]$content"
+	echo "[$(date +"%F %T")]$content" >>$normal_log 2>&1
 }
 
 
