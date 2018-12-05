@@ -22,7 +22,7 @@ binarylog_backup_dir="$backup_parent_dir/BINARYLOG_BACKUP"
 dump_dir="$backup_parent_dir/DUMP"
 mkdir -p $backup_parent_dir $full_backup_dir $binarylog_backup_dir $dump_dir
 
-#max_table_rows=1000000 # 大于此数对表分块dump
+max_table_rows=1000000 # 大于此数对表分块dump
 
 dba_host="172.16.112.10"
 dba_port="10000"
@@ -48,64 +48,243 @@ t_mysql_check_result="mysql_backup_db.t_mysql_check_result" # 校验结果表
 
 
 
-# Functions
+####################################### Functions
+
+
+function archivePath()
+{
+    dir_path="$1"
+    base_path="$2"
+    # Tips:
+    # --remove-files:归档后删除源数据
+    # 归档大文件会比较吃CPU
+    cd $dir_path && tar zcf ${base_path}.tar.gz $base_path --remove-files
+}
+
+
+function analysisMetadata()
+{
+    metadata="$1"
+    data_source="$2"
+    slave_host=$(echo "$data_source"| awk -F":" '{print $1}')
+    slave_port=$(echo "$data_source"| awk -F":" '{print $2}')
+    repl_conn="$mysql -u$repl_user -p$repl_pass -h$slave_host -P$slave_port"
+
+    values=$(cat "$metadata")
+    start_time=$(echo "$values" | grep -w "Started dump at:"| awk -F"Started dump at: " '{print $2}')
+    end_time=$(echo "$values" | grep -w "Finished dump at:"| awk -F"Finished dump at: " '{print $2}')
+    slave_log_file=$(echo "$values"| grep -w "SHOW MASTER STATUS:" -A 3 | grep -w "Log:"| awk -F"Log:" '{print $2}' | sed 's/ //g')
+    slave_log_pos=$(echo "$values"| grep -w "SHOW MASTER STATUS:" -A 3 | grep -w "Pos:"| awk -F"Pos:" '{print $2}' | sed 's/ //g')
+    slave_gtid=$(echo "$values"| grep -w "SHOW MASTER STATUS:" -A 3 | grep -w "GTID:"| awk -F"GTID:" '{print $2}' | sed 's/ //g')
+    master_host=$(echo "$values"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "Host:"| awk -F"Host:" '{print $2}' | sed 's/ //g')
+    master_port=$(echo "show slave status\G" | $repl_conn | grep -w "Master_Port:"| awk -F"Master_Port:" '{print $2}'| sed 's/ //g')
+    master_log_file=$(echo "$values"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "Log:"| awk -F"Log:" '{print $2}' | sed 's/ //g')
+    master_log_pos=$(echo "$values"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "Pos:"| awk -F"Pos:" '{print $2}' | sed 's/ //g')
+    master_gtid=$(echo "$values"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "GTID:"| awk -F"GTID:" '{print $2}' | sed 's/ //g')
+    metadata_jason="{'start_time':'$start_time','end_time':'$end_time','slave_host':'$slave_host','slave_port':'$slave_port','slave_log_file':'$slave_log_file','slave_log_pos':'$slave_log_pos','slave_gtid':'$slave_gtid','master_host':'$master_host','master_port':'$master_port','master_log_file':'$master_log_file','master_log_pos':'$master_log_pos','master_gitd':'$master_gtid'}"
+    size=$(du -shm $backup_path | awk '{print $1}') 
+}
+
+
+function checkMydumperResult()
+{
+    f_metadata="$1"
+    data_source="$2"
+    if [ -f "$f_metadata" ];then
+        analysisMetadata "$f_metadata" "$data_source"
+        echo "${start_time}--${end_time}--${size}--${metadata_jason}"
+        E=0
+    else
+        if ps -ef | grep -v grep | grep "$mydumper" | grep -q "$backup_path";then
+            printLog "[$data_source]pid is exits,not find metadata" "$normal_log"
+            E=1
+        else
+            printLog "[$data_source]pid is not exits,not find metadata" "$normal_log"
+            E=2
+        fi
+    fi
+    return "$E"
+}
+
+
+function mkdirPath()
+{
+    path="$1"
+    if [ ! -d "$path" ];then
+        mkdir -p $path
+    fi
+}
+
+
+function checkPathFile()
+{
+    path="$1"
+    cnt=$(ls "$path"| wc -l)
+    if ((${cnt}==0));then
+        E="0"
+    else
+        E="1"
+    fi
+    return "$E"
+}
+
+
+function checkMySQLConnection()
+{
+    mysql_host="$1"
+    mysql_port="$2"
+    mysql_user="$3"
+    mysql_pass="$4"
+    value=$($mysql -h$mysql_host -P$mysql_port -u$mysql_user -p$mysql_pass -e "select 'k'" -N 2>&1)
+    if [ "$value" == "k" ];then
+        return 0
+    else
+        return 1
+    fi
+}
+
+
+function checkActiveConnect()
+{
+    mysql_host="$1"
+    mysql_port="$2"
+    mysql_user="$3"
+    mysql_pass="$4"
+    sql="select count(*) from information_schema.innodb_trx;"
+    value=$($mysql -h$mysql_host -P$mysql_port -u$mysql_user -p$mysql_pass -e "$sql" -N 2>&1)
+    if (($?!=0));then
+        return 1
+    fi
+    if ((${value}>0));then
+        return 1
+    fi
+}
+
+
+function checkMydumper()
+{
+    src_host="$1"
+    src_port="$2"
+    backup_path="$3"
+
+    mkdirPath "$backup_path"
+    checkPathFile "$backup_path"
+    if (($?!=0));then
+       content="path is not empty.($backup_path)"
+       printLog "$content" "$normal_log"
+       return 1
+    fi
+    
+    for u in $(echo "$dump_user:$dump_pass $repl_user:$repl_pass"| sed 's/ /\n/g')
+    do
+        user=$(echo "$u"| awk -F":" '{print $1}')
+        pass=$(echo "$u"| awk -F":" '{print $2}')
+        info="mysql -u$user -p$pass -h$src_host -P$src_port"
+        checkMySQLConnection "$src_host" "$src_port" "$user" "$pass"
+        if (($?!=0));then
+            content="mysql connect error.($info)"
+            printLog "$content" "$normal_log"
+            return 1
+        fi
+    done
+
+    info="mysql -u$dump_user -p$dump_pass -h$src_host -P$src_port"
+    checkActiveConnect "$src_host" "$src_port" "$dump_user" "$dump_pass"
+    if (($?!=0));then
+        printLog "mysql have active trx($info)." "$normal_log" 
+        return 1
+    fi
+
+    return 0
+}
+
+
+
+function backupMydump()
+{
+    src_host="$1"
+    src_port="$2"
+    backup_path="$3"
+    is_wait="$4" # 是否等待
+
+    if [ "$is_wait" = "Y" ];then
+        $mydumper --regex '^(?!(performance_schema|sys))' -u $dump_user -p $dump_pass -h $src_host -P $src_port -v 2 -t 4 -s $max_table_rows -r $max_table_rows -o $backup_path -L $normal_log >>$normal_log 2>&1
+    else
+        $mydumper --regex '^(?!(performance_schema|sys))' -u $dump_user -p $dump_pass -h $src_host -P $src_port -v 2 -t 4 -s $max_table_rows -r $max_table_rows -o $backup_path -L $normal_log >>$normal_log 2>&1 &
+    fi
+
+    if (($?==0));then
+        return 0
+    else
+        return 1
+    fi
+}
+
+
+function upperString()
+{
+    string="$1"
+    echo "$string"| tr 'a-z' 'A-Z'
+}
+
+
 function printLog()
 {
-	content="$1"
-	normal_log="$2"
-	if [ -z "$normal_log" ];then
+    content="$1"
+    normal_log="$2"
+    if [ -z "$normal_log" ];then
         normal_log="$log_dir/shell.log"
-	fi
-	echo "[$(date +"%F %T")]$content"
-	echo "[$(date +"%F %T")]$content" >>$normal_log 2>&1
+    fi
+    echo "[$(date +"%F %T")]$content"
+    echo "[$(date +"%F %T")]$content" >>$normal_log 2>&1
 }
 
 
 function lockFile()
 {
-	shell_name="$1"
-	sock_file="$2"
-	pid="$3"
+    shell_name="$1"
+    sock_file="$2"
+    pid="$3"
 
-	# 检测是否还存在除了$pid的其他进程,如果存在需要kill
-	is_pids=$(ps aux| grep -w "$shell_name"| grep -v grep | grep -v "$pid"| awk '{print $2}')
+    # 检测是否还存在除了$pid的其他进程,如果存在需要kill
+    is_pids=$(ps aux| grep -w "$shell_name"| grep -v grep | grep -v "$pid"| awk '{print $2}')
 
-	# 判断是否存在sock_file
-	if [ ! -f "$sock_file" ];then
-		if [ "$is_pids" ];then
-			for is_pid in $(echo "$is_pids")
-			do
-				# kill前再次判断是否存在当前pid,避免异常
-				if ps aux| grep $is_pid| grep -w "$shell_name"| grep -v grep >/dev/null 2>&1; then
-					echo "[$(date +"%F %T")]$shell_name存在异常进程,开始执行kill $is_pid"
-					kill $is_pid
-				fi
-			done
-		fi
-		echo "[$(date +"%F %T")]$shell_name进程没有在运行,准备拉起" 
-		echo "$pid" >$sock_file
+    # 判断是否存在sock_file
+    if [ ! -f "$sock_file" ];then
+        if [ "$is_pids" ];then
+            for is_pid in $(echo "$is_pids")
+            do
+                # kill前再次判断是否存在当前pid,避免异常
+                if ps aux| grep $is_pid| grep -w "$shell_name"| grep -v grep >/dev/null 2>&1; then
+                    echo "[$(date +"%F %T")]$(basename $shell_name) is killed."
+                    kill $is_pid
+                fi
+            done
+        fi
+        echo "[$(date +"%F %T")]$(basename $shell_name) start pull." 
+        echo "$pid" >$sock_file
 
-	else
-		value=$(cat $sock_file 2>&1)
-		is_num=$(ps aux | grep $value | grep $shell_name | wc -l)
-		# 唯一一种正常情况
-		if ((${is_num}==1));then
-			echo "[$(date +"%F %T")]$shell_name进程在运行" 
-			exit 0
-		else
-			if [ "$is_pids" ];then
-				for is_pid in $(echo "$is_pids")
-				do
-					if ps aux| grep $is_pid| grep -w $shell_name |grep -v grep >/dev/null 2>&1; then
-						echo "[$(date +"%F %T")]$shell_name存在异常进程,开始执行kill $is_pid"
-						kill $is_pid
-					fi
-				done
-			fi
-			echo "[$(date +"%F %T")]$shell_name进程运行异常($sock_file异常),准备重启" 
-			echo "$pid" >$sock_file
-		fi
-	fi
+    else
+        value=$(cat $sock_file 2>&1)
+        is_num=$(ps aux | grep $value | grep $shell_name | wc -l)
+        # 唯一一种正常情况
+        if ((${is_num}==1));then
+            echo "[$(date +"%F %T")]$(basename $shell_name) is running." 
+            exit 0
+        else
+            if [ "$is_pids" ];then
+                for is_pid in $(echo "$is_pids")
+                do
+                    if ps aux| grep $is_pid| grep -w $shell_name |grep -v grep >/dev/null 2>&1; then
+                        echo "[$(date +"%F %T")]$(basename $shell_name) is killed."
+                        kill $is_pid
+                    fi
+                done
+            fi
+            echo "[$(date +"%F %T")]$(basename $shell_name) is not ok($(basename $sock_file) error), restarting." 
+            echo "$pid" >$sock_file
+        fi
+    fi
 }
 
 
@@ -113,6 +292,7 @@ function lastExit()
 {
     bd="$1"
     maxr_second="$2"
+    shell_name="$3"
     if [ -z "$bd" ];then
         bd="0"
     fi
@@ -122,7 +302,9 @@ function lastExit()
     ed=$(date +%s)
     vd=$(echo "$ed -$bd" | bc)
     if ((${vd}>=${maxr_second}));then #执行超过时间推出
+        printLog "[$shell_name][bd:$bd,ed:$ed,maxr_second:$maxr_second]shell is normal exit." "$normal_log"
         exit
     fi
 }
+
 
