@@ -31,8 +31,8 @@ dba_user="dba_master" # DML权限
 dba_pass="dba_master"
 check_user="read_user" # 只读权限
 check_pass="read_user"
-admin_user="remote_root" # surper权限
-admin_pass="remote_root"
+admin_user="admin_user" # surper权限
+admin_pass="admin_user"
 repl_user="repl_user" # 复制用户
 repl_pass="repl_user"
 dump_user="dump_user" # 备份用户
@@ -66,6 +66,61 @@ function analysisXtrabackupInfo()
     slave_log_file=$(echo "$values" | grep -w "binlog_pos"| awk -F"= " '{print $2}'| awk -F"," '{print $1}'| awk '{print $2}'| sed "s/'//g")
     slave_log_pos=$(echo "$values" | grep -w "binlog_pos"| awk -F"= " '{print $2}'| awk -F"," '{print $2}'| awk '{print $2}'| sed "s/'//g")
     metadata_jason="{'start_time':'$start_time','end_time':'$end_time','slave_host':'$slave_host','slave_port':'$slave_port','slave_log_file':'$slave_log_file','slave_log_pos':'$slave_log_pos','slave_gtid':'','master_host':'','master_port':'','master_log_file':'','master_log_pos':'','master_gitd':''}"
+}
+
+
+function feelChange()
+{
+    file="$1"
+    sleep_time="$2"
+    first_size="du -shk $file"
+    sleep $sleep_time
+    second_size="du -shk $file"
+    if [ "$first_size" = "$second_size" ];then
+        return 1
+    else
+        return 0
+    fi
+}
+
+
+function checkXtrabackupResultRemote()
+{
+    backup_path="$1"
+    data_source="$2"
+    host=$(echo "$data_source" | awk -F":" '{print $1}')
+    port=$(echo "$data_source" | awk -F":" '{print $2}')
+    
+    sleep 10 # backup.tar.gz不一定马上会生成
+    backup_tar="$backup_path/backup.tar.gz"
+    cnt=$(ps aux| grep "tar -tf" | wc -l)
+    if [ -f "$backup_tar" ];then
+        if ((${cnt}>2));then
+            return_info="too manay tar progress is running,wait"
+            E=1
+            echo "$return_info"
+        else
+            if tar -tmf $backup_tar | grep -q xtrabackup_info;then
+                (cd $backup_path && tar zxmvf backup.tar.gz && rm -f backup.tar.gz) >>$normal_log 2>&1
+                json_info=$(checkXtrabackupResultLocal "$backup_path" "$data_source") 
+                if (($?==0));then
+                    E="0"
+                else
+                    E="2"
+                fi
+                echo "$json_info"
+            else
+                return_info="backup is fail,not find $backup_tar/xtrabackup_info."
+                E=1
+                echo "$return_info"
+            fi
+        fi
+    else
+        return_info="backup is fail,not find $backup_tar."
+        E=2
+        echo "$return_info"
+    fi
+    return $E
 }
 
 
@@ -106,6 +161,7 @@ function checkXtrabackupResultLocal()
 
     return $E
 }
+
 
 function checkXtrabackup()
 {
@@ -417,6 +473,7 @@ function checkActiveConnect()
 }
 
 
+
 function checkMydumper()
 {
     src_host="$1"
@@ -455,6 +512,36 @@ function checkMydumper()
 }
 
 
+function onfSlowLog()
+{
+    host="$1"
+    port="$2"
+    action="$3"
+    $mysql -h$host -P$port -u$admin_user -p$admin_pass -e "set global slow_query_log_file='$action';"
+}
+
+
+function loadMydump()
+{
+    dest_host="$1"
+    dest_port="$2"
+    backup_path="$3"
+    enable_binlog="$4"
+    thread="$5"
+    if [ -z "$thread" ];then
+        thread="8"
+    fi
+    onfSlowLog "$dest_host" "$dest_port" "off" # 关闭慢日志
+    # -o, --overwrite-tables Drop tables if they already exist
+    # -e, --enable-binlog    Enable binary logging of the restore data
+    if [ "enable_binlog" = "Y" ] || [ "enable_binlog" = "y" ];then
+        $myloader -h $dest_host -P $dest_port -u $admin_user -p $admin_pass -t $thread -o -e -v 2 -d $backup_path >>$normal_log 2>&1
+    else
+        $myloader -h $dest_host -P $dest_port -u $admin_user -p $admin_pass -t $thread -o -v 2 -d $backup_path >>$normal_log 2>&1
+    fi
+    onfSlowLog "$dest_host" "$dest_port" "on" # 打开慢日志
+}
+
 
 function backupMydump()
 {
@@ -462,11 +549,15 @@ function backupMydump()
     src_port="$2"
     backup_path="$3"
     is_wait="$4" # 是否等待
+    thread="$5"
+    if [ -z "$thread" ];then
+        thread="4"
+    fi
 
     if [ "$is_wait" = "Y" ];then
-        $mydumper --regex '^(?!(performance_schema|sys))' -u $dump_user -p $dump_pass -h $src_host -P $src_port -v 2 -t 4 -s $max_table_rows -r $max_table_rows -o $backup_path -L $normal_log >>$normal_log 2>&1
+        $mydumper --regex '^(?!(performance_schema|sys))' -u $dump_user -p $dump_pass -h $src_host -P $src_port -v 2 -t $thread -s $max_table_rows -r $max_table_rows -o $backup_path -L $normal_log >>$normal_log 2>&1
     else
-        $mydumper --regex '^(?!(performance_schema|sys))' -u $dump_user -p $dump_pass -h $src_host -P $src_port -v 2 -t 4 -s $max_table_rows -r $max_table_rows -o $backup_path -L $normal_log >>$normal_log 2>&1 &
+        $mydumper --regex '^(?!(performance_schema|sys))' -u $dump_user -p $dump_pass -h $src_host -P $src_port -v 2 -t $thread -s $max_table_rows -r $max_table_rows -o $backup_path -L $normal_log >>$normal_log 2>&1 &
     fi
 
     if (($?==0));then
@@ -477,12 +568,63 @@ function backupMydump()
 }
 
 
+function checkEmptyInstance()
+{
+    host="$1"
+    port="$2"
+}
+
+
+function checkInt()
+{
+    value="$1"
+    int_value=$(echo "${value}*1"| bc)
+    if [ "$int_value" = "0" ];then
+        echo "$value not a int."
+        return 1
+    else
+        return 0
+    fi
+}
+
+
+function checkMyload()
+{
+    host="$1"
+    port="$2"
+    info="mysql -h$host -P$port -u$admin_user -p$admin_pass"
+    checkMySQLConnection "$host" "$port" "$admin_user" "$admin_pass"
+    if (($?!=0));then
+        content="mysql connect error.($info)"
+        printLog "$content" "$normal_log"
+        return 1
+    fi
+    sql="show databases;"
+    values=$($mysql -u$admin_user -p$admin_pass -h$host -P$port -N -e "$sql")
+    if echo "$values"| grep -Evwq "information_schema|mysql|performance_schema|sys";then
+        printLog "not empty instance($host:$port)" "$normal_log"
+        return 1
+    fi
+    return 0
+}
+
+function getIntToday()
+{
+    echo $(date +"%Y%m%d")
+}
+
+function pointToLineString()
+{
+    string="$1"
+    echo "$string"| sed 's/\./_/g'
+}
+
+
 function upperString()
 {
     string="$1"
     echo "$string"| tr 'a-z' 'A-Z'
 }
-
 
 function printLog()
 {

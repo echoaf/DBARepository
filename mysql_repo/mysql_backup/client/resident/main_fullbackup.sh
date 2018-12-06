@@ -73,8 +73,6 @@ function backupFunctionMain()
             # backupXtrabackupRemote:在远程备份,使用scp
             #return_info=$(backupXtrabackupLocal "$master_host" "$master_port" "$backup_path" "N")
             return_info=$(backupXtrabackupRemote "$master_host" "22" "$master_port" "22" "$backup_path" "N")
-            echo "$return_info"
-            exit
         else
             ec >/dev/null 2>&1 # Tips:主动生成一个错误
         fi
@@ -230,7 +228,8 @@ function checkBackStatus()
             metadata="$backup_path/metadata"
             json_info=$(checkMydumperResult "$metadata" "$data_source")
         elif [ "$tmp_bmode" = "XTRABACKUP" ];then
-            json_info=$(checkXtrabackupResultLocal "$backup_path" "$data_source")
+            #json_info=$(checkXtrabackupResultLocal "$backup_path" "$data_source")
+            json_info=$(checkXtrabackupResultRemote "$backup_path" "$data_source")
         elif [ "$tmp_bmode" = "MYSQLDUMP" ];then
             return_info="hell mysqldump"
         else
@@ -239,6 +238,7 @@ function checkBackStatus()
         fi
 
         value="$?"
+        backup_path=$(echo "select Fbackup_path from $t_mysql_fullbackup_result where Findex='$index';"| $DBA_MYSQL)
         if (($value==0));then
             size=$(du -shm $backup_path | awk '{print $1}')
             backup_start_time=$(echo "$json_info"| awk -F"--" '{print $1}')
@@ -252,7 +252,7 @@ function checkBackStatus()
             #archive_file="${dir_path}/${base_path}.tar.gz"
             sql="update $t_mysql_fullbackup_result 
             set Fbackup_size='$backup_size',Fbackup_start_time='$backup_start_time',Fbackup_end_time='$backup_end_time',
-            Fbackup_metadata=\"$metadata_jason\",Fback_status='$back_status',Fmodify_time=now(),Fbackup_info='Succ'
+            Fbackup_metadata=\"$metadata_jason\",Fback_status='$back_status',Fmodify_time=now(),Fbackup_info='备份完成'
             where Ftask_id='$task_id';"
         elif (($value==1));then
             back_status="Backing"
