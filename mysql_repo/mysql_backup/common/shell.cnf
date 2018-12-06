@@ -11,6 +11,7 @@ mysqlbinlog="$common_dir/mysqlbinlog" # Ver 3.4 for Linux at x86_64
 mydumper="/usr/local/bin/mydumper"
 myloader="/usr/local/bin/myloader"
 innobackupex="/usr/local/xtrabackup/bin/innobackupex"
+ssh="/usr/bin/ssh"
 chmod a+x $mysql $mysqlbinlog
 
 normal_log="$log_dir/shell.log"
@@ -51,6 +52,262 @@ t_mysql_check_result="mysql_backup_db.t_mysql_check_result" # 校验结果表
 ####################################### Functions
 
 
+
+
+function analysisXtrabackupInfo()
+{
+    file="$1"
+    data_source="$2"
+    slave_host=$(echo "$data_source" | awk -F":" '{print $1}')
+    slave_port=$(echo "$data_source" | awk -F":" '{print $2}')
+    values=$(cat $file)
+    start_time=$(echo "$values" | grep -w "start_time"| awk -F"= " '{print $2}')
+    end_time=$(echo "$values" | grep -w "end_time"| awk -F"= " '{print $2}')
+    slave_log_file=$(echo "$values" | grep -w "binlog_pos"| awk -F"= " '{print $2}'| awk -F"," '{print $1}'| awk '{print $2}'| sed "s/'//g")
+    slave_log_pos=$(echo "$values" | grep -w "binlog_pos"| awk -F"= " '{print $2}'| awk -F"," '{print $2}'| awk '{print $2}'| sed "s/'//g")
+    metadata_jason="{'start_time':'$start_time','end_time':'$end_time','slave_host':'$slave_host','slave_port':'$slave_port','slave_log_file':'$slave_log_file','slave_log_pos':'$slave_log_pos','slave_gtid':'','master_host':'','master_port':'','master_log_file':'','master_log_pos':'','master_gitd':''}"
+}
+
+
+function checkXtrabackupResultLocal()
+{
+    backup_path="$1"
+    data_source="$2"
+    host=$(echo "$data_source" | awk -F":" '{print $1}')
+    port=$(echo "$data_source" | awk -F":" '{print $2}')
+    cnt=$(ps aux| grep "$innobackupex" | grep "host=$host" | grep "port=$port"| wc -l)
+    if [ -d "$backup_path" ];then
+        if [ -f "$backup_path/xtrabackup_info" ];then
+            analysisXtrabackupInfo "$backup_path/xtrabackup_info" "$data_source"
+            echo "${start_time}--${end_time}--${metadata_jason}"
+            E=0
+        else
+            if ((${cnt}==0));then
+                return_info="backup is fail,not find $backup_path/xtrabackup_info and pid is not exists."
+                echo "$return_info"
+                E=2
+            else
+                return_info="backup is backuping,find $backup_path and not find $backup_path/xtrabackup_info however pid is exists."
+                echo "$return_info"
+                E=1
+            fi
+        fi
+    else
+        if ((${cnt}==0));then
+            return_info="backup is fail,not find $backup_path and pid is not exists."
+            echo "$return_info"
+            E=2
+        else
+            return_info="backup is backuping,not find $backup_path however pid is exists."
+            echo "$return_info"
+            E=1
+        fi
+    fi
+
+    return $E
+}
+
+function checkXtrabackup()
+{
+    src_host="$1"
+    src_port="$2"
+    backup_path="$3"
+
+    mkdirPath "$backup_path"
+    checkPathFile "$backup_path"
+    if (($?!=0));then
+       content="path is not empty.($backup_path)"
+       printLog "$content" "$normal_log"
+       return 1
+    fi
+    
+    for u in $(echo "$dump_user:$dump_pass $repl_user:$repl_pass"| sed 's/ /\n/g')
+    do
+        user=$(echo "$u"| awk -F":" '{print $1}')
+        pass=$(echo "$u"| awk -F":" '{print $2}')
+        info="mysql -u$user -p$pass -h$src_host -P$src_port"
+        checkMySQLConnection "$src_host" "$src_port" "$user" "$pass"
+        if (($?!=0));then
+            content="mysql connect error.($info)"
+            printLog "$content" "$normal_log"
+            return 1
+        fi
+    done
+
+    #info="mysql -u$dump_user -p$dump_pass -h$src_host -P$src_port"
+    #checkActiveConnect "$src_host" "$src_port" "$dump_user" "$dump_pass"
+    #if (($?!=0));then
+    #    printLog "mysql have active trx($info)." "$normal_log" 
+    #    return 1
+    #fi
+
+    return 0
+}
+
+
+function getMyCNF()
+{
+    port="$1"
+    cnf=$(ps aux| grep mysqld_safe | grep "$port" | awk -F"--defaults-file=" '{print $2}'| awk '{print $1}')
+    if [ -f "$cnf" ];then
+        echo "$cnf"
+        E=0
+    else
+        E=1
+    fi
+    return $E
+}
+
+
+function checkGtidMode()
+{
+    host="$1"
+    port="$2"
+    gtid_mode=$($mysql -h$host -P$port -u$dump_user -p$dump_pass -N -e "show global variables like 'gtid_mode';" 2>&1)
+    if [ "$gtid_mode" = "ON" ] ;then
+        echo 1
+    else
+        echo 0
+    fi
+}
+
+
+function checkSlaveWorkers()
+{
+    host="$1"
+    port="$2"
+    slave_workers=$($mysql -h$host -P$port -u$dump_user -p$dump_pass -N -e "show global variables like 'slave_parallel_workers';" 2>&1)
+    if [ "$slave_workers" = "" ] || [ "$slave_workers" = "0" ];then
+        echo 0
+    else
+        echo 1
+    fi
+}
+
+
+function checkSlaveInfo()
+{
+    host="$1"
+    port="$2"
+    gtid_mode=$(checkGtidMode "$host" "$port")
+    slave_workers=$(checkSlaveWorkers "$host" "$port")
+    if [ "$gtid_mode" = "1" ] && [ "$slave_workers" = "1" ];then # 两者都打开
+        echo "1"
+    else
+        echo "0"
+    fi
+}
+
+
+<<comment
+# 远程备份,远程备份只能压缩
+# 使用免密钥方式
+# 172.16.112.10:11000的mysql数据备份到172.16.112.11
+#innobackupex --defaults-file=/data/mysql/11000/my.cnf --tmpdir=/data/MySQL_BACKUP/DUMP/20181206 --stream=tar --user=fql_dump --password=fql_dump --host=172.16.112.10 --port=11000 --slave-info --no-timestamp /data/MySQL_BACKUP/DUMP/20181206 | ssh -p 22 root@172.16.112.11 -o StrictHostKeyChecking=no "gzip >/data/MySQL_BACKUP/DUMP/20181206/backup.tar.gz"
+
+# 远程备份,远程备份只能压缩
+# 使用明文密码方式
+# 172.16.112.10:11000的mysql数据备份到172.16.112.11
+innobackupex --defaults-file=/data/mysql/11000/my.cnf --tmpdir=/data/MySQL_BACKUP/DUMP/20181206 --stream=tar --user=fql_dump --password=fql_dump --host=172.16.112.10 --port=11000 --slave-info --no-timestamp /data/MySQL_BACKUP/DUMP/20181206 | sshpass -p "redhat" ssh -p 22 root@172.16.112.11 -o StrictHostKeyChecking=no "gzip >/data/MySQL_BACKUP/DUMP/20181206/backup.tar.gz"
+comment
+# 一定要用root
+function backupXtrabackupRemote()
+{
+    remote_host="$1"
+    remote_ssh_port="$2"
+    remote_mysql_port="$3"
+    local_ssh_port="$4"
+    backup_path="$5"
+    is_wait="$6"
+    tmpdir="/tmp/full" # 表空间太大可能会占用/tmp空间
+    local_host="$local_ip"
+    # 在远程目录需要执行的命令
+    remote_cmd_get_cnf="ps aux| grep mysqld_safe | grep \"$remote_mysql_port\" | awk -F\"--defaults-file=\" '{print \$2}'| awk '{print \$1}'" # 获取my.cnf
+    my_cnf=$(timeout 3 $ssh -p $remote_ssh_port -o StrictHostKeyChecking=no root@$remote_host "$remote_cmd_get_cnf" 2>&1)
+    my_cnf=$(echo "$my_cnf" | sed -e 's/"//g' -e 's/\n//g') # Tips:不知道为什么有这个
+    if (($?!=0));then
+        printLog "执行远程命令报错($remote_cmd_get_cnf)"
+        return 1
+    fi
+
+    tmpdir_cmd_mkdir="mkdir -p $tmpdir"
+    timeout 3 $ssh -p $remote_ssh_port -o StrictHostKeyChecking=no root@$remote_host "$tmpdir_cmd_mkdir"
+    if (($?!=0));then
+        printLog "执行远程命令报错($tmpdir_cmd_mkdir)"
+        return 1
+    fi
+
+    # Tips:一段极其丑陋的代码，希望不需要再进行改造
+    slave_info=$(checkSlaveInfo "$remote_host" "$remote_ssh_port")
+    if [ "$is_wait" = "Y" ];then
+        if [ "$slave_info" = "1" ];then
+            innobackup_cmd_execute="/usr/bin/innobackupex --defaults-file=$my_cnf --tmpdir=$tmpdir --stream=tar --user=$dump_user --password=$dump_pass --host=$remote_host --port=$remote_mysql_port --slave-info --no-timestamp $tmpdir | $ssh -p $local_ssh_port root@$local_host -o StrictHostKeyChecking=no \"gzip >$backup_path/backup.tar.gz\" "
+            $ssh -p $remote_ssh_port -o StrictHostKeyChecking=no root@$remote_host "echo '$innobackup_cmd_execute'>/tmp/innobackupex.sh" >>$normal_log 2>&1
+            $ssh -p $remote_ssh_port -o StrictHostKeyChecking=no root@$remote_host "sh /tmp/innobackupex.sh" >>$normal_log 2>&1
+        else
+            innobackup_cmd_execute="/usr/bin/innobackupex --defaults-file=$my_cnf --tmpdir=$tmpdir --stream=tar --user=$dump_user --password=$dump_pass --host=$remote_host --port=$remote_mysql_port --no-timestamp $tmpdir | $ssh -p $local_ssh_port root@$local_host -o StrictHostKeyChecking=no \"gzip >$backup_path/backup.tar.gz\" "
+            $ssh -p $remote_ssh_port -o StrictHostKeyChecking=no root@$remote_host "echo '$innobackup_cmd_execute'>/tmp/innobackupex.sh" >>$normal_log 2>&1
+            $ssh -p $remote_ssh_port -o StrictHostKeyChecking=no root@$remote_host "sh /tmp/innobackupex.sh" >>$normal_log 2>&1
+        fi
+    else
+        if [ "$slave_info" = "1" ];then
+            innobackup_cmd_execute="/usr/bin/innobackupex --defaults-file=$my_cnf --tmpdir=$tmpdir --stream=tar --user=$dump_user --password=$dump_pass --host=$remote_host --port=$remote_mysql_port --slave-info --no-timestamp $tmpdir | $ssh -p $local_ssh_port root@$local_host -o StrictHostKeyChecking=no \"gzip >$backup_path/backup.tar.gz\" "
+            $ssh -p $remote_ssh_port -o StrictHostKeyChecking=no root@$remote_host "echo '$innobackup_cmd_execute'>/tmp/innobackupex.sh" >>$normal_log 2>&1
+            $ssh -p $remote_ssh_port -o StrictHostKeyChecking=no root@$remote_host "sh /tmp/innobackupex.sh" >>$normal_log 2>&1 &
+        else
+            innobackup_cmd_execute="/usr/bin/innobackupex --defaults-file=$my_cnf --tmpdir=$tmpdir --stream=tar --user=$dump_user --password=$dump_pass --host=$remote_host --port=$remote_mysql_port --no-timestamp $tmpdir | $ssh -p $local_ssh_port root@$local_host -o StrictHostKeyChecking=no \"gzip >$backup_path/backup.tar.gz\" "
+            $ssh -p $remote_ssh_port -o StrictHostKeyChecking=no root@$remote_host "echo '$innobackup_cmd_execute'>/tmp/innobackupex.sh" >>$normal_log 2>&1
+            $ssh -p $remote_ssh_port -o StrictHostKeyChecking=no root@$remote_host "sh /tmp/innobackupex.sh" >>$normal_log 2>&1 &
+        fi
+    fi
+    if (($?==0));then
+        return 0
+    else
+        return 1
+    fi
+}
+
+
+
+function backupXtrabackupLocal()
+{
+    host="$1"
+    port="$2"
+    backup_path="$3"
+    is_wait="$4"
+    
+    my_cnf=$(getMyCNF "$port")
+    if (($?!=0));then
+        printLog "找不到my.cnf($port)" "$normal_log"
+        return 1
+    fi
+
+    # --slave-info 
+    # The --slave-info option requires GTID enabled for a multi-threaded slave.
+    # 因为从库开了多线程复制(slave_parallel_workers)但没开启GTID,而XtraBackup要求2者必须都开启,否则报错
+    slave_info=$(checkSlaveInfo "$host" "$port")
+    if [ "$is_wait" = "Y" ];then
+        if [ "$slave_info" = "1" ];then
+            $innobackupex --defaults-file=$my_cnf --user=$dump_user --password=$dump_pass --host=$host --port=$port --slave-info --no-timestamp $backup_path >>$normal_log 2>&1
+        else
+            $innobackupex --defaults-file=$my_cnf --user=$dump_user --password=$dump_pass --host=$host --port=$port --no-timestamp $backup_path >>$normal_log 2>&1
+        fi
+    else
+        if [ "$slave_info" = "1" ];then
+            $innobackupex --defaults-file=$my_cnf --user=$dump_user --password=$dump_pass --host=$host --port=$port --slave-info --no-timestamp $backup_path >>$normal_log 2>&1 &
+        else
+            $innobackupex --defaults-file=$my_cnf --user=$dump_user --password=$dump_pass --host=$host --port=$port --no-timestamp $backup_path >>$normal_log 2>&1 &
+        fi
+    fi
+
+    if (($?==0));then
+        return 0
+    else
+        return 1
+    fi
+}
+
+
 function archivePath()
 {
     dir_path="$1"
@@ -82,7 +339,6 @@ function analysisMetadata()
     master_log_pos=$(echo "$values"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "Pos:"| awk -F"Pos:" '{print $2}' | sed 's/ //g')
     master_gtid=$(echo "$values"| grep -w "SHOW SLAVE STATUS:" -A 4 | grep -w "GTID:"| awk -F"GTID:" '{print $2}' | sed 's/ //g')
     metadata_jason="{'start_time':'$start_time','end_time':'$end_time','slave_host':'$slave_host','slave_port':'$slave_port','slave_log_file':'$slave_log_file','slave_log_pos':'$slave_log_pos','slave_gtid':'$slave_gtid','master_host':'$master_host','master_port':'$master_port','master_log_file':'$master_log_file','master_log_pos':'$master_log_pos','master_gitd':'$master_gtid'}"
-    size=$(du -shm $backup_path | awk '{print $1}') 
 }
 
 
@@ -92,7 +348,7 @@ function checkMydumperResult()
     data_source="$2"
     if [ -f "$f_metadata" ];then
         analysisMetadata "$f_metadata" "$data_source"
-        echo "${start_time}--${end_time}--${size}--${metadata_jason}"
+        echo "${start_time}--${end_time}--${metadata_jason}"
         E=0
     else
         if ps -ef | grep -v grep | grep "$mydumper" | grep -q "$backup_path";then

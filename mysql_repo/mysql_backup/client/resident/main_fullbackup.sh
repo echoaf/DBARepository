@@ -67,12 +67,20 @@ function backupFunctionMain()
             ec >/dev/null 2>&1 # Tips:主动生成一个错误
         fi
     elif [ "$tmp_bmode" = "XTRABACKUP" ];then
-        echo 2
-        master_my_cnf="/data/mysql/$master_port/my.cnf"
-        return_info=$(xtrabackupBackup $master_host $master_port 22 $master_my_cnf $local_ip 22 $backup_path "N" "$normal_log")
+        return_info=$(checkXtrabackup "$master_host" "$master_port" "$backup_path")
+        if (($?==0));then
+            # backupXtrabackupLocal:在本地备份
+            # backupXtrabackupRemote:在远程备份,使用scp
+            #return_info=$(backupXtrabackupLocal "$master_host" "$master_port" "$backup_path" "N")
+            return_info=$(backupXtrabackupRemote "$master_host" "22" "$master_port" "22" "$backup_path" "N")
+            echo "$return_info"
+            exit
+        else
+            ec >/dev/null 2>&1 # Tips:主动生成一个错误
+        fi
     elif [ "$tmp_bmode" = "MYSQLDUMP" ];then
-        echo 3
-        #return_info=$(xtrabackupBackup $master_host $master_port 22 $master_my_cnf $local_ip 22 $backup_path "N" "$normal_log")
+        return_info="[$f_name][$task_id]不支持mysqldump($backup_mode)"
+        ec >/dev/null 2>&1 # Tips:主动生成一个错误
     else
         return_info="[$f_name][$task_id]unknow backup mode($backup_mode)"
         ec >/dev/null 2>&1 # Tips:主动生成一个错误
@@ -222,7 +230,7 @@ function checkBackStatus()
             metadata="$backup_path/metadata"
             json_info=$(checkMydumperResult "$metadata" "$data_source")
         elif [ "$tmp_bmode" = "XTRABACKUP" ];then
-            json_info=$(xtrabackupResultCheck "$backup_path")
+            json_info=$(checkXtrabackupResultLocal "$backup_path" "$data_source")
         elif [ "$tmp_bmode" = "MYSQLDUMP" ];then
             return_info="hell mysqldump"
         else
@@ -232,10 +240,10 @@ function checkBackStatus()
 
         value="$?"
         if (($value==0));then
+            size=$(du -shm $backup_path | awk '{print $1}')
             backup_start_time=$(echo "$json_info"| awk -F"--" '{print $1}')
             backup_end_time=$(echo "$json_info"| awk -F"--" '{print $2}')
-            backup_size=$(echo "$json_info"| awk -F"--" '{print $3}')
-            metadata_jason=$(echo "$json_info"| awk -F"--" '{print $4}')
+            metadata_jason=$(echo "$json_info"| awk -F"--" '{print $3}')
             back_status="Succ"
             # Tips:归档留给check脚本,仅仅验证数据是有效集之后再进行压缩
             #dir_path=$(dirname "$backup_path")
@@ -277,11 +285,11 @@ function main()
         backupMain 
         printLog "[$f_name]end full backup do,quit if you need." "$normal_log" 
         #sleep 60 # 开始备份后不一定马上会生成备份文件,需要sleep
-        # 检测备份成功失败状态(只检测Backing状态的task_id)
+        #检测备份成功失败状态(只检测Backing状态的task_id)
         printLog "[$f_name]start full backup check." "$normal_log" 
         checkBackStatus
-        exit
         printLog "[$f_name]end full backup check." "$normal_log" 
+        exit
         sleep 10 # 留给退出时间
 
         lastExit $bd $maxr_second $f_name
