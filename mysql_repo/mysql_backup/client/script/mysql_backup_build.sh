@@ -111,19 +111,37 @@ function bulidMydumper()
     backup_path="$5"
     logic_threads="$6"
     enable_binlog="$7"
+    printLog "[$f_name]开始备份数据库" "$normal_log"
     return_info=$(backupMydump "$source_host" "$source_port" "$backup_path" "Y" "$logic_threads")
     if (($?==0));then
-        printLog "[$f_name][$task_id]$return_info" "$normal_log"
         metadata="$backup_path/metadata"
-        json_info=$(checkMydumperResult "$metadata" "$source_host:$source_port")
-        if (($value==0));then
+        json_info=$(checkMydumperResult "$metadata" "$source_host:$source_port" "1")
+        return_value=$?
+        if ((${return_value}==0));then
+            printLog "[$f_name][$source_host:$source_port]备份成功,位点信息如下($json_info)" "$normal_log"
+            printLog "[$f_name][$dest_host:$dest_port]开始导入数据" "$normal_log"
+            loadMydump "$dest_host" "$dest_port" "$backup_path" "$enable_binlog" "8"
+            change_sql=$(getChangeSQL "$json_info")
+            if (($?==0));then
+                printLog "[$f_name][$dest_host:$dest_port]开始change sql(change_sql:$change_sql)" "$normal_log"
+                $mysql -u$admin_user -p$admin_pass -h$dest_host -P$dest_port -e "stop slave;"
+                $mysql -u$admin_user -p$admin_pass -h$dest_host -P$dest_port -e "$sql"
+                $mysql -u$admin_user -p$admin_pass -h$dest_host -P$dest_port -e "start slave;"
+                printLog "[$f_name][$dest_host:$dest_port]检测slave,sleep 10" "$normal_log"
+                sleep 10
+                checkIsSlave "$dest_host" "$dest_port"
+                printLog "Slave_IO_Running:$Slave_IO_Running,Slave_SQL_Running:$Slave_SQL_Running,Seconds_Behind_Master:$Seconds_Behind_Master" "$normal_log"
+            else
+                printLog "[$f_name][$dest_host:$dest_port]change sql失败($change_sql)" "$normal_log"
+            fi
         else
+            printLog "[$f_name][$source_host:$source_port]备份失败($json_info)" "$normal_log"
+            return
         fi
     else
-        printLog ""
-        return 1
+        printLog "[$f_name][$source_host:$source_port]备份失败($return_info)" "$normal_log"
+        return
     fi
-    loadMydump "$dest_host" "$dest_port" "$backup_path" "$enable_binlog" "8"
 }
 
 
