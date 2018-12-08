@@ -1,0 +1,5 @@
+*.pyc
+*.log
+*.sock
+*.tar
+*.tar.gz
