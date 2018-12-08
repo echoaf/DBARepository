@@ -1,0 +1,15 @@
+https://www.ibm.com/developerworks/cn/linux/l-pyint/#ibm-pcon
+import keyword
+dir(keyword)
+查看模块包含哪些工具
+help(keyword.iskeyword)
+查看模块下面工具具体使用方法
+
+谁知道自省可以变得这么简单而又如此有价值？
+可是，我在结束时必须提出警告：不要将自省的结果误认为是万能的。有经验的 Python 程序员知道：
+他们不知道的东西总是比已知的更多，因此根本不可能是万能的。
+编程行为产生的问题多于答案。
+关于 Python 的唯一优点（正如我们今天在本文中所见）是它确实回答了人们的问题。
+至于我本人，觉得您不必因为我帮助您了解了这些 Python 必须提供的内容而酬谢我。
+用 Python 编程自有回报。
+我从爱好 Python 的同伴处获得的帮助也是不计报酬的。
