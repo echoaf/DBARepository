@@ -9,6 +9,7 @@ else
     action="ch"
 fi
 
+chmod a+x *.txt *.py *.sh
 
 if [ "$action" = "en" ];then
     sed -i 's/“/"/g' *.txt *.py
