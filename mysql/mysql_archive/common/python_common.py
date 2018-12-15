@@ -168,8 +168,15 @@ class Pulic(object):
         table_schema,table_name  = self.splitPoint(table)
         sql = ("""select COLUMN_NAME from information_schema.COLUMNS 
               where COLUMN_KEY='PRI' and table_schema='%s' and table_name='%s'; """%(table_schema,table_name))
-        v = self.connMySQL(sql,conn_setting)
-        v = v[0]['COLUMN_NAME'] if v else False
+        v = self.connMySQL(sql,conn_setting,0)
+        if v:
+            v = v[0]
+            if len(v) > 1:
+                v = False
+            else:
+                v = v[0]
+        else:
+            v = False
         return v
 
 

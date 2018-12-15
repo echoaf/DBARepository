@@ -5,6 +5,8 @@ import sys
 import os
 import datetime,time
 import commands
+import threading
+from threading import Thread, Semaphore
 base_dir = '/data/DBARepository/mysql/mysql_archive'
 common_dir = '%s/common'%base_dir
 sys.path.append(common_dir)
@@ -88,27 +90,28 @@ class MySQLArchive(object):
     
         conn_instance = ({'host':info['ip'], 'port':int(info['port']),
                         'user':self.d['master_user'], 'passwd':self.d['master_pass'],})
-        task_id = ["%s:%s"%(info['ip'],info['port'])]
+        task_id = ("%s:%s"%(info['ip'],info['port']))
         conn_repl = ({'host':info['ip'], 'port':int(info['port']),
                     'user':self.d['repl_user'], 'passwd':self.d['repl_pass'],})
         d_slave = self.pc.showSlaveStatus(conn_repl)
         if d_slave:
             if d_slave['Slave_IO_Running'] == "Yes" or d_slave['Slave_IO_Running'] == "Yes":
-                print(task_id + "人上有人")
+                print("[%s]:天外有天"%task_id)
                 return False
     
         if self.pc.checkReadonly(conn_instance).upper() != "OFF":
-            print(task_id + "主库read_only是ON?")
+            print("[%s]:主库read_only是ON?"%task_id)
             return False
 
         pri_column = self.pc.getUinqueColumn(conn_instance, info['table'])
         if not pri_column:
-            print(task_id + "不好意思,找不到唯一约束")
+            print pri_column
+            print("[%s]不好意思,找不到唯一约束"%task_id)
             return False
 
         column_type = self.pc.checkColumnType(conn_instance,info['table'],info['column'])
         if not column_type:
-            print(task_id + "索引列只能是时间类型(int|datetime|date|timestamp)")
+            print("%s:索引列只能是时间类型(int|datetime|date|timestamp)"%(task_id))
             return False
         else:
             dt = self.pc.getHorizondate(info['keep_days'])
@@ -163,7 +166,7 @@ class MySQLArchive(object):
         """
         #sql = ("""select '%s',%s from %s where %s<'%s';"""%(task_id,pri_column,table,column,horizon_time))
         #Tips:task_id+pri_column构成流水表唯一键
-        sql = ("""select '%s',%s from %s where %s<'%s' limit 200000;""" % 
+        sql = ("""select '%s',%s from %s where %s<'%s' limit 2000;""" % 
               (task_id, pri_column, archive_info['table'], archive_info['column'], horizon_time))
         cmd = ("""%s -u%s -p%s -h%s -P%s -N -e "%s" >%s""" %
               (mysql, user, passwd, archive_info['ip'], archive_info['port'], sql, load_big_file))
@@ -245,7 +248,7 @@ class MySQLArchive(object):
 
 
 
-def processOneInstance(archive_info, mysql_archive=None):
+def processOneInstance(archive_info, mysql_archive, sem):
 
     pc = mysql_archive.pc
     task_id = mysql_archive.returnTaskID(archive_info['ip'], archive_info['port'])
@@ -311,6 +314,8 @@ def processOneInstance(archive_info, mysql_archive=None):
 
     pc.printLog("[task_id:%s]is done"%(task_id),normal_log)
 
+    sem.release() # 释放 semaphore
+
 
 def getKVDict(pc):
     d = {}
@@ -325,8 +330,26 @@ def main():
     d = getKVDict(pc)
     mysql_archive = MySQLArchive(pc, d)
     archive_infos = mysql_archive.getOnlineInfo()
+    mysql_archive.pc.printLog('start execute archive progress.',normal_log)
+    thread_num = 3 # 同时跑的线程数
+    sem = Semaphore(thread_num) # 设置计数器的值为
+    threads = []
+    
     for archive_info in archive_infos:
-        processOneInstance(archive_info, mysql_archive)
+        #processOneInstance(archive_info, mysql_archive)
+        t = threading.Thread(target=processOneInstance,args=(archive_info,mysql_archive,sem))
+        threads.append(t)
+
+    length = len(threads)
+    for i in range(length): # start threads
+        sem.acquire() # 获取一个semaphore
+        threads[i].start()
+    
+    for i in range(length): # wait for all
+        threads[i].join() # threads to finish
+
+    mysql_archive.pc.printLog('all DONE.',normal_log)
+
 
 if __name__ == '__main__':
 

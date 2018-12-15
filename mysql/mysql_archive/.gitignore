@@ -3,4 +3,4 @@
 *.pyc
 *.tar
 *.tar.gz
-*.tmp
+*tmp
