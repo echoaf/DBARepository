@@ -31,5 +31,4 @@ os
     os.system("/usr/bin/firefox")
         open "firefox"
 
-heapq
     
