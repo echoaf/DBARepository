@@ -25,7 +25,7 @@ class Pulic(object):
 
     def getKV(self,key,ip=None,port=None):
 
-        conn_conf = {'host':self.conf_host, 'port':self.conf_port, 'user':self.conf_user, 'passwd':self.conf_pass,} 
+        conn_conf = {'host':self.conf_host, 'port':self.conf_port, 'user':self.conf_user, 'passwd':self.conf_pass} 
         w_generl = "Fstate='online' and Fkey='%s'"%(key)
         s1 = "select Fvalue from %s where %s;"%(self.t_conf_common,w_generl) 
         s2 = "select Fvalue from %s where %s and Fserver_host='%s' and Fserver_port='65536';"%(self.t_conf_person,w_generl,ip)
@@ -48,11 +48,13 @@ class Pulic(object):
                 conn = MySQLdb.connect(host=conn_setting['host'],port=conn_setting['port'],
                                       user=conn_setting['user'],passwd=conn_setting['passwd'],
                                       db='information_schema',charset='utf8', 
-                                      cursorclass=MySQLdb.cursors.DictCursor)
+                                      cursorclass=MySQLdb.cursors.DictCursor
+                )
             else:
                 conn = MySQLdb.connect(host=conn_setting['host'],port=conn_setting['port'],
                                       user=conn_setting['user'],passwd=conn_setting['passwd'],
-                                      db='information_schema',charset='utf8',)
+                                      db='information_schema',charset='utf8'
+                )
             cur = conn.cursor()
             cur.execute(sql)
             values = cur.fetchall()
@@ -81,14 +83,18 @@ class Pulic(object):
 
 
     def ChangedatetimeToTimestamp(self,d):
-         time.strptime(d,'%Y-%m-%d %H:%M:%S')
-         s = time.mktime(time.strptime(d,'%Y-%m-%d %H:%M:%S'))
-         return int(s)
+        #time.strptime(d,'%Y-%m-%d %H:%M:%S')
+        try:
+            time.strptime("%s 00:00:01"%d,'%Y-%m-%d %H:%M:%S')
+            s = time.mktime(time.strptime("%s 00:00:01"%d,'%Y-%m-%d %H:%M:%S'))
+        except ValueError,e:
+            time.strptime(d,'%Y-%m-%d %H:%M:%S')
+            s = time.mktime(time.strptime(d,'%Y-%m-%d %H:%M:%S'))
+        return int(s)
     
 
     def deletePoint(self,v):
         return str(v.replace('.',''))
-    
 
     def runShell(delf,c):
         v = commands.getoutput(c)
@@ -120,8 +126,11 @@ class Pulic(object):
 
     def createTable(self,sql,table,conn_setting):
         table_schema,table_name  = self.splitPoint(table)
-        check_sql = ("""select count(*) from information_schema.tables 
-                    where table_schema='%s' and table_name='%s' """%(table_schema,table_name))
+        check_sql = ("""select count(*) 
+                        from information_schema.tables 
+                        where table_schema='%s' and table_name='%s' """
+                        %(table_schema,table_name)
+                    )
         v = self.connMySQL(check_sql,conn_setting)
         if v:
             if v[0]['count(*)'] == 0:
@@ -150,8 +159,11 @@ class Pulic(object):
             Slave_IO_Running = slave_status[0]['Slave_IO_Running']
             Slave_SQL_Running = slave_status[0]['Slave_SQL_Running']
             Seconds_Behind_Master = slave_status[0]['Seconds_Behind_Master']
-            d = ({'Seconds_Behind_Master':Seconds_Behind_Master, 'Slave_IO_Running':Slave_IO_Running,
-                'Slave_SQL_Running':Slave_SQL_Running,})
+            d = {
+                    'Seconds_Behind_Master':Seconds_Behind_Master,
+                    'Slave_IO_Running':Slave_IO_Running,
+                    'Slave_SQL_Running':Slave_SQL_Running
+                }
         else:
             d = False
         return d
@@ -166,8 +178,11 @@ class Pulic(object):
 
     def getUinqueColumn(self,conn_setting,table):
         table_schema,table_name  = self.splitPoint(table)
-        sql = ("""select COLUMN_NAME from information_schema.COLUMNS 
-              where COLUMN_KEY='PRI' and table_schema='%s' and table_name='%s'; """%(table_schema,table_name))
+        sql = ("""select COLUMN_NAME 
+                  from information_schema.COLUMNS 
+                  where COLUMN_KEY='PRI' and table_schema='%s' and table_name='%s'; """
+                  %(table_schema,table_name)
+              )
         v = self.connMySQL(sql,conn_setting,0)
         if v:
             v = v[0]
@@ -182,8 +197,10 @@ class Pulic(object):
 
     def checkColumnType(self,conn_setting,table,column):
         table_schema,table_name  = self.splitPoint(table)
-        sql = ("""select DATA_TYPE from information_schema.COLUMNS where table_schema='%s' and table_name='%s'
-              and COLUMN_NAME='%s'; """%(table_schema,table_name,column))
+        sql = ("""select DATA_TYPE from information_schema.COLUMNS
+                  where table_schema='%s' and table_name='%s' and COLUMN_NAME='%s'; """
+                  %(table_schema,table_name,column)
+              )
         v = self.connMySQL(sql,conn_setting)
         if v:
             v = v[0]['DATA_TYPE']
