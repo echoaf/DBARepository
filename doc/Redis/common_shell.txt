@@ -1,0 +1,59 @@
+一、通用命令
+
+    dbsize
+        查看键数量,直接获取Redis内置的键总数变量,时间复杂度是O(1)
+    keys *
+        查看所有键,遍历所有键,时间复杂度是O(n)
+    exists key
+    del key, del key1 key2 key3
+    type key
+    rename key newkey
+        如果在rename之前,键newkey已经存在,那么它的值也将被覆盖
+    renamenx key newkey
+        如果在rename之前,键newkey已经存在,会失败
+        ·由于重命名键期间会执行del命令删除旧的键,如果键对应的值比较大,会存在阻塞Redis的可能性,这点不要忽视
+    randomkey
+        随机返回一个键
+    键过期
+        Tips:
+            对于字符串类型键,执行set命令会去掉过期时间,这个问题很容易在开发中被忽视
+            Redis不支持二级数据结构(例如哈希、列表)内部元素的过期功能,例如不能对列表类型的一个元素做过期时间设置
+            setex命令作为set+expire的组合,不但是原子执行,同时减少了一次网络通讯的时间
+        shell:
+            expire key 10
+            expireat key timestamp
+                键在秒级时间戳timestamp后过期
+            ttl key
+                大于等于0的整数：键剩余的过期时间.
+                1：键没设置过期时间.
+                2：键不存在
+            pttl key
+    迁移
+        move key db
+        dump+restore
+            dump key
+            restore key ttl value
+                可以实现在不同的Redis实例之间进行数据迁移的功能
+                步骤:
+                    在源Redis上,dump命令会将键值序列化,格式采用的是RDB格式
+                    在目标Redis上,restore命令将上面序列化的值进行复原,其中ttl参数代表过期时间,如果ttl=0代表没有过期时间
+        migrate
+            migrate host port key|"" destination-db timeout [copy] [replace] [keys key [key 
+            
+    遍历键
+        keys pattern
+            ·*代表匹配任意字符.
+            ·代表匹配一个字符
+            ·[]代表匹配部分字符,例如[1,3]代表匹配1,3,[1-10]代表匹配1到10的任意数字.
+            ·\x用来做转义,例如要匹配星号、问号需要进行转义.
+            keys [j,r]edis
+            redis-cli keys video* | xargs redis-cli del
+        scan 
+            scan cursor [match pattern] [count number]
+            渐进式遍历
+            scan并不能保证完整的遍历出来所有的键
+            hscan、sscan、zscan
+                代替hgetall、smembers、zrange
+                
+        
+    

@@ -1,0 +1,45 @@
+set 
+
+保存多个的字符串元素
+
+两个特点和list比较:
+
+    第一、集合中的元素是无序的,不能通过索引下标获取元素
+    第二、集合中不允许有重复元素
+
+
+一、shell
+    
+    sadd key element [element ...]
+    srem key element [element ...]
+        删除元素
+    scard key
+        计算元素个数,不会阻塞
+    sismember key element
+        判断元素是否在集合中
+    srandmember key [count]
+        随机从集合返回指定个数元素
+    spop key
+        从集合随机弹出元素
+    smembers key
+        获取所有元素,并且是无序的
+        smembers和lrange、hgetall都属于比较重的命令,如果元素过多存在阻塞Redis的可能性,这时候可以使用sscan来完成
+    
+
+二、时间复杂度:可能阻塞
+
+    阻塞
+        sadd
+        srem
+        srandmember
+        smembers
+        
+
+
+三、内部编码
+
+    集合类型的内部编码有两种：
+        ·intset(整数集合)：当集合中的元素都是整数且元素个数小于set-max-intset-entries配置(默认512个)时,Redis会选用intset来作为集合的内部实现,从而减少内存的使用.
+        ·hashtable(哈希表)：当集合类型无法满足intset的条件时,Redis会使用hashtable作为集合的内部实现
+
+

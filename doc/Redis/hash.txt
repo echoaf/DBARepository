@@ -1,0 +1,66 @@
+hash
+
+
+一、shell
+    
+    hset key field value
+        hset user:1 name tom
+    hsetnx
+    hget key field
+        hget user:1 name
+    hdel key field [field ...]
+    hlen key
+        计算key个数
+        172.16.112.12:20000> hset user:1 name tom
+        (integer) 0
+        172.16.112.12:20000> hset user:1 age 23
+        (integer) 1
+        172.16.112.12:20000> hset user:1 city tianjin
+        (integer) 1
+        172.16.112.12:20000> hlen user:1
+        (integer) 3
+    hmset key field value [field value ...]
+    hmget key field [field ...]
+    hexists key field
+    hkeys key
+        172.16.112.12:20000> hkeys user:1
+        1) "name"
+        2) "age"
+        3) "city"
+    hvals key
+        172.16.112.12:20000> hvals user:1
+        1) "tom"
+        2) "23"
+        3) "tianjin"
+    hgetall key
+        172.16.112.12:20000> hgetall user:1
+        1) "name"
+        2) "tom"
+        3) "age"
+        4) "23"
+        5) "city"
+        6) "tianjin"
+    hstrlen key field
+        计算value的字符串长度
+    
+    
+二、时间复杂度:可能阻塞
+
+    阻塞
+        hgetall
+            阻塞redis,可以使用hmget获取需要的key或者hscan命令渐进式遍历哈希类型
+        hmget
+        hmset
+        hkeys
+        hvals
+        hdel
+
+    优化
+        hscan
+
+三、内部编码
+
+
+    哈希类型的内部编码有两种：
+        ·ziplist(压缩列表)：当哈希类型元素个数小于hash-max-ziplist-entries配置(默认512个)、同时所有值都小于hash-max-ziplist-value配置(默认64字节)时,Redis会使用ziplist作为哈希的内部实现,ziplist使用更加紧凑的结构实现多个元素的连续存储,所以在节省内存方面比hashtable更加优秀.
+        ·hashtable(哈希表)：当哈希类型无法满足ziplist的条件时,Redis会使用hashtable作为哈希的内部实现,因为此时ziplist的读写效率会下降,而hashtable的读写时间复杂度为O(1).

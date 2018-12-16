@@ -1,0 +1,49 @@
+字符串
+
+字符串类型的值实际可以是字符串(简单的字符串、复杂的字符串(例如JSON、XML))、数字(整数、浮点数),甚至是二进制(图片、音频、视频),但是值最大不能超过512MB
+
+一、shell
+
+    set key value [ex seconds] [px milliseconds] [nx|xx]
+        ·ex seconds：为键设置秒级过期时间.
+        ·px milliseconds：为键设置毫秒级过期时间.
+        ·nx：键必须不存在,才可以设置成功,用于添加.
+        ·xx：与nx相反,键必须存在,才可以设置成功,用于更新
+    setex key seconds value
+    setnx key value
+    mset key value [key value ...]
+    mget key [key ...]
+        时间消耗, 网络可能会成为性能的瓶颈,学会使用批量操作,有助于提高业务处理效率,但是要注意的是每次批量操作所发送的命令数不是无节制的,如果数量过多可能造成Redis阻塞或者网络拥塞
+            get n次: n 次 get 时间 = n 次网络时间 + n 次命令时间
+            mget: n 次 get 时间 = 1 次网络时间 + n 次命令时间
+    incr key
+        ·值不是整数,返回错误.
+        ·值是整数,返回自增后的结果.
+        ·键不存在,按照值为0自增,返回结果为1
+    strlen key:获取value长度
+        Tips:用来检测值是否很大
+        172.16.112.12:20000> get hello
+        "world"
+        172.16.112.12:20000> set hello hello_1
+        OK
+        172.16.112.12:20000> 
+        172.16.112.12:20000> strlen hello
+        (integer) 7       
+    getset key value：设置并且返回原值
+    
+    
+二、时间复杂度:可能阻塞
+
+    del
+    mset
+    mget
+    
+
+三、内部编码
+
+    字符串类型的内部编码有3种：
+        ·int：8个字节的长整型.
+        ·embstr：小于等于39个字节的字符串.
+        ·raw：大于39个字节的字符串.   
+
+
