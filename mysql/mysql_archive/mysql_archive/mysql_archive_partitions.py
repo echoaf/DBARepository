@@ -48,14 +48,32 @@ conf_keys = (
     'repl_pass',
     'repl_user',
     'threads_running',
+)
+
+
+conn_instance = {
+    'host':'172.16.112.12',
+    'port':10000,
+    'user':'master_user',
+    'passwd':'redhat'
 }
 
+table = 'test_db.t_test_partitions'
+column = 'insert_time'
+keep_days = '30'
 
-class ArchivePartitions(object):
 
-    def __init__ (self):
-        pass
-    
+def getKVDict(pc):
+    d = {}
+    for key in conf_keys:
+        d[key] = pc.getKV(key)
+    return d
+
+
+
+pc = Pulic(conf_host, conf_port, conf_user, conf_pass, t_conf_common, t_conf_person)
+d = getKVDict(pc)
+
 
 def archivePartion(conn_mysql,table,column,keep_days):
     table_schema,table_name  = pc.splitPoint(table)
@@ -77,5 +95,7 @@ def archivePartion(conn_mysql,table,column,keep_days):
                 and PARTITION_DESCRIPTION<'%s';
          """%(table_schema,table_name,column,keep_days)
          )
+    print sql
+    print pc.connMySQL(sql,conn_mysql,)  
 
-
+archivePartion(conn_instance,table,column,keep_days)
