@@ -1,11 +1,18 @@
 #!/usr/bin/env python
 #coding=utf8
+#description:MySQL归档脚本
+
+"""
+Todo
+    1)唯一索引不能是复合列构成
+"""
 
 import sys
 import os
 import time
 import datetime
 import re
+import pprint
 import commands
 import threading
 from threading import Thread, Semaphore
@@ -14,115 +21,57 @@ base_dir = '/data/DBARepository/mysql/mysql_archive'
 common_dir = '%s/common'%base_dir
 sys.path.append(common_dir)
 from python_conf import *
-from python_function import connMySQL, printLog, PubicFunction as PF
-#from python_function import connMySQL
-#from python_function import printLog
+from python_function import connMySQL, printLog 
 
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-
-def archivePartitions(d_archive, mysql_archive, check_info, task_id):
-    pc = mysql_archive.pc
-    table_schema,table_name  = splitPoint(d_archive['table'])
-    pri_column, column_type, horizon_time = check_info
-    ddl_user = getKV(k='ddl_user', ip=d_archive['ip'], port=int(d_archive['port']))
-    ddl_pass = getKV(k='ddl_pass', ip=d_archive['ip'], port=int(d_archive['port']))
-    conn_instance = {
-        'host' : d_archive['ip'],
-        'port' : int(d_archive['port']),
-        'user' : ddl_user,
-        'passwd' : ddl_pass
-    }
-    print conn_instance
-    exit()
-    where_module = """TABLE_NAME IS NOT NULL
-                and PARTITION_METHOD = 'RANGE COLUMNS'
-                and table_schema='%s' 
-                and table_name='%s' 
-                and PARTITION_EXPRESSION='`%s`' 
-                and PARTITION_DESCRIPTION<'%s';
-         """%(table_schema,table_name,d_archive['column'],horizon_time)
-    sql1 = ("""select 
-                TABLE_SCHEMA,
-                TABLE_NAME,
-                sum(DATA_LENGTH+INDEX_LENGTH)/1024/1024 AS DATA_LENGTH,
-                sum(TABLE_ROWS) AS TABLE_ROWS,
-                count(*) AS TABLE_COUNT
-              from information_schema.PARTITIONS
-              where %s"""%(where_module)
+def archivePartitions(d):
+    where_module = ("""TABLE_NAME IS NOT NULL
+                        and PARTITION_METHOD = 'RANGE COLUMNS'
+                        and table_schema='%s' 
+                        and table_name='%s' 
+                        and PARTITION_EXPRESSION='`%s`' 
+                        and PARTITION_DESCRIPTION<'%s';"""
+                    %(d['table_schema'],d['table_name'],d['column'],d['threshold_time'])
     )
-    sql2 = ("""select PARTITION_NAME from information_schema.PARTITIONS
-            where %s"""%(where_module))
-    sum_info = connMySQL(sql1,conn_instance)
-    sum_info = sum_info[0]
-    if sum_info['TABLE_COUNT'] == 0:
-        printLog("[%s]没有需要删除的分区"
-                %(d_archive['table']),normal_log)
-        return
-    ps = connMySQL(sql2,conn_instance,"0")
-    v = ""
-    for p in ps:
-        p = p[0]
-        if not v:
-            v = p
-        else:
-            v = v + "," + p
-    printLog("[%s]开始执行删除语句,预计删除分区个数:%s,行数:%s,数据量大小:%sM"
-            %(d_archive['table'], sum_info['TABLE_COUNT'], 
-            sum_info['TABLE_ROWS'], sum_info['DATA_LENGTH']),
-            normal_log)
-    sql = ("""alter table %s.%s drop partition %s"""
-            %(sum_info['TABLE_SCHEMA'],sum_info['TABLE_NAME'],v))
-    printLog((sql),normal_log)
-    connMySQL(sql,conn_instance)
+    sql1 = ("""select TABLE_SCHEMA,TABLE_NAME,
+                    sum(DATA_LENGTH+INDEX_LENGTH)/1024/1024 AS DATA_LENGTH,
+                    sum(TABLE_ROWS) AS TABLE_ROWS,
+                    count(*) AS TABLE_COUNT
+              from information_schema.PARTITIONS
+              where %s"""%(where_module))
+    sql2 = ("""select PARTITION_NAME from information_schema.PARTITIONS where %s"""%(where_module))
 
+    si = connMySQL(sql1, d['conn_instance'])
+    si = si[0]
+    if si['TABLE_COUNT'] == 0:
+        printLog("[%s]没有需要删除的分区"%(d['task_id']), normal_log)
+        u_sql = ("""update %s set Fcount='0',Fexec_status='Succ',Fsql="没有需要删除的分区",Fmodify_time=now() where Ftask_id='%s';"""
+                %(d['dconf']['t_mysql_archive_result'],d['task_id']))
+    else:
+        ps = connMySQL(sql2, d['conn_instance'], "0")
+        v = ""
+        for p in ps:
+            p = p[0]
+            if not v:
+                v = p
+            else:
+                v = v + "," + p
 
-#def archiveTable(d):
-#    """
-#    单表归档逻辑
-#    """
-#    load_big_file = "%s/%s.txt"%(tmp_dir,task_id)
-#    ##### create table
-#    t_task_id = "mysql_archive_2018_db.t_%s"%(task_id)
-#    create_sql = example_sql.replace("table_schema.table_name", t_task_id)
-#    printLog("[%s]create water table:%s"%(task_id,t_task_id), normal_log)
-#    createTable(create_sql, t_task_id, conn_dba)
-#    # load数据
-#    archive_sql = ("delete from %s where %s<'%s';" %(d_archive['table'], d_archive['column'], horizon_time))
-#    printLog("[%s]import data to file"%(task_id),normal_log)
-#    mysql_archive.importToLocal(d_archive, horizon_time,
-#                                    t_task_id, load_big_file, 
-#                                    task_id, pri_column, master_user, master_pass
-#                               )
-#    printLog("[%s]start load big file to mysql(%s)" %(task_id,t_task_id),normal_log)
-#    mysql_archive.loadToMySQL(d_archive, pri_column, horizon_time, 
-#                                t_task_id, load_big_file,
-#                                task_id, load_user, load_pass
-#                             )
-#    printLog("[%s]end load big file to mysql(%s)" %(task_id,t_task_id),normal_log)
-#    # 更新t_mysql_archive_result
-#    t_mysql_archive_result = getKV('t_mysql_archive_result')
-#    sql = "select count(*) from %s;" % (t_task_id)
-#    deal_count = connMySQL(sql,conn_dba)[0]['count(*)']
-#    ins_s = ("""select '%s',current_date(),'%s','%s','%s','%s','%s',"%s",now(),now()"""%
-#            (task_id,d_archive['ip'], d_archive['port'], 
-#            d_archive['table'], deal_count, 'Init', archive_sql))
-#    ins_sql = ("""insert into %s (Ftask_id,Fdate,Fip,Fport,Ftable,
-#              Fcount,Fexec_status,Fsql,Fcreate_time,Fmodify_time) %s"""%
-#              (t_mysql_archive_result,ins_s))
-#    connMySQL(ins_sql,conn_dba)
-#    
-#    # 删除数据逻辑
-#    mysql_archive.deleteDo(conn_instance, conn_dba, d_archive['table'], 
-#                          pri_column, t_task_id, task_id)
-#    
-#    # 更新t_mysql_archive_result
-#    exec_status = "Succ"
-#    sql = ("""update %s set Fcount='%s',Fexec_status='%s',Fmodify_time=now() where Ftask_id='%s';"""%
-#          (t_mysql_archive_result, deal_count, exec_status, task_id))
-#    connMySQL(sql,conn_dba)
-#    printLog("[%s]is done"%(task_id),normal_log)
+        printLog("[%s]开始执行删除语句,表名:%s,预计删除分区个数:%s,行数:%s,数据量大小:%sM"
+                %(d['task_id'],
+                    d['table'],
+                    si['TABLE_COUNT'],
+                    si['TABLE_ROWS'],
+                    si['DATA_LENGTH']),
+                normal_log)
+        sql = ("""ALTER TABLE %s.%s DROP PARTITION %s;""" %(si['TABLE_SCHEMA'],si['TABLE_NAME'],v))
+        connMySQL(sql, d['conn_instance'])
+
+        u_sql = ("""update %s set Fcount='%s',Fexec_status='Succ',Fsql="%s",Fmodify_time=now() where Ftask_id='%s';"""
+                %(d['dconf']['t_mysql_archive_result'],si['TABLE_COUNT'],sql,d['task_id']))
+    connMySQL(u_sql, conn_dbadb)
 
 
 
@@ -146,7 +95,6 @@ def getFL(d):
         f = f[0]['%s'%(d['uc_name'])]
         l = l[0]['%s'%(d['uc_name'])]
         v = (f, l)
-        #v = (f[0]['%s'%d[uc_name]], l[0]['%s'%d[uc_name]])
     else:
         v = False
     return v
@@ -159,6 +107,7 @@ def returnTaskID(ip, port):
     false_ip = deletePoint(ip)
     timestamp = time.strftime("%H%M%S_%Y%m%d")
     task_id = "%s_%s_%s"%(false_ip, port, timestamp)
+    time.sleep(1)
     return task_id
 
 def splitPoint(v):
@@ -260,20 +209,6 @@ def checkColumnType(conn_setting=None, table_schema=None, table_name=None, colum
     return r
 
 
-#def checkIndexType()
-#    #column_type = checkColumnType(conn_instance, info['table'], info['column'])
-#    if not column_type:
-#        print("%s:索引列只能是时间类型(int|datetime|date|timestamp)" % (task_id))
-#        return False
-#    else:
-#        dt = getHorizondate(info['keep_days'])
-#        if column_type == "int":
-#            horizon_time = ChangedatetimeToTimestamp(dt)
-#        else:
-#            horizon_time = dt
-#    return pri_column, column_type, horizon_time
-
-
 def checkMain(d):
 
     d_slave_status = showSlaveStatus(d['conn_instance'])
@@ -286,18 +221,23 @@ def checkMain(d):
         print("[%s]主库read_only是ON?"%d['task_id'])
         return False
 
-    uc_name = getUniqueKeyColumn(conn_setting=d['conn_instance'], table_schema=d['table_schema'], table_name=d['table_name'])
+    uc_name = getUniqueKeyColumn(conn_setting=d['conn_instance'], table_schema=d['table_schema'], 
+                        table_name=d['table_name'])
     if not uc_name:
         printLog("[%s]找不到唯一约束"%['task_id'], normal_log)
         info = False
     else:
-        ck_type = checkColumnType(conn_setting=d['conn_instance'], table_schema=d['table_schema'], table_name=d['table_name'], column=d['column'])
+        ck_type = checkColumnType(conn_setting=d['conn_instance'], table_schema=d['table_schema'],
+                            table_name=d['table_name'], column=d['column'])
         if not ck_type:
-            printLog("[%s]匹配列字段类型只能为时间类型(int|datetime|date|timestamp)"%(d['task_id']), normal_log)
+            printLog("[%s]匹配列字段类型只能为时间类型(int|datetime|date|timestamp)"
+                        %(d['task_id']), normal_log)
             info = False
         else:
-            uk_name = getUniqueKeyName(conn_setting=d['conn_instance'], table_schema=d['table_schema'], table_name=d['table_name'], uc_name=uc_name)
-            columns = getColumns(conn_setting=d['conn_instance'], table_schema=d['table_schema'], table_name=d['table_name'])
+            uk_name = getUniqueKeyName(conn_setting=d['conn_instance'], table_schema=d['table_schema'],
+                            table_name=d['table_name'], uc_name=uc_name)
+            columns = getColumns(conn_setting=d['conn_instance'], table_schema=d['table_schema'],
+                            table_name=d['table_name'])
             select_module = getSelectModule(columns)
             info = uc_name,ck_type,uk_name,columns,select_module
     return info
@@ -328,17 +268,18 @@ def getThresholdTime(ck_type=None, days=None):
 
 
 def runShell(c):
-    return commands.getoutput(c)
+    status, text = commands.getstatusoutput(c)
+    return status, text
 
 
-def backupData(d, f_begin=None, f_end=None):
+def dealData(d, f_begin=None, f_end=None, d_rc=None):
 
-    general_sql = ("""from {table_schema}.{table_name}"""
+    general_sql = ("""FROM {table_schema}.{table_name}"""
             """ FORCE INDEX({uk_name})"""
             """ WHERE {column}<'{threshold_time}'"""
             """ AND {uc_name}>='{f_begin}'""" # 左开
             """ AND {uc_name}<='{f_end}'""" # 又闭
-            """ ORDER BY {uc_name}""".format(
+            """ ORDER BY {uc_name};""".format(
                     table_schema = d['table_schema'],
                     table_name = d['table_name'],
                     uk_name = d['uk_name'],
@@ -350,35 +291,158 @@ def backupData(d, f_begin=None, f_end=None):
                 )
     )
         
-    backup_sql = "SELECT %s %s;"%(d['select_module'], general_sql)
-    cmd = ("""{mysql} -u{user} -p{passwd} -h{host} -P{port} -e "{sql}" -N --default-character-set='utf8'"""
+    mysql_cmd = ("""{mysql} -u{user} -p{passwd} -h{host} -P{port} -N --default-character-set='utf8'"""
             .format(
                 mysql = mysql,
                 user = getKV(k='backup_user'),
                 passwd = getKV(k='backup_pass'),
                 host = getKV(k='backup_host'),
-                port = getKV(k='backup_port'),
-                sql = backup_sql)
+                port = getKV(k='backup_port')
+            )
     )
-    print runShell(cmd)
-    return
-    load_sql = ("""LOAD DATA LOCAL INFILE '%s' REPLACE INTO TABLE %s CHARACTER SET UTF8 (%s)"""
-            %(d['tmp_file'], d['t_backup'], d['select_module']))
-    #cmd = ("""echo $(%s -u%s -p%s -h%s -P%s -N -e "%s")| sed "s/ /','/g"| sed -e "s/^/'/g" -e "s/$/'/g" """%
-    #  (mysql,conn_instance['user'], conn_instance['passwd'], conn_instance['host'], conn_instance['port'], sql))
-    #id_range = self.pc.runShell(cmd)
+
+    if d['backup_status'].upper() == "Y": # 备份逻辑
+        backup_sql = "SELECT %s %s;"%(d['select_module'], general_sql)
+        load_sql = ("""LOAD DATA LOCAL INFILE '%s' REPLACE INTO TABLE %s CHARACTER SET UTF8 (%s)"""
+                %(d['tmp_file'], d['t_backup'], d['select_module']))
+        runShell(""" echo "%s" | %s >%s """%(backup_sql, mysql_cmd, d['tmp_file']))
+        runShell(""" echo "%s" | %s """%(load_sql, mysql_cmd))
+        runShell("rm -fv %s"%(d['tmp_file']))
+
+    if not d['bool_partition']:
+        delete_sql = ("""DELETE FROM {table_schema}.{table_name}"""
+                """ WHERE {column}<'{threshold_time}'"""
+                """ AND {uc_name}>='{f_begin}'""" # 左开
+                """ AND {uc_name}<='{f_end}'""" # 又闭
+                """ LIMIT {archive_count};""".format(
+                        table_schema = d['table_schema'],
+                        table_name = d['table_name'],
+                        column = d['column'],
+                        threshold_time = d['threshold_time'],
+                        uc_name = d['uc_name'],
+                        f_begin = f_begin,
+                        f_end = f_end,
+                        archive_count = int(d_rc['archive_count']),
+                    )
+        )
+        start_pos = showMasterStatus(d['conn_instance'])
+        v_del = runShell(""" echo "%s" | %s """%(delete_sql, mysql_cmd))
+        end_pos = showMasterStatus(d['conn_instance'])
+        exec_status = "Succ" if v_del[0] == 0 else "Fail"
+        report_sql = ("""replace into {t}"""
+                """ (Ftask_id,Fbegin_unique,Fend_unique,Fstart_pos,Fend_pos,Fexec_status,Fmodify_time)"""
+                """ values"""
+                """ ("{task_id}","{begin_unique}","{end_unique}","{start_pos}","{end_pos}","{exec_status}",now()) """
+                .format(t = d['t_taskid'],
+                    task_id = d['task_id'],
+                    begin_unique = f_begin,
+                    end_unique = f_end,
+                    start_pos = start_pos,
+                    end_pos = end_pos,
+                    exec_status = exec_status)
+        )
+        connMySQL(report_sql, conn_dbadb)
+
+
+def showMasterStatus(conn_setting=None):
+
+    sql = "SHOW MASTER STATUS;"
+    v = connMySQL(sql, conn_setting)
+    v = v[0] if v else ""
+    return v
+
+
+def checkThreadsRunning(conn_setting=None, a=None):
+    r = True
+    sql = "SHOW GLOBAL STATUS LIKE 'Threads_running';"
+    v = connMySQL(sql, conn_setting)
+    v = v[0]['Value']
+    if int(v) > a:
+        printLog("[%s:%s]当前Threads_running:%s(阈值%s)"%(conn_setting['host'],conn_setting['port'],v,a), normal_log)
+        r = False
+    else:
+        printLog("[%s:%s]当前Threads_running:%s(阈值%s)"%(conn_setting['host'],conn_setting['port'],v,a), normal_log)
+    return r
+    
+
+def getSlave(conn_setting=None, master_host=None, master_port=None):
+ 
+    t_mysql_info = getKV('t_mysql_info')
+    sql = ("""select Fserver_host as slave_host,
+                    Fserver_port as slave_port 
+            from {t_mysql_info} 
+            where Fstate='online' and Frole!='Master' 
+            and Ftype in (
+                select Ftype from {t_mysql_info} 
+                where Fstate='online' 
+                    and Fserver_host='{master_host}' 
+                    and Fserver_port='{master_port}'
+                    and Frole='Master');"""
+            .format(t_mysql_info = t_mysql_info,
+                    master_host = master_host,
+                    master_port = master_port,
+            )
+    )
+    slave_hosts = connMySQL(sql, conn_setting)
+    return slave_hosts
+
+def checkSlaveDelay(conn_setting=None, a=None):
+
+    r = True
+    repl_user = getKV('repl_user')
+    repl_pass = getKV('repl_pass')
+    master_host = conn_setting['host']
+    master_port = conn_setting['port']
+    slave_hosts = getSlave(conn_setting=conn_setting, master_host=master_host, master_port=master_port)
+    for s in slave_hosts:
+        slave_host = s['slave_host']
+        slave_port = s['slave_port']
+        conn_slave = {'host' : slave_host,
+            'port' : slave_port,
+            'user' : repl_user,
+            'passwd' : repl_pass
+        }
+        slave_status = showSlaveStatus(conn_slave)
+        """
+        slave_status = {'Seconds_Behind_Master': 0L, 'Slave_IO_Running': u'Yes', 'Slave_SQL_Running': u'Yes'}
+        """
+        if slave_status['Slave_IO_Running'] == 'Yes' and slave_status['Slave_SQL_Running'] == 'Yes':
+            if int(slave_status['Seconds_Behind_Master']) > a:
+                printLog("[%s:%s]当前主从延迟:%ss(阈值%ss)"
+                        %(slave_host,slave_port,slave_status['Seconds_Behind_Master'],a),
+                        normal_log)
+                r = False
+            else:
+                printLog("[%s:%s]当前主从延迟:%ss(阈值%ss)"
+                        %(slave_host,slave_port,slave_status['Seconds_Behind_Master'],a),
+                        normal_log)
+        else:
+            printLog("[%s:%s]主从复制已断开(%s)"%(slave_host,slave_port,slave_status), normal_log)
+            r = False
+    return r
+
+
+def checkDBStatus(conn_setting=None, d_rc=None, times=1):
+
+    if times > 10800: # 我等你一天
+        return False
+
+    r1 = checkThreadsRunning(conn_setting=conn_setting, a=int(d_rc['threads_running']))
+    r2 = checkSlaveDelay(conn_setting=conn_dbadb, a=int(d_rc['repl_time']))
+    if not r1 or not r2:
+        times = times + 1
+        time.sleep(8)
+        checkDBStatus(conn_setting, d_rc=d_rc, times=times)
+    return True
 
 
 def getCurFL(d=None, f0=None, max_value=None):
-
     rconf = getKVDict(realtime_keys, ip=d['ip'], port=d['port']) # 实时keys,每次读取数据库最新数据
-    archive_count = int(rconf['archive_count'])
-
     general_sql = ("""from {table_schema}.{table_name}"""
             """ FORCE INDEX({uk_name})"""
             """ WHERE {column}<'{threshold_time}'"""
             """ AND {uc_name}>='{f0}'""" # 左开
-            """ AND {uc_name}<'{max_value}'""" # 又闭
+            """ AND {uc_name}<'{max_value}'""" # 右闭
             """ ORDER BY {uc_name}""".format(
                     table_schema = d['table_schema'],
                     table_name = d['table_name'],
@@ -391,30 +455,70 @@ def getCurFL(d=None, f0=None, max_value=None):
                 )
     )
         
-    f12_sql = "SELECT %s %s limit %s,2;"%(d['select_module'], general_sql, archive_count-1)
+    f12_sql = "SELECT %s %s limit %s,2;"%(d['select_module'], general_sql, int(rconf['archive_count'])-1)
     f12 = connMySQL(f12_sql, d['conn_instance'], 0)
     if f12:
         f1 = f12[0][0]
         f2 = f12[1][0]
-        print f0, f1, f2
-        backupData(d=d, f_begin=f0, f_end=f1)
+        printLog("[%s]开始处理数据(%s-%s)"%(d['task_id'],f0,f1), normal_log)
+        dealData(d=d, f_begin=f0, f_end=f1, d_rc=rconf)
+        printLog("[%s]结束处理数据(%s-%s)"%(d['task_id'],f0,f1), normal_log)
+        printLog("[%s]开始检测DB状态"%(d['task_id']), normal_log)
+        if not checkDBStatus(conn_setting=d['conn_instance'], d_rc=rconf, times=1): 
+            printLog("[%s]检测不通过,执行失败,退出逻辑"%(d['task_id']), normal_log)
+            return False # 生命之再再次跳转
+        else:
+            printLog("[%s]检测通过,进入下一步逻辑"%(d['task_id']), normal_log)
         getCurFL(d=d, f0=f2, max_value=max_value)
         v = True
-    else: # 已经到末尾了
+    else: # 来日无期
         f1_sql = "SELECT %s %s limit 1;"%(d['select_module'], general_sql)
         f1 = connMySQL(f1_sql, d['conn_instance'], 0)
         f1 = f1[0][0]
         f2 = max_value # Todo:最后一条数据获取不到
-        print f0, f1, f2
-        backupData(d=d, f_begin=f1, f_end=f2)
+        printLog("[%s]开始处理数据(%s-%s)"%(d['task_id'],f1,f2), normal_log)
+        dealData(d=d, f_begin=f1, f_end=f2, d_rc=rconf)
+        printLog("[%s]结束处理数据(%s-%s)"%(d['task_id'],f1,f2), normal_log)
         v = False
     if not v:
         return
         
 
+def recordTable(d):
+
+    sql1 = "select count(*) as cnt from %s where Fexec_status='Fail';"%(d['t_taskid'])
+    cnt = connMySQL(sql1, conn_dbadb)
+    cnt = cnt[0]['cnt']
+    if cnt > 0:
+        exec_status = "Fail"
+    else:
+        exec_status = "Succ"
+
+    sql2 = "select count(*) as cnt from %s;"%(d['t_backup']) # slow sql
+    exec_cnt = connMySQL(sql2, conn_dbadb)
+    exec_cnt = exec_cnt[0]['cnt']
+ 
+    del_sql = "DLLETE FROM %s WHERE %s<'%s'"%(d['table'],d['column'],d['threshold_time'])  
+    sql = ("""update {t_mysql_archive_result} 
+            SET Fcount='{count}',Fexec_status='{exec_status}',Fsql="{sql}",Fmodify_time=now() 
+            WHERE Ftask_id='{task_id}'"""
+            .format(t_mysql_archive_result = d['dconf']['t_mysql_archive_result'],
+                    count = exec_cnt,
+                    sql = del_sql,
+                    exec_status = exec_status,
+                    task_id = d['task_id'])
+    )
+    connMySQL(sql, conn_dbadb)
+
+
 def archiveTableMain(d):
-    
-    getCurFL(d=d, f0=d['f_uc_name'], max_value=d['l_uc_name'])       
+    if 'f_uc_name' in d and 'l_uc_name' in d:
+        getCurFL(d=d, f0=d['f_uc_name'], max_value=d['l_uc_name'])       
+    if d['bool_partition']: # 处理分区表
+        archivePartitions(d)
+    else:
+        recordTable(d)
+        
 
 
 def getTableDefion(conn_setting=None, table_schema=None, table_name=None):
@@ -436,7 +540,8 @@ def createBackupTable(conn_setting=None, t_new=None, t_old=None, t_defition=None
 def createTable(conn_setting=None, t=None, t_defition=None):
 
     table_schema,table_name  = splitPoint(t)
-    sql = ("""select count(*) from information_schema.tables where table_schema='%s' and table_name='%s'"""%(table_schema, table_name))
+    sql = ("""select count(*) from information_schema.tables 
+              where table_schema='%s' and table_name='%s'"""%(table_schema, table_name))
     v = connMySQL(sql, conn_setting)
     if v:
         if v[0]['count(*)'] == 0:
@@ -447,9 +552,8 @@ def createTable(conn_setting=None, t=None, t_defition=None):
         return False
 
 
-def processOneInstance(d_archive=None, dconf=None, sem=None):
-    
-    d_archive['task_id'] = returnTaskID(d_archive['ip'], d_archive['port'])
+def processOneInstance(d_archive=None, sem=None):
+
     d_archive['t_backup'] = 'mysql_archive_2018_db.t_backup_%s'%(d_archive['task_id'])
     d_archive['t_taskid'] = 'mysql_archive_2018_db.t_taskid_%s'%(d_archive['task_id'])
     d_archive['tmp_file'] = '%s/%s.txt'%(tmp_dir,d_archive['task_id'])
@@ -460,24 +564,39 @@ def processOneInstance(d_archive=None, dconf=None, sem=None):
             'passwd' : getKV(k='ddl_pass', ip=d_archive['ip'], port=int(d_archive['port']))
     }
     d_archive['table_schema'], d_archive['table_name'] = splitPoint(d_archive['table'])
+
     printLog("[%s]begin:检测参数"%d_archive['task_id'], normal_log, 'green')
     check_info = checkMain(d_archive)
     if not check_info:
         printLog("[%s]end:参数有误,退出逻辑"%d_archive['task_id'], normal_log, 'red')
-        return False # Tips:跳转
-
+        return False # Tips:死亡跳转
     else:
         printLog("[%s]end:参数正常"%d_archive['task_id'], normal_log, 'green')
+
     d_archive['uc_name'] = check_info[0]
     d_archive['ck_type'] = check_info[1]
     d_archive['uk_name'] = check_info[2]
     d_archive['columns'] = check_info[3]
     d_archive['select_module'] = check_info[4]
     d_archive['threshold_time'] = getThresholdTime(ck_type=d_archive['ck_type'], days=d_archive['keep_days'])
+
+    result_sql = ("""replace into {t} (Ftask_id,Fdate,Fip,Fport,Ftable,Fexec_status,Fcreate_time,Fmodify_time) 
+            values 
+            ('{task_id}','{dt}','{ip}','{port}','{table}','{exec_status}',now(),now());"""
+            .format(t = d_archive['dconf']['t_mysql_archive_result'],
+                    task_id = d_archive['task_id'],
+                    dt = getToday(),
+                    ip = d_archive['conn_instance']['host'],
+                    port = d_archive['conn_instance']['port'],
+                    table = d_archive['table'],
+                    exec_status = 'Init')
+    )
+    connMySQL(result_sql, conn_dbadb)
+
     fl = getFL(d_archive)
     if not fl:
         printLog("[%s]找不到需要归档的数据"%(d_archive['task_id']), normal_log)
-        return False # Tips:再一次跳转
+        #return False # Tips:再一次死亡跳转
     else:
         d_archive['f_uc_name'] = fl[0]
         d_archive['l_uc_name'] = fl[1]
@@ -485,7 +604,8 @@ def processOneInstance(d_archive=None, dconf=None, sem=None):
                     %(d_archive['task_id'], d_archive['uc_name'], 
                     d_archive['f_uc_name'], d_archive['l_uc_name']), 
                 normal_log)
-    t_task_id_defition = example_sql.replace('table_schema.table_name', '%s'%(d_archive['t_taskid']))
+
+    t_task_id_defition = example_sql.replace('table_schema.table_name','%s'%(d_archive['t_taskid']))
     createTable(conn_setting=conn_dbadb, t=d_archive['t_taskid'], t_defition=t_task_id_defition)
     if d_archive['backup_status'].upper() == 'Y':
         table_deftion = getTableDefion(conn_setting=d_archive['conn_instance'], 
@@ -494,15 +614,16 @@ def processOneInstance(d_archive=None, dconf=None, sem=None):
         printLog("[%s]创建结果库%s"%(d_archive['task_id'], d_archive['t_taskid']), normal_log)
         createBackupTable(conn_setting=conn_dbadb, t_new=d_archive['t_backup'], t_old=d_archive['table_name'], t_defition=table_deftion)
 
-    bool_partition = checkTableType(conn_setting=d_archive['conn_instance'], table_schema=d_archive['table_schema'], table_name=d_archive['table_name'])
-    if bool_partition:
-        pass
-        #archivePartitions(mysql_archive, d_archive, check_info, task_id) # 分区表逻辑
-    else:
-        archiveTableMain(d_archive) # 单表逻辑
+    d_archive['bool_partition'] = checkTableType(conn_setting=d_archive['conn_instance'], 
+                                        table_schema=d_archive['table_schema'], table_name=d_archive['table_name'])
+
+    archiveTableMain(d_archive)
 
     sem.release() # 释放 semaphore
 
+
+def getToday():
+    return time.strftime('%F',time.localtime())
 
 def getOnlineInfo(conn_setting, t):
     sql = ("""select 
@@ -549,7 +670,9 @@ def main():
     sem = Semaphore(thread_num) 
     threads = []
     for archive_info in archive_infos:
-        t = threading.Thread(target=processOneInstance, args=(archive_info, dconf, sem))
+        archive_info['dconf'] = dconf
+        archive_info['task_id'] = returnTaskID(archive_info['ip'], archive_info['port'])
+        t = threading.Thread(target=processOneInstance, args=(archive_info, sem))
         threads.append(t)
     length = len(threads)
     for i in range(length):
