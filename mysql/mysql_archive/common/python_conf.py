@@ -34,8 +34,8 @@ if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 if not os.path.exists(tmp_dir):
     os.makedirs(tmp_dir)
-if not os.path.exists(backup_parent_dir):
-    os.makedirs(backup_parent_dir)
+#if not os.path.exists(backup_parent_dir):
+#    os.makedirs(backup_parent_dir)
 
 conf_keys = (
     'archive_count',

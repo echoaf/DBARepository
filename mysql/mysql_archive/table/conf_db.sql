@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.19, for Linux (x86_64)
 --
--- Host: 172.16.112.12    Database: conf_db
+-- Host: localhost    Database: conf_db
 -- ------------------------------------------------------
 -- Server version	5.7.19-log
 
@@ -33,7 +33,7 @@ CREATE TABLE `t_archive_conf_common` (
   PRIMARY KEY (`Findex`),
   UNIQUE KEY `uniq_Fkey` (`Fkey`),
   KEY `idx_Fmodify_time` (`Fmodify_time`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='配置公共表';
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COMMENT='配置公共表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -55,6 +55,13 @@ INSERT INTO `t_archive_conf_common` (`Findex`, `Fkey`, `Fvalue`, `Fmemo`, `Fstat
 INSERT INTO `t_archive_conf_common` (`Findex`, `Fkey`, `Fvalue`, `Fmemo`, `Fstate`, `Fcreate_time`, `Fmodify_time`) VALUES (12,'t_mysql_archive_result','mysql_archive_db.t_mysql_archive_result','归档结果表','online','2018-12-15 10:18:15','2018-12-15 02:18:15');
 INSERT INTO `t_archive_conf_common` (`Findex`, `Fkey`, `Fvalue`, `Fmemo`, `Fstate`, `Fcreate_time`, `Fmodify_time`) VALUES (13,'archive_count','20000','每次处理数据行数','online','2018-12-15 10:26:50','2018-12-15 02:26:50');
 INSERT INTO `t_archive_conf_common` (`Findex`, `Fkey`, `Fvalue`, `Fmemo`, `Fstate`, `Fcreate_time`, `Fmodify_time`) VALUES (14,'threads_running','1000','最大活跃连接数','online','2018-12-15 10:26:51','2018-12-15 02:26:51');
+INSERT INTO `t_archive_conf_common` (`Findex`, `Fkey`, `Fvalue`, `Fmemo`, `Fstate`, `Fcreate_time`, `Fmodify_time`) VALUES (16,'ddl_user','ddl_user','SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, INDEX, ALTER, SHOW DATABASES, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER, CREATE TABLESPACE','online','2018-12-17 16:10:28','2018-12-17 08:14:38');
+INSERT INTO `t_archive_conf_common` (`Findex`, `Fkey`, `Fvalue`, `Fmemo`, `Fstate`, `Fcreate_time`, `Fmodify_time`) VALUES (18,'ddl_pass','redhat','','online','2018-12-17 16:10:50','2018-12-17 08:10:50');
+INSERT INTO `t_archive_conf_common` (`Findex`, `Fkey`, `Fvalue`, `Fmemo`, `Fstate`, `Fcreate_time`, `Fmodify_time`) VALUES (19,'repl_time','3','最大延迟阈值','online','2018-12-21 14:24:26','2018-12-21 06:24:26');
+INSERT INTO `t_archive_conf_common` (`Findex`, `Fkey`, `Fvalue`, `Fmemo`, `Fstate`, `Fcreate_time`, `Fmodify_time`) VALUES (20,'backup_host','172.16.112.12','备份地址','online','2018-12-21 22:00:05','2018-12-21 14:00:05');
+INSERT INTO `t_archive_conf_common` (`Findex`, `Fkey`, `Fvalue`, `Fmemo`, `Fstate`, `Fcreate_time`, `Fmodify_time`) VALUES (21,'backup_port','10000','备份地址','online','2018-12-21 22:00:14','2018-12-21 14:00:14');
+INSERT INTO `t_archive_conf_common` (`Findex`, `Fkey`, `Fvalue`, `Fmemo`, `Fstate`, `Fcreate_time`, `Fmodify_time`) VALUES (22,'backup_user','ddl_user','备份地址','online','2018-12-21 22:00:25','2018-12-21 14:00:25');
+INSERT INTO `t_archive_conf_common` (`Findex`, `Fkey`, `Fvalue`, `Fmemo`, `Fstate`, `Fcreate_time`, `Fmodify_time`) VALUES (23,'backup_pass','redhat','备份地址','online','2018-12-21 22:00:32','2018-12-21 14:00:32');
 /*!40000 ALTER TABLE `t_archive_conf_common` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -78,7 +85,7 @@ CREATE TABLE `t_archive_conf_person` (
   PRIMARY KEY (`Findex`),
   UNIQUE KEY `uniq_Fkey_host_port` (`Fkey`,`Fserver_host`,`Fserver_port`),
   KEY `idx_Fmodify_time` (`Fmodify_time`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='配置特性表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='配置特性表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -89,6 +96,7 @@ LOCK TABLES `t_archive_conf_person` WRITE;
 /*!40000 ALTER TABLE `t_archive_conf_person` DISABLE KEYS */;
 INSERT INTO `t_archive_conf_person` (`Findex`, `Fkey`, `Fvalue`, `Fserver_host`, `Fserver_port`, `Fmemo`, `Fstate`, `Fcreate_time`, `Fmodify_time`) VALUES (1,'threads_running','20000','172.16.112.10',65536,'test','offline','2018-12-15 11:14:45','2018-12-15 03:15:55');
 INSERT INTO `t_archive_conf_person` (`Findex`, `Fkey`, `Fvalue`, `Fserver_host`, `Fserver_port`, `Fmemo`, `Fstate`, `Fcreate_time`, `Fmodify_time`) VALUES (2,'threads_running','30000','172.16.112.10',10000,'test','online','2018-12-15 11:14:54','2018-12-15 03:14:54');
+INSERT INTO `t_archive_conf_person` (`Findex`, `Fkey`, `Fvalue`, `Fserver_host`, `Fserver_port`, `Fmemo`, `Fstate`, `Fcreate_time`, `Fmodify_time`) VALUES (3,'archive_count','1000','172.16.112.12',10000,'','online','2018-12-21 15:45:56','2018-12-21 08:18:07');
 /*!40000 ALTER TABLE `t_archive_conf_person` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -101,4 +109,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-15 18:05:44
+-- Dump completed on 2018-12-22 15:09:57
