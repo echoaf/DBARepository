@@ -113,9 +113,6 @@ def returnTaskID(ip, port):
 def splitPoint(v):
     return v.split('.',-1)[0], v.split('.',-1)[1]
 
-def e():
-    exit()
-
 
 def showSlaveStatus(conn_setting):
     slave_status = connMySQL("SHOW SLAVE STATUS;", conn_setting)
@@ -638,6 +635,7 @@ def getOnlineInfo(conn_setting, t):
     )
     d = connMySQL(sql, conn_setting)
     return d
+
 
 def getKV(k, ip=None, port=None):
     conn_setting = conn_dbadb
