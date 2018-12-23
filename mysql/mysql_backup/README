@@ -1,0 +1,18 @@
+├── client
+│   ├── crontab
+            计划任务 - shell
+│   ├── function
+            独立脚本
+│   └── resident
+            独立脚本
+├── common
+        公共函数
+├── log 
+        打印日志
+├── server
+│   └── crontab
+        自动添加备份计划任务 - shell
+├── table
+        表结构定义
+└── tmp
+        sock文件
