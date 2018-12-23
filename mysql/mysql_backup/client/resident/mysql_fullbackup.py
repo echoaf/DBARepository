@@ -51,22 +51,41 @@ def main():
                 BF.printLog("[%s]非我良时"%(f_info['instance']), normal_log)
                 continue # 生命之死亡跳转
             rconf = BF.getKVDict(ip=f_info['source_host'], port=f_info['source_port'], real=1)
-            print rconf
-            exit()
+            MF.dconf['rconf'] = rconf
             backup_status = MF.checkFullbackupTaskID()
             MF.dconf['backup_path'] = "%s/FULLBACKUP/%s"%(MF.dconf['backup_pdir'], MF.dconf['task_id'])
             BF.mkdirPath(MF.dconf['backup_path'])
+
+            result_info = {
+                'backup_status' : '',
+                'd_metadata' : '',
+                'size' : '',
+                'backup_info' : '',
+            }
+
             if backup_status:
-                if backup_status[0]['backup_status'].upper() == 'BACKING':
+                backup_status = backup_status[0]['backup_status'].upper()
+                if backup_status == 'BACKING':
                     BF.printLog("[%s]全备状态:%s,进入check逻辑"%(MF.dconf['task_id'],backup_status), normal_log)
-                elif backup_status[0]['backup_status'].upper() == 'SUCC':
+                    check_info = MF.doCheck()
+                    if check_info:
+                        result_info['backup_status'] = check_info[0]
+                        result_info['d_metadata'] = check_info[1]
+                        result_info['size'] = check_info[2]
+                        result_info['backup_info'] = check_info[3]
+                        MF.updateFullbackup(result_info)
+                elif backup_status == 'SUCC':
                     BF.printLog("[%s]全备状态:%s"%(MF.dconf['task_id'],backup_status), normal_log)
                 else:
                     BF.printLog("[%s]全备状态:%s,进入备份逻辑"%(MF.dconf['task_id'],backup_status), normal_log)
             else:
                 BF.printLog("[%s]进入全备逻辑"%(MF.dconf['task_id']), normal_log)
-                MF.backupMydumper()
-            
+                #v_dob = MF.doBackup()
+                if v_dob:
+                    result_info['backup_status'] = 'Backing'
+                else:
+                    result_info['backup_status'] = 'Fail'
+                MF.updateFullbackup(result_info)
         break
 
     BF.printLog('===MySQL FULLBACKUP IS END.', normal_log, 'purple')

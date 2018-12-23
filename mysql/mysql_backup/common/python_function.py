@@ -9,7 +9,9 @@ import re
 import pprint
 import datetime
 import commands
+import subprocess
 import logging
+import linecache
 import MySQLdb
 import MySQLdb.cursors
 
@@ -44,7 +46,7 @@ class MySQLBackupFunction(object):
 
     def checkFullbackupTaskID(self):
         """return backup_status for task_id"""
-        sql = ("""select Fback_status as backup_status from %s where Ftask_id='%s';"""
+        sql = ("""select Fbackup_status as backup_status from %s where Ftask_id='%s';"""
                 %(self.dconf['t_mysql_fullbackup_result'], self.dconf['task_id']))
         v = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
         return v
@@ -87,16 +89,245 @@ class MySQLBackupFunction(object):
         return task_id
 
 
-    def backupMydumper(self):
-        # TIPS:
-        # -s,-r:分块,锁表时间会变长
+    def doBackup(self):
+        
+        v_check = self.checkBackup()
+        if not v_check:
+            v = False 
+        else:
+            backup_mode = self.dconf['f_info']['backup_mode'].upper()
+            if backup_mode == 'MYDUMPER':
+                self.doBackupMydumper(wait=0)
+                v = True
+            elif backup_mode == 'XTRABACKUP':
+                v = False
+            elif backup_mode == 'MYSQLDUMP':
+                v = False
+            else:
+                v = False
+        return v
+        
+
+    def checkPath(self, path=None):
+        if os.path.isdir(path):
+            if os.listdir(path):
+                self.BF.printLog("目录不为空:%s"%(path), self.dconf['normal_log'])
+                v = False
+            else:
+                self.BF.printLog("目录为空目录:%s"%(path), self.dconf['normal_log'])
+                v = True
+        else:
+            self.BF.printLog("找不到目录:%s"%(path), self.dconf['normal_log'])
+            v = False
+        return v
+
+
+    def checkActiveTrx(self, conn_setting=None):
+    
+        sql = "select count(*) as cnt from information_schema.innodb_trx;"
+        cnt = self.BF.connMySQL(sql, conn_setting)
+        if cnt[0]['cnt'] > 0:
+            self.BF.printLog("[%s:%s]数据库存在活跃事务:%s"
+                                %(conn_setting['host'],conn_setting['port'],cnt[0]['cnt']),
+                                self.dconf['normal_log'])
+            v = False
+        else:
+            v = True
+        return v
+
+
+    def updateFullbackup(self, d=None):
+    
+        sql = "select count(*) as cnt from %s where Ftask_id='%s';"%(self.dconf['t_mysql_fullbackup_result'], self.dconf['task_id'])
+        cnt = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
+        if cnt[0]['cnt'] == 0:
+            u_sql = ("""insert into {table} 
+                            (Ftype,Ftask_id,Fdate,Fsource_host,Fsource_port,
+                            Fmode,Faddress,Fpath,Fbackup_status,Fbackup_info,
+                            Fcreate_time,Fmodify_time) 
+                        values 
+                            ('{instance}','{task_id}',curdate(),'{source_host}','{source_port}',
+                            '{mode}','{address}','{path}','{backup_status}','{backup_info}',
+                            now(),now());"""
+                        .format(table = self.dconf['t_mysql_fullbackup_result'],
+                                instance = self.dconf['f_info']['instance'],
+                                task_id = self.dconf['task_id'],
+                                source_host = self.dconf['f_info']['source_host'],
+                                source_port = self.dconf['f_info']['source_port'],
+                                mode = self.dconf['f_info']['backup_mode'],
+                                address = self.dconf['local_ip'],
+                                path = self.dconf['backup_path'],
+                                backup_status = d['backup_status'],
+                                backup_info = d['backup_info'],
+                        )
+                    )
+        else:
+            u_sql =  ("""update {table} 
+                        set 
+                            Fbackup_status='{backup_status}',
+                            Fsize='{size}',
+                            Fmetadata=\"{metadata}\",
+                            Fstart_time='{start_time}',
+                            Fend_time='{end_time}',
+                            Fbackup_info='{backup_info}' 
+                        where Ftask_id='{task_id}';"""
+                        .format(table = self.dconf['t_mysql_fullbackup_result'],
+                                backup_status = d['backup_status'],
+                                size = d['size'],
+                                metadata = d['d_metadata'],
+                                start_time = d['d_metadata']['start_time'],
+                                end_time = d['d_metadata']['end_time'],
+                                backup_info = d['backup_info'],
+                                task_id = self.dconf['task_id']
+                            )
+                     )
+        self.BF.connMySQL(u_sql, self.BF.conn_dbadb)
+
+
+    def checkBackup(self):
+        """
+        check backup is continue
+        backup_path必须为空
+        不存在活跃事务
+        """
+        conn_instance = {
+            'host' : self.dconf['f_info']['source_host'],
+            'port' : self.dconf['f_info']['source_port'],
+            'user' : self.dconf['dump_user'],
+            'passwd' : self.dconf['dump_pass']
+        }
+        v1 = self.checkPath(self.dconf['backup_path'])
+        v2 = self.checkActiveTrx(conn_setting=conn_instance)
+        if not v1 or not v2:
+            v = False
+        else:
+            v = True
+        return v
+
+    def showSlaveStatus(self, conn_setting):
+        slave_status = self.BF.connMySQL("SHOW SLAVE STATUS;", conn_setting)
+        if slave_status:
+            Slave_IO_Running = slave_status[0]['Slave_IO_Running']
+            Slave_SQL_Running = slave_status[0]['Slave_SQL_Running']
+            Seconds_Behind_Master = slave_status[0]['Seconds_Behind_Master']
+            Master_Host = slave_status[0]['Master_Host']
+            Master_Port = slave_status[0]['Master_Port']
+            Seconds_Behind_Master = slave_status[0]['Seconds_Behind_Master']
+            d = {'Seconds_Behind_Master' : Seconds_Behind_Master,
+                'Slave_IO_Running' : Slave_IO_Running,
+                'Slave_SQL_Running' : Slave_SQL_Running,
+                'Master_Host' : Master_Host,
+                'Master_Port' : Master_Port,
+            }
+        else:
+            d = False
+        return d
+
+    def resolveMydumperBackupFile(self, f_metadata=None):
+        """
+        Started dump at: 2018-12-23 20:40:42
+        SHOW MASTER STATUS:
+            Log: binlog.000006
+            Pos: 34248173
+            GTID:
+        
+        SHOW SLAVE STATUS:
+            Host: 172.16.112.12
+            Log: binlog.000007
+            Pos: 35718139
+            GTID:
+        Finished dump at: 2018-12-23 20:40:48
+        """
+        f = open(f_metadata, 'r')
+        i = 1
+        master_line = 0
+        slave_line = 0
+        for line in f.readlines():
+            line = str(line.replace('\n', ''))
+            if line == 'SHOW MASTER STATUS:':
+                master_line = i
+            if line == 'SHOW SLAVE STATUS:':
+                slave_line = i
+            if re.match('Started dump at', line):
+                start_time = re.sub('Started dump at: ','',line)
+            if re.match('Finished dump at: ', line):
+                end_time = re.sub('Finished dump at: ','',line)
+            i = i + 1
+        f.close()
+        
+        #即使f_metadata存在show slave status,有可能slave状态不是Yes,这种情况下master是source
+        #slave_status = connMySQL("show slave status;",source_host,int(source_port),repl_user,repl_pass)
+        conn_instance = {
+            'host' : self.dconf['f_info']['source_host'],
+            'port' : self.dconf['f_info']['source_port'],
+            'user' : self.dconf['repl_user'],
+            'passwd' : self.dconf['repl_pass']
+        }
+        slave_status = self.showSlaveStatus(conn_setting=conn_instance)
+        
+        if not slave_status: # source_host role is master
+            master_host = self.dconf['f_info']['source_host']
+            master_port = self.dconf['f_info']['source_port']
+            log_file = linecache.getline(f_metadata, master_line+1).replace('\n', '').split('Log: ', -1)[1]
+            log_pos = int(linecache.getline(f_metadata, master_line+2).replace('\n', '').split('Pos: ', -1)[1])
+        else:
+            if slave_status['Slave_IO_Running'] == "Yes" and slave_status['Slave_SQL_Running'] == "Yes": # source_host role is slave
+                master_host = slave_status['Master_Host']
+                master_port= slave_status['Master_Port']
+                log_file = linecache.getline(f_metadata, slave_line+2).replace('\n', '').split('Log: ', -1)[1]
+                log_pos = int(linecache.getline(f_metadata, slave_line+3).replace('\n', '').split('Pos: ', -1)[1])
+            else: # source_host role is master, but slave status is error
+                master_host = self.dconf['f_info']['source_host']
+                master_port = self.dconf['f_info']['source_port']
+                log_file = linecache.getline(f_metadata, master_line+1).replace('\n', '').split('Log: ', -1)[1]
+                log_pos = int(linecache.getline(f_metadata, master_line+2).replace('\n', '').split('Pos: ', -1)[1])
+        info = {
+            'master_host' : master_host,
+            'master_port' : master_port,
+            'master_log_file' : log_file,
+            'master_log_pos' : log_pos,
+            'start_time' : start_time,
+            'end_time' : end_time,
+        }
+        # Todo:不支持GTID
+        return info
+
+
+    def doCheck(self):
+        """
+        check backup is succ?
+        """
+        backup_mode = self.dconf['f_info']['backup_mode'].upper()
+        if backup_mode == 'MYDUMPER':
+            f_metadata = "%s/metadata"%(self.dconf['backup_path'])
+            if os.path.isfile(f_metadata):
+                d_metadata = self.resolveMydumperBackupFile(f_metadata=f_metadata)
+                size = self.BF.runShell("du -shm %s | awk '{print $1}'"%(self.dconf['backup_path']))[1]
+                v = (
+                    'Succ',
+                    d_metadata,
+                    size,
+                    '备份成功',
+                )
+            else:
+                v = False
+        elif backup_mode == 'XTRABACKUP':
+            v = False
+        elif backup_mode == 'MYSQLDUMP':
+            v = False
+        else:
+            v = False
+        return v
+    
+
+    def doBackupMydumper(self, wait=1):
         cmd = ("""{mydumper} --user='{user}'"""
                     """ --password='{password}'"""
                     """ --host='{host}' """
                     """ --port='{port}'"""
                     """ --threads='{threads}'"""
                     """ --outputdir='{outputdir}'"""
-                    """ --verbose=3"""
+                    """ --verbose=2"""
                     """ --statement-size='{statement_size}'"""
                     """ --rows='{rows}'"""
                     """ >>{log_file} 2>&1"""
@@ -106,16 +337,20 @@ class MySQLBackupFunction(object):
                         password = self.dconf['dump_pass'],
                         host = self.dconf['f_info']['source_host'],
                         port = self.dconf['f_info']['source_port'],
-                        threads = self.dconf['dump_threads'],
+                        threads = self.dconf['rconf']['dump_threads'],
                         outputdir = self.dconf['backup_path'],
-                        statement_size = self.dconf['statement_size'],
-                        rows = self.dconf['rows'],
+                        statement_size = self.dconf['rconf']['statement_size'],
+                        rows = self.dconf['rconf']['rows'],
                         log_file = '/tmp/python.log',
                     )
         )
         self.BF.printLog("[%s]开始备份:%s"%(self.dconf['task_id'],cmd), self.dconf['normal_log'])
-        self.BF.runShell(cmd)
-
+        if wait == 0: # not wait
+            cmd = "%s &"%cmd
+            subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        else:
+            subprocess.call(cmd, stdout=subprocess.PIPE, shell=True)
+        return True
 
 
 class BaseFunction(object):
@@ -211,11 +446,11 @@ class BaseFunction(object):
                 where Fstate='online'"""
                 %(self.t_conf_common))
         if real == 1:
-            sql = "%s and Freal_state='Y'"
+            sql = "%s and Freal_state='Y'"%(sql)
         kvs = self.connMySQL(sql, self.conn_dbadb)
         for kv in kvs:
-            print kv
-            #d[kv['k']] = self.getKV(k=d[kv['k']], ip=ip, port=port)
+            k = kv['k']
+            d[k] = self.getKV(k=k, ip=ip, port=port)
             #d[key] = self.getKV(k=key, ip=ip, port=port)
         return d
 
@@ -362,20 +597,6 @@ class ApplicationInstance(object):
 #    return v.split('.',-1)[0], v.split('.',-1)[1]
 #
 #
-#def showSlaveStatus(conn_setting):
-#    slave_status = connMySQL("SHOW SLAVE STATUS;", conn_setting)
-#    if slave_status:
-#        Slave_IO_Running = slave_status[0]['Slave_IO_Running']
-#        Slave_SQL_Running = slave_status[0]['Slave_SQL_Running']
-#        Seconds_Behind_Master = slave_status[0]['Seconds_Behind_Master']
-#        d = {
-#            'Seconds_Behind_Master':Seconds_Behind_Master,
-#            'Slave_IO_Running':Slave_IO_Running,
-#            'Slave_SQL_Running':Slave_SQL_Running
-#        }
-#    else:
-#        d = False
-#    return d
 #
 #
 #def checkReadonly(conn_setting):
