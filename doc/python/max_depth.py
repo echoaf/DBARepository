@@ -1,0 +1,3 @@
+ValueError: sql is running error:maximum recursion depth exceeded while calling a Python object...
+import sys
+sys.setrecursionlimit(1500) # set the maximum depth as 1500
