@@ -44,6 +44,32 @@ class MySQLBackupFunction(object):
         return v
 
 
+    def getOnlineBinarybackupInfo(self):
+    
+        sql = ("""select Ftype as instance,
+                        Fsource_host as source_host,
+                        Fsource_port as source_port
+                    from {table}
+                    where Fstate='online'
+                        and Faddress='{address}'"""
+                    .format(table = self.dconf['t_mysql_binarylog_info'],
+                        address = self.dconf['local_ip']
+                    )
+               )
+        v = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
+        return v
+
+
+    def findFirstBinaryLogName(self):
+
+        sql = "SHOW BINARY LOGS;"
+        names = self.BF.connMySQL(sql=sql, d=self.dconf['conn_instance'], is_dict=0)
+        if names:
+            name = names[0][0]
+        else:
+            name = False
+        return name
+
     def checkFullbackupTaskID(self):
         """return backup_status for task_id"""
         sql = ("""select Fbackup_status as backup_status from %s where Ftask_id='%s';"""
@@ -90,7 +116,7 @@ class MySQLBackupFunction(object):
 
 
     def doBackup(self):
-        
+        # Returns:True|False
         v_check = self.checkBackup()
         if not v_check:
             v = False 
@@ -114,7 +140,7 @@ class MySQLBackupFunction(object):
                 self.BF.printLog("目录不为空:%s"%(path), self.dconf['normal_log'])
                 v = False
             else:
-                self.BF.printLog("目录为空目录:%s"%(path), self.dconf['normal_log'])
+                #self.BF.printLog("目录为空目录:%s"%(path), self.dconf['normal_log'])
                 v = True
         else:
             self.BF.printLog("找不到目录:%s"%(path), self.dconf['normal_log'])
@@ -157,8 +183,8 @@ class MySQLBackupFunction(object):
                                 mode = self.dconf['f_info']['backup_mode'],
                                 address = self.dconf['local_ip'],
                                 path = self.dconf['backup_path'],
-                                backup_status = d['backup_status'],
-                                backup_info = d['backup_info'],
+                                backup_status = d['check_status'],
+                                backup_info = d['memo'],
                         )
                     )
         else:
@@ -172,12 +198,12 @@ class MySQLBackupFunction(object):
                             Fbackup_info='{backup_info}' 
                         where Ftask_id='{task_id}';"""
                         .format(table = self.dconf['t_mysql_fullbackup_result'],
-                                backup_status = d['backup_status'],
+                                backup_status = d['check_status'],
                                 size = d['size'],
-                                metadata = d['d_metadata'],
-                                start_time = d['d_metadata']['start_time'],
-                                end_time = d['d_metadata']['end_time'],
-                                backup_info = d['backup_info'],
+                                metadata = d['metadata'],
+                                start_time = d['metadata']['start_time'],
+                                end_time = d['metadata']['end_time'],
+                                backup_info = d['memo'],
                                 task_id = self.dconf['task_id']
                             )
                      )
@@ -189,6 +215,7 @@ class MySQLBackupFunction(object):
         check backup is continue
         backup_path必须为空
         不存在活跃事务
+        Returns:True:False
         """
         conn_instance = {
             'host' : self.dconf['f_info']['source_host'],
@@ -225,19 +252,31 @@ class MySQLBackupFunction(object):
 
     def resolveMydumperBackupFile(self, f_metadata=None):
         """
-        Started dump at: 2018-12-23 20:40:42
-        SHOW MASTER STATUS:
-            Log: binlog.000006
-            Pos: 34248173
-            GTID:
-        
-        SHOW SLAVE STATUS:
-            Host: 172.16.112.12
-            Log: binlog.000007
-            Pos: 35718139
-            GTID:
-        Finished dump at: 2018-12-23 20:40:48
+        Returns:metadata
+            metadata = {
+                    'start_time' : '1970-01-01',
+                    'end_time' : '1970-01-01',
+                    'master_log_file' : '',
+                    'master_log_pos' : '',
+                    'master_gtid' : '',
+                    'master_host' : '',
+                    'master_port' : '',
+            }
+        Mydumper metadata May be like this:
+            Started dump at: 2018-12-23 20:40:42
+            SHOW MASTER STATUS:
+                Log: binlog.000006
+                Pos: 34248173
+                GTID:
+            
+            SHOW SLAVE STATUS:
+                Host: 172.16.112.12
+                Log: binlog.000007
+                Pos: 35718139
+                GTID:
+            Finished dump at: 2018-12-23 20:40:48
         """
+
         f = open(f_metadata, 'r')
         i = 1
         master_line = 0
@@ -255,8 +294,11 @@ class MySQLBackupFunction(object):
             i = i + 1
         f.close()
         
-        #即使f_metadata存在show slave status,有可能slave状态不是Yes,这种情况下master是source
-        #slave_status = connMySQL("show slave status;",source_host,int(source_port),repl_user,repl_pass)
+        """
+        Tips:
+        即使f_metadata存在show slave status,有可能slave状态不是Yes,这种情况下master是source
+        slave_status = connMySQL("show slave status;",source_host,int(source_port),repl_user,repl_pass)
+        """
         conn_instance = {
             'host' : self.dconf['f_info']['source_host'],
             'port' : self.dconf['f_info']['source_port'],
@@ -281,43 +323,63 @@ class MySQLBackupFunction(object):
                 master_port = self.dconf['f_info']['source_port']
                 log_file = linecache.getline(f_metadata, master_line+1).replace('\n', '').split('Log: ', -1)[1]
                 log_pos = int(linecache.getline(f_metadata, master_line+2).replace('\n', '').split('Pos: ', -1)[1])
-        info = {
+
+        # Todo:不支持GTID
+        metadata = {
             'master_host' : master_host,
             'master_port' : master_port,
             'master_log_file' : log_file,
             'master_log_pos' : log_pos,
+            'master_gtid' : '',
             'start_time' : start_time,
             'end_time' : end_time,
         }
-        # Todo:不支持GTID
-        return info
+        return metadata
 
 
     def doCheck(self):
         """
         check backup is succ?
+        Returns:check_info
+            check_info = {
+                'check_status' : '',
+                'metadata' : {
+                    'start_time' : '1970-01-01',
+                    'end_time' : '1970-01-01',
+                    'master_log_file' : '',
+                    'master_log_pos' : '',
+                    'master_gtid' : '',
+                    'master_host' : '',
+                    'master_port' : ''
+                },
+                'size' : '0',
+                'memo' : '',
+            }
         """
+        check_info = {
+             'check_status' : '',
+             'metadata' : '',
+             'size' : '0',
+             'memo' : '初始化字典',
+        }
         backup_mode = self.dconf['f_info']['backup_mode'].upper()
         if backup_mode == 'MYDUMPER':
             f_metadata = "%s/metadata"%(self.dconf['backup_path'])
             if os.path.isfile(f_metadata):
-                d_metadata = self.resolveMydumperBackupFile(f_metadata=f_metadata)
-                size = self.BF.runShell("du -shm %s | awk '{print $1}'"%(self.dconf['backup_path']))[1]
-                v = (
-                    'Succ',
-                    d_metadata,
-                    size,
-                    '备份成功',
-                )
-            else:
-                v = False
+                check_info['metadata'] = self.resolveMydumperBackupFile(f_metadata=f_metadata)
+                check_info['size'] = self.BF.runShell("du -shm %s | awk '{print $1}'"%(self.dconf['backup_path']))[1]
+                check_info['check_status'] = 'Succ'
+                check_info['memo'] = '备份成功'
+            else: # 可能依然还在做备份
+                check_info['check_status'] = 'Backing'
+                check_info['memo'] = 'not find metadata'
         elif backup_mode == 'XTRABACKUP':
-            v = False
+            pass
         elif backup_mode == 'MYSQLDUMP':
-            v = False
+            pass
         else:
-            v = False
-        return v
+            pass
+        return check_info
     
 
     def doBackupMydumper(self, wait=1):

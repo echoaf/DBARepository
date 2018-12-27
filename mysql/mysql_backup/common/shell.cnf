@@ -21,7 +21,7 @@ backup_parent_dir="/data/MySQL_BACKUP"
 full_backup_dir="$backup_parent_dir/FULL_BACKUP"
 binarylog_backup_dir="$backup_parent_dir/BINARYLOG_BACKUP"
 dump_dir="$backup_parent_dir/DUMP"
-mkdir -p $backup_parent_dir $full_backup_dir $binarylog_backup_dir $dump_dir
+#mkdir -p $backup_parent_dir $full_backup_dir $binarylog_backup_dir $dump_dir
 
 max_table_rows=1000000 # 大于此数对表分块dump
 

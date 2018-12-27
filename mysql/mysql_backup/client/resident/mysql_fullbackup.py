@@ -41,52 +41,60 @@ def main():
 
     BF.printLog('===MySQL FULLBACKUP IS START.', normal_log, 'purple')
 
-    while True:
+    f_infos = MF.getOnlineFullbackupInfo()
+    for f_info in f_infos:
+        MF.dconf['f_info'] = f_info 
+        MF.dconf['task_id'] = MF.getFullbackupTaskID()
+        if not MF.dconf['task_id']:
+            BF.printLog("[%s]非我良时"%(f_info['instance']), normal_log)
+            continue # Notice
 
-        f_infos = MF.getOnlineFullbackupInfo()
-        for f_info in f_infos:
-            MF.dconf['f_info'] = f_info 
-            MF.dconf['task_id'] = MF.getFullbackupTaskID()
-            if not MF.dconf['task_id']:
-                BF.printLog("[%s]非我良时"%(f_info['instance']), normal_log)
-                continue # 生命之死亡跳转
-            rconf = BF.getKVDict(ip=f_info['source_host'], port=f_info['source_port'], real=1)
-            MF.dconf['rconf'] = rconf
-            backup_status = MF.checkFullbackupTaskID()
-            MF.dconf['backup_path'] = "%s/FULLBACKUP/%s"%(MF.dconf['backup_pdir'], MF.dconf['task_id'])
-            BF.mkdirPath(MF.dconf['backup_path'])
+        # rconf:real time conf
+        MF.dconf['rconf'] = BF.getKVDict(ip=f_info['source_host'], port=f_info['source_port'], real=1)
+        backup_status = MF.checkFullbackupTaskID()
+        MF.dconf['backup_path'] = "%s/FULLBACKUP/%s"%(MF.dconf['backup_pdir'], MF.dconf['task_id'])
+        BF.mkdirPath(MF.dconf['backup_path'])
 
-            result_info = {
-                'backup_status' : '',
-                'd_metadata' : '',
-                'size' : '',
-                'backup_info' : '',
-            }
+        check_info = {
+            'check_status' : '',
+            'metadata' : {
+                    'start_time' : '1970-01-01',
+                    'end_time' : '1970-01-01',
+                    'master_log_file' : '',
+                    'master_log_pos' : '',
+                    'master_gtid' : '',
+                    'master_host' : '',
+                    'master_port' : ''},
+            'size' : '0',
+            'memo' : '初始化字典',
+        }
 
-            if backup_status:
-                backup_status = backup_status[0]['backup_status'].upper()
-                if backup_status == 'BACKING':
-                    BF.printLog("[%s]全备状态:%s,进入check逻辑"%(MF.dconf['task_id'],backup_status), normal_log)
-                    check_info = MF.doCheck()
-                    if check_info:
-                        result_info['backup_status'] = check_info[0]
-                        result_info['d_metadata'] = check_info[1]
-                        result_info['size'] = check_info[2]
-                        result_info['backup_info'] = check_info[3]
-                        MF.updateFullbackup(result_info)
-                elif backup_status == 'SUCC':
-                    BF.printLog("[%s]全备状态:%s"%(MF.dconf['task_id'],backup_status), normal_log)
-                else:
-                    BF.printLog("[%s]全备状态:%s,进入备份逻辑"%(MF.dconf['task_id'],backup_status), normal_log)
+        if backup_status:
+            backup_status = backup_status[0]['backup_status'].upper()
+            if backup_status == 'BACKING':
+                BF.printLog("[%s]backup status is %s, enter checking"%(MF.dconf['task_id'],backup_status), normal_log)
+                check_info = MF.doCheck()
+                MF.updateFullbackup(check_info)
+            elif backup_status == 'SUCC': 
+                BF.printLog("[%s]backup status is %s, exit"%(MF.dconf['task_id'],backup_status), normal_log)
             else:
-                BF.printLog("[%s]进入全备逻辑"%(MF.dconf['task_id']), normal_log)
-                #v_dob = MF.doBackup()
-                if v_dob:
-                    result_info['backup_status'] = 'Backing'
+                BF.printLog("[%s]backup status is %s, enter backuping"%(MF.dconf['task_id'],backup_status), normal_log)
+                if MF.doBackup():
+                    check_info['check_status'] = 'Backing'
+                    check_info['memo'] = '尝试备份成功'
                 else:
-                    result_info['backup_status'] = 'Fail'
-                MF.updateFullbackup(result_info)
-        break
+                    check_info['check_status'] = 'Fail'
+                    check_info['memo'] = '第一次尝试备份失败'
+                MF.updateFullbackup(check_info)
+        else:
+            BF.printLog("[%s]init status, enter backuping"%(MF.dconf['task_id']), normal_log)
+            if MF.doBackup():
+                check_info['check_status'] = 'Backing'
+                check_info['memo'] = '尝试备份成功'
+            else:
+                check_info['check_status'] = 'Fail'
+                check_info['memo'] = '第一次尝试备份失败'
+            MF.updateFullbackup(check_info)
 
     BF.printLog('===MySQL FULLBACKUP IS END.', normal_log, 'purple')
 
