@@ -1,5 +1,0 @@
-set number " 显示行号
-set tabstop=4   " 设置tab键的宽度
-set expandtab   " 使用空格来替换tab
-au BufRead,BufNewFile *.py,*.sh 2match Underlined /.\%81v/ " 80字符提示
-" https://github.com/erasin/notes/blob/master/linux/vim/vimrc.mdv/
