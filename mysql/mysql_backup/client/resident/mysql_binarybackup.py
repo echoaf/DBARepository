@@ -10,6 +10,7 @@ import calendar
 import re
 import pprint
 import commands
+import shutil
 import subprocess
 import threading
 from threading import Thread, Semaphore
@@ -41,7 +42,10 @@ def monitorProcess(MF=None):
                 )
     )
     if not BF.runShell(ps_cmd)[1]:
-        name = MF.findFirstBinaryLogName()
+        if not d['f_info']['name'] or d['f_info']['name']=='empty': 
+            name = MF.findFirstBinaryLogName() # 从目前source上第一个开始拉取
+        else:
+            name = d['f_info']['name'] # 从配置表里面拉取
         pull_cmd = ("""{mysqlbinlog} -h{host} -P{port} -u{user} -p{passwd}"""
                     """ {binlog_name}"""
                     """ --read-from-remote-server --raw --stop-never --result-file"""
@@ -60,19 +64,55 @@ def monitorProcess(MF=None):
         BF.printLog('[%s]pull mysqlbinlog process.'%(d['task_id']), normal_log)
         BF.printLog(pull_cmd, normal_log)
         subprocess.Popen(pull_cmd, stdout=subprocess.PIPE, shell=True)
-    
+        sql = "update %s set Fname='empty' where Ftype='%s'"%(d['t_mysql_binarylog_info'],d['f_info']['instance'])
+        BF.connMySQL(sql, d['conn_dbadb']) # Todo:需要判断本次是否拉取成功,更新配置表
+
 
 def checkMain(MF=None):
 
     d = MF.dconf
     BF = MF.BF
     
-    fs = [(i, os.stat('%s/%s'%(d['report_path'],i)).st_mtime) for i in os.listdir(d['report_path'])]
-    l = [i for i in sorted(fs, key=lambda x: x[1])] # 按时间排序
-    l.pop() # 删除最后一个元素
-    for f in l:
-        print f[0]
+    fs = [i for i in os.listdir(d['report_path'])]
+    t_binary = BF.connMySQL("SHOW BINARY LOGS", d['conn_instance'], 0)
+    l_binary = list(t_binary)
+    l_binary.pop() # 最后一个binlog不做比较
 
+    for b in l_binary:
+
+        d_result = {
+            'instance' : d['f_info']['instance'],
+            'name' : b[0],
+            'host' : d['f_info']['source_host'],
+            'port' : d['f_info']['source_port'],
+            'address' : d['local_ip'],
+            'path' : '',
+            'size' : '0',
+            'start_time' : '',
+            'backup_status' : '',
+            'backup_info' : '',
+        }
+
+        if b[0] in fs:
+            print b[0]
+            s1 = os.path.getsize("%s/%s"%(d['report_path'],b[0]))
+            s2 = b[1]      
+            if s1 == s2: # 通过对比file size判断binlog是否拉取succ
+                BF.runShell("mv -vf %s/%s %s"%(d['report_path'],b[0],d['succ_path']))
+                d_result['start_time'] = MF.getBinarylogTime("%s/%s"%(d['report_path'],b[0]), mysqlbinlog)
+                d_result['path'] = "%s/%s"%(d['report_path'],b[0])
+                d_result['size'] = int(s1)
+                d_result['backup_status'] = "Succ"
+                d_result['backup_info'] = "备份成功"
+            else:
+                d_result['start_time'] = "1970-01-01"
+                d_result['path'] = ""
+                d_result['size'] = "0"
+                d_result['backup_status'] = "Fai;"
+                d_result['backup_info'] = "备份失败(找不到文件)"
+            MF.updateBinarybackup(d_result)
+        else:
+            pass
     
 
 def main():
@@ -92,7 +132,8 @@ def main():
     f_infos = MF.getOnlineBinarybackupInfo()
     for f_info in f_infos:
         MF.dconf['f_info'] = f_info 
-        p = "%s/BINARYBACKUP/%s/%s_%s"%(MF.dconf['backup_pdir'], f_info['instance'].upper(), f_info['source_host'], f_info['source_port'])
+        p = ("""%s/BINARYBACKUP/%s/%s_%s"""%(MF.dconf['backup_pdir'], 
+                f_info['instance'].upper(), f_info['source_host'], f_info['source_port']))
         MF.dconf['succ_path'] = "%s/SUCC"%(p)
         MF.dconf['report_path'] = "%s/REPORTED"%(p)
         MF.dconf['fail_path'] = "%s/FAIL"%(p)
@@ -107,48 +148,8 @@ def main():
             'user': dconf['repl_user'],
             'passwd': dconf['repl_pass']
         }
-        monitorProcess(MF=MF)
+        #monitorProcess(MF=MF)
         checkMain(MF=MF)
-        #check_info = {
-        #    'check_status' : '',
-        #    'metadata' : {
-        #            'start_time' : '1970-01-01',
-        #            'end_time' : '1970-01-01',
-        #            'master_log_file' : '',
-        #            'master_log_pos' : '',
-        #            'master_gtid' : '',
-        #            'master_host' : '',
-        #            'master_port' : ''},
-        #    'size' : '0',
-        #    'memo' : '初始化字典',
-        #}
-
-        #if backup_status:
-        #    backup_status = backup_status[0]['backup_status'].upper()
-        #    if backup_status == 'BACKING':
-        #        BF.printLog("[%s]backup status is %s, enter checking"%(MF.dconf['task_id'],backup_status), normal_log)
-        #        check_info = MF.doCheck()
-        #        MF.updateFullbackup(check_info)
-        #    elif backup_status == 'SUCC': 
-        #        BF.printLog("[%s]backup status is %s, exit"%(MF.dconf['task_id'],backup_status), normal_log)
-        #    else:
-        #        BF.printLog("[%s]backup status is %s, enter backuping"%(MF.dconf['task_id'],backup_status), normal_log)
-        #        if MF.doBackup():
-        #            check_info['check_status'] = 'Backing'
-        #            check_info['memo'] = '尝试备份成功'
-        #        else:
-        #            check_info['check_status'] = 'Fail'
-        #            check_info['memo'] = '第一次尝试备份失败'
-        #        MF.updateFullbackup(check_info)
-        #else:
-        #    BF.printLog("[%s]init status, enter backuping"%(MF.dconf['task_id']), normal_log)
-        #    if MF.doBackup():
-        #        check_info['check_status'] = 'Backing'
-        #        check_info['memo'] = '尝试备份成功'
-        #    else:
-        #        check_info['check_status'] = 'Fail'
-        #        check_info['memo'] = '第一次尝试备份失败'
-        #    MF.updateFullbackup(check_info)
 
     BF.printLog('===MySQL BINARYBACKUP IS END.', normal_log, 'purple')
 

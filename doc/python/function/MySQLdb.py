@@ -6,7 +6,6 @@ import MySQLdb.cursors
 from warnings import filterwarnings
 filterwarnings('error', category = MySQLdb.Warning)
 
-
 def connMySQL(self, sql=None, d=None, is_dict=1):
     """
     d = {'host': host, 'port': port, 'user': user, 'passwd': passwd}
@@ -18,7 +17,7 @@ def connMySQL(self, sql=None, d=None, is_dict=1):
         if is_dict == 1:
             conn = MySQLdb.connect(host=d['host'], port=d['port'],
                     user=d['user'], passwd=d['passwd'],
-                    db='information_schema', charset='utf8', 
+                    db='information_schema', charset='utf8',
                     cursorclass=MySQLdb.cursors.DictCursor)
         else:
             conn = MySQLdb.connect(host=d['host'], port=d['port'],
@@ -33,4 +32,3 @@ def connMySQL(self, sql=None, d=None, is_dict=1):
         return values
     except Exception,e:
         raise Exception("sql is running error:%s..."%e)
-

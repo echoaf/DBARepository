@@ -48,7 +48,8 @@ class MySQLBackupFunction(object):
     
         sql = ("""select Ftype as instance,
                         Fsource_host as source_host,
-                        Fsource_port as source_port
+                        Fsource_port as source_port,
+                        Fname as name
                     from {table}
                     where Fstate='online'
                         and Faddress='{address}'"""
@@ -153,7 +154,7 @@ class MySQLBackupFunction(object):
         sql = "select count(*) as cnt from information_schema.innodb_trx;"
         cnt = self.BF.connMySQL(sql, conn_setting)
         if cnt[0]['cnt'] > 0:
-            self.BF.printLog("[%s:%s]数据库存在活跃事务:%s"
+            self.BF.printLog("""[%s:%s]数据库存在活跃事务:%s"""
                                 %(conn_setting['host'],conn_setting['port'],cnt[0]['cnt']),
                                 self.dconf['normal_log'])
             v = False
@@ -161,6 +162,73 @@ class MySQLBackupFunction(object):
             v = True
         return v
 
+
+    def getBinarylogTime(self, f, mysqlbinlog):
+    
+        cmd = ("""%s -vv %s 2>&1 | head -100 | grep "server id " | awk -F"server id" '{print $1}' | sed 's/#//g'| head -1"""%(mysqlbinlog, f))
+        time1 = self.BF.runShell(cmd)[1]
+        cmd2 = """date -d "%s" +"%%F %%T" """%(time1)
+        time2 = self.BF.runShell(cmd2)[1]
+        time2 = time2 if time2 else "1970-01-01 00:00:00"
+        return time2
+
+    def updateBinarybackup(self, d_result=None):
+        sql = ("""select count(*) as cnt from {table} 
+                    where Fsource_host='{host}' and Fsource_port='{port}' 
+                    and Fname='{name}'"""
+                .format(table = self.dconf['t_mysql_binarylog_result'],
+                    host = d_result['host'],
+                    port = d_result['port'],
+                    name = d_result['name'])
+              )
+
+        cnt = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
+        if cnt[0]['cnt'] == 0:
+            u_sql = ("""insert into {table}"""
+                            """ (Ftype,Fname,Fdate,Fsource_host,Fsource_port"""
+                            """,Faddress,Fpath,Fsize,Fstart_time,Fbackup_status"""
+                            """,Fbackup_info,Fcreate_time,Fmodify_time)"""
+                            """ values"""
+                            """ ('{instance}','{name}',curdate(),'{host}','{port}'"""
+                            """,'{address}','{path}','{size}','{start_time}','{backup_status}'"""
+                            """,'{backup_info}',now(),now());"""
+                        .format(table = self.dconf['t_mysql_binarylog_result'],
+                            instance = d_result['instance'],
+                            name = d_result['name'],
+                            host = d_result['host'],
+                            port = d_result['port'],
+                            address = d_result['address'],
+                            path = d_result['path'],
+                            size = d_result['size'],
+                            start_time = d_result['start_time'],
+                            backup_status = d_result['backup_status'],
+                            backup_info = d_result['backup_info']
+                        )
+                    )
+        else:
+            u_sql = ("""update {table}"""
+                            """ set Ftype='{instance}',Fname='{name}',Fdate=curdate(),"""
+                            """ Fsource_host='{host}',Fsource_port='{port}'"""
+                            """,Faddress='{address}',Fpath='{path}',Fsize='{size}'"""
+                            """,Fstart_time='{start_time}',Fbackup_status='{backup_status}'"""
+                            """,Fbackup_info='{backup_info}',Fmodify_time=now()"""
+                            """ where Fsource_host='{host}' and Fsource_port='{port}'"""
+                            """ and Fname='{name}';"""
+                        .format(table = self.dconf['t_mysql_binarylog_result'],
+                            instance = d_result['instance'],
+                            name = d_result['name'],
+                            host = d_result['host'],
+                            port = d_result['port'],
+                            address = d_result['address'],
+                            path = d_result['path'],
+                            size = d_result['size'],
+                            start_time = d_result['start_time'],
+                            backup_status = d_result['backup_status'],
+                            backup_info = d_result['backup_info']
+                        )
+                    )
+        print u_sql    
+        self.BF.connMySQL(u_sql, self.BF.conn_dbadb)
 
     def updateFullbackup(self, d=None):
     

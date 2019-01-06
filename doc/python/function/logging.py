@@ -1,5 +1,5 @@
-
 import logging
+import time
 
 def printLog(self, content=None, normal_log=None, color='normal'):
     if normal_log:
@@ -23,4 +23,3 @@ def printLog(self, content=None, normal_log=None, color='normal'):
             'normal':'0'
     }
     print("\033["+codeCodes[color]+"m"+'[%s] %s'%(time.strftime('%F %T',time.localtime()),content)+"\033[0m")
-
