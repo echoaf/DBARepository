@@ -25,21 +25,29 @@ class MySQLBackupFunction(object):
 
     def getOnlineFullbackupInfo(self):
     
+        #sql = ("""select Ftype as instance,
+        #                Fsource_host as source_host,
+        #                Fsource_port as source_port,
+        #                Fmode as backup_mode,
+        #                Fweekday as backup_weekday,
+        #                Fstart_time as backup_start_time,
+        #                Fend_time as backup_end_time,
+        #                Fclear_rule as backup_clear_rule
+        #            from {table}
+        #            where Fstate='online'
+        #                and Faddress='{address}'"""
+        #            .format(table = self.dconf['t_mysql_fullbackup_info'],
+        #                address = self.dconf['local_ip']
+        #            )
+        #       )
         sql = ("""select Ftype as instance,
-                        Fsource_host as source_host,
-                        Fsource_port as source_port,
-                        Fmode as backup_mode,
-                        Fweekday as backup_weekday,
-                        Fstart_time as backup_start_time,
-                        Fend_time as backup_end_time,
-                        Fclear_rule as backup_clear_rule
-                    from {table}
-                    where Fstate='online'
-                        and Faddress='{address}'"""
-                    .format(table = self.dconf['t_mysql_fullbackup_info'],
-                        address = self.dconf['local_ip']
-                    )
-               )
+                        Fmydumper as is_mydumper,
+                        Fxtrabackup as is_xtrabackup,
+                        Fmysqldump as mysqldump
+                    from {table} 
+                    where Fstate='online';"""
+                    .format(table = self.dconf['t_mysql_fullbackup_info'])
+        )
         v = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
         return v
 

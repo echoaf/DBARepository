@@ -28,7 +28,7 @@ sys.setdefaultencoding('utf8')
 def main():
     
     BF = BaseFunction(t_conf_common=t_conf_common, t_conf_person=t_conf_person, 
-            conn_dbadb=conn_dbadb)
+        conn_dbadb=conn_dbadb)
     f_sock = BF.getSockFile(__file__, tmp_dir)
     dconf = BF.getKVDict()
     dconf['run_times'] = int(dconf['run_times'])
@@ -44,7 +44,9 @@ def main():
     f_infos = MF.getOnlineFullbackupInfo()
     for f_info in f_infos:
         MF.dconf['f_info'] = f_info 
-        MF.dconf['task_id'] = MF.getFullbackupTaskID()
+        #MF.dconf['task_id'] = MF.getFullbackupTaskID()
+        pprint.pprint(MF.dconf)
+        exit()
         if not MF.dconf['task_id']:
             BF.printLog("[%s]非我良时"%(f_info['instance']), normal_log)
             continue # Notice
