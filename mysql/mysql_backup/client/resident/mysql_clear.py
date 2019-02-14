@@ -24,9 +24,6 @@ from python_function import MySQLBackupFunction
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-def checkInFO():
-    pass
-
 
 
 def mysqlBackupMain():

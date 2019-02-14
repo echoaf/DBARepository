@@ -6,9 +6,9 @@ import os
 import time
 import datetime
 import commands
-import linecache
-import threading
-from threading import Thread, Semaphore
+#import linecache
+#import threading
+#from threading import Thread, Semaphore
 
 base_dir = '/data/DBARepository/mysql/mysql_backup'
 common_dir = '%s/common'%base_dir

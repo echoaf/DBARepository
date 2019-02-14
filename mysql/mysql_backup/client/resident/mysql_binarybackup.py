@@ -26,7 +26,6 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 
-
 def monitorProcess(MF=None):
 
     d = MF.dconf
@@ -64,7 +63,7 @@ def monitorProcess(MF=None):
         BF.printLog('[%s]pull mysqlbinlog process.'%(d['task_id']), normal_log)
         BF.printLog(pull_cmd, normal_log)
         subprocess.Popen(pull_cmd, stdout=subprocess.PIPE, shell=True)
-        sql = "update %s set Fname='empty' where Ftype='%s'"%(d['t_mysql_binarylog_info'],d['f_info']['instance'])
+        sql = "update %s set Fbinary_name='empty' where Ftype='%s'"%(d['t_mysql_backup_info'],d['f_info']['instance'])
         BF.connMySQL(sql, d['conn_dbadb']) # Todo:需要判断本次是否拉取成功,更新配置表
 
 
@@ -115,10 +114,11 @@ def checkMain(MF=None):
             pass
     
 
-def main():
+def mysqlBinaryBackupMain():
     
-    BF = BaseFunction(t_conf_common=t_conf_common, t_conf_person=t_conf_person, 
-            conn_dbadb=conn_dbadb)
+    BF = BaseFunction(t_conf_common=t_conf_common, 
+                      t_conf_person=t_conf_person, 
+                      conn_dbadb=conn_dbadb)
     f_sock = BF.getSockFile(__file__, tmp_dir)
     dconf = BF.getKVDict()
     dconf['run_times'] = int(dconf['run_times'])
@@ -148,11 +148,15 @@ def main():
             'user': dconf['repl_user'],
             'passwd': dconf['repl_pass']
         }
-        #monitorProcess(MF=MF)
+        monitorProcess(MF=MF)
         checkMain(MF=MF)
 
     BF.printLog('===MySQL BINARYBACKUP IS END.', normal_log, 'purple')
 
+
+def main():
+
+    mysqlBinaryBackupMain()
 
 if __name__ == '__main__':
 

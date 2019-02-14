@@ -25,29 +25,27 @@ class MySQLBackupFunction(object):
 
     def getOnlineFullbackupInfo(self):
     
-        #sql = ("""select Ftype as instance,
-        #                Fsource_host as source_host,
-        #                Fsource_port as source_port,
-        #                Fmode as backup_mode,
-        #                Fweekday as backup_weekday,
-        #                Fstart_time as backup_start_time,
-        #                Fend_time as backup_end_time,
-        #                Fclear_rule as backup_clear_rule
-        #            from {table}
-        #            where Fstate='online'
-        #                and Faddress='{address}'"""
-        #            .format(table = self.dconf['t_mysql_fullbackup_info'],
-        #                address = self.dconf['local_ip']
-        #            )
-        #       )
-        sql = ("""select Ftype as instance,
-                        Fmydumper as is_mydumper,
-                        Fxtrabackup as is_xtrabackup,
-                        Fmysqldump as mysqldump
-                    from {table} 
-                    where Fstate='online';"""
-                    .format(table = self.dconf['t_mysql_fullbackup_info'])
-        )
+        sql=("""select  
+                        Ftype as instance,
+                        Fsource_host as source_host,
+                        Fsource_port as source_port,
+                        Fxtrabackup_state as xtrabackup_state,
+                        Fxtrabackup_weekday as xtrabackup_weekday,
+                        Fxtrabackup_start_time as xtrabackup_start_time,
+                        Fxtrabackup_end_time as xtrabackup_end_time,
+                        Fxtrabackup_clear_rule as xtrabackup_clear_rule,
+                        Fmydumper_state as mydumper_state,
+                        Fmydumper_weekday as mydumper_weekday,
+                        Fmydumper_start_time as mydumper_start_time,
+                        Fmydumper_end_time as mydumper_end_time,
+                        Fmydumper_clear_rule as mydumper_clear_rule,
+                        Fmysqldump_state as mysqldump_state,
+                        Fmysqldump_weekday as mysqldump_weekday,
+                        Fmysqldump_start_time as mysqldump_start_time,
+                        Fmysqldump_end_time as mysqldump_end_time,
+                        Fmysqldump_clear_rule as mysqldump_clear_rule
+                from %s where Fstate='online' and Faddress='%s'"""%
+                (self.dconf['t_mysql_backup_info'],self.dconf['local_ip']))
         v = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
         return v
 
@@ -57,11 +55,11 @@ class MySQLBackupFunction(object):
         sql = ("""select Ftype as instance,
                         Fsource_host as source_host,
                         Fsource_port as source_port,
-                        Fname as name
+                        Fbinary_name as name
                     from {table}
                     where Fstate='online'
                         and Faddress='{address}'"""
-                    .format(table = self.dconf['t_mysql_binarylog_info'],
+                    .format(table = self.dconf['t_mysql_backup_info'],
                         address = self.dconf['local_ip']
                     )
                )
@@ -79,10 +77,10 @@ class MySQLBackupFunction(object):
             name = False
         return name
 
-    def checkFullbackupTaskID(self):
+    def checkFullbackupTaskID(self, task_id=None):
         """return backup_status for task_id"""
         sql = ("""select Fbackup_status as backup_status from %s where Ftask_id='%s';"""
-                %(self.dconf['t_mysql_fullbackup_result'], self.dconf['task_id']))
+                %(self.dconf['t_mysql_backup_result'], task_id))
         v = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
         return v
 
@@ -106,36 +104,63 @@ class MySQLBackupFunction(object):
         t = weekday_sun + datetime.timedelta(days=int(w))
         return t
     
-    def getFullbackupTaskID(self):
+    def getFullbackupTaskID(self, backup_mode=None):
         today = self.getToday()
         compact_today = self.compactTime(today)
         weekday = int(self.getWeekDay())
-        if int(self.dconf['f_info']['backup_weekday']) == 9:
-            task_id = "{instance}-{datetime}".format(instance=self.dconf['f_info']['instance'], datetime=compact_today)
-        elif int(self.dconf['f_info']['backup_weekday']) in range(0,7):
-            if self.dconf['f_info']['backup_weekday'] > weekday: # 非我良时
+        backup_mode = backup_mode.lower()
+        if backup_mode == 'xtrabackup':
+            backup_weekday = self.dconf['f_info']['xtrabackup_weekday']
+            if self.dconf['f_info']['xtrabackup_state'].lower() != 'online':
                 task_id = False
-            else:
-                d_today = self.getSpecialtoday(int(delf.dconf['f_info']['backup_weekday']))
-                d_compact_today = self.compactTime(str(d_today))
-                task_id = "{instance}-{datetime}".format(instance=self.dconf['f_info']['instance'], datetime=d_compact_today)
+                return task_id # Tips:trap
+        elif backup_mode == 'mydumper':
+            backup_weekday = self.dconf['f_info']['mydumper_weekday']
+            if self.dconf['f_info']['mydumper_state'].lower() != 'online':
+                task_id = False
+                return task_id # Tips:trap
+        elif backup_mode == 'mysqldump':
+            backup_weekday = self.dconf['f_info']['mysqldump_weekday']
+            if self.dconf['f_info']['mysqldump_state'].lower() != 'online':
+                task_id = False
+                return task_id # Tips:trap
         else:
             task_id = False
+            return task_id # Tips:trap
+
+        backup_weekday = int(backup_weekday)
+        if backup_weekday == 9:
+            task_id = "{instance}-{datetime}-{backup_mode}".format(instance=self.dconf['f_info']['instance'], 
+                                                                   datetime=compact_today, 
+                                                                   backup_mode=backup_mode)
+        elif backup_weekday in range(0,7):
+            if backup_weekday > weekday: # 非我良时
+                task_id = False
+            else:
+                d_today = self.getSpecialtoday(backup_weekday)
+                d_compact_today = self.compactTime(str(d_today))
+                task_id = "{instance}-{datetime}-{backup_mode}".format(instance=self.dconf['f_info']['instance'], 
+                                                                       datetime=compact_today, 
+                                                                       backup_mode=backup_mode)
+        else:
+            task_id = False
+        task_id = task_id.upper()
         return task_id
 
 
-    def doBackup(self):
+    def doBackup(self, backup_mode=None, backup_path=None):
         # Returns:True|False
-        v_check = self.checkBackup()
+        v_check = self.checkBackup(backup_path=backup_path)
         if not v_check:
             v = False 
         else:
-            backup_mode = self.dconf['f_info']['backup_mode'].upper()
+            backup_mode = backup_mode.upper()
             if backup_mode == 'MYDUMPER':
-                self.doBackupMydumper(wait=0)
+                self.doBackupMydumper(wait=0, backup_path=backup_path)
                 v = True
             elif backup_mode == 'XTRABACKUP':
-                v = False
+                self.doBackupXtrabackup(wait=0, backup_path=backup_path)
+                v = True
             elif backup_mode == 'MYSQLDUMP':
                 v = False
             else:
@@ -238,9 +263,10 @@ class MySQLBackupFunction(object):
         print u_sql    
         self.BF.connMySQL(u_sql, self.BF.conn_dbadb)
 
-    def updateFullbackup(self, d=None):
-    
-        sql = "select count(*) as cnt from %s where Ftask_id='%s';"%(self.dconf['t_mysql_fullbackup_result'], self.dconf['task_id'])
+    def updateFullbackup(self, d=None, task_id=None, backup_mode=None, backup_path=None):
+
+        sql = ("""select count(*) as cnt from %s where Ftask_id='%s';"""%
+                    (self.dconf['t_mysql_backup_result'], task_id))
         cnt = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
         if cnt[0]['cnt'] == 0:
             u_sql = ("""insert into {table} 
@@ -251,14 +277,14 @@ class MySQLBackupFunction(object):
                             ('{instance}','{task_id}',curdate(),'{source_host}','{source_port}',
                             '{mode}','{address}','{path}','{backup_status}','{backup_info}',
                             now(),now());"""
-                        .format(table = self.dconf['t_mysql_fullbackup_result'],
+                        .format(table = self.dconf['t_mysql_backup_result'],
                                 instance = self.dconf['f_info']['instance'],
-                                task_id = self.dconf['task_id'],
+                                task_id = task_id,
                                 source_host = self.dconf['f_info']['source_host'],
                                 source_port = self.dconf['f_info']['source_port'],
-                                mode = self.dconf['f_info']['backup_mode'],
+                                mode = backup_mode,
                                 address = self.dconf['local_ip'],
-                                path = self.dconf['backup_path'],
+                                path = backup_path,
                                 backup_status = d['check_status'],
                                 backup_info = d['memo'],
                         )
@@ -273,20 +299,21 @@ class MySQLBackupFunction(object):
                             Fend_time='{end_time}',
                             Fbackup_info='{backup_info}' 
                         where Ftask_id='{task_id}';"""
-                        .format(table = self.dconf['t_mysql_fullbackup_result'],
+                        .format(table = self.dconf['t_mysql_backup_result'],
                                 backup_status = d['check_status'],
                                 size = d['size'],
                                 metadata = d['metadata'],
                                 start_time = d['metadata']['start_time'],
                                 end_time = d['metadata']['end_time'],
                                 backup_info = d['memo'],
-                                task_id = self.dconf['task_id']
+                                task_id = task_id
                             )
                      )
+        #print u_sql
         self.BF.connMySQL(u_sql, self.BF.conn_dbadb)
 
 
-    def checkBackup(self):
+    def checkBackup(self, backup_path=None):
         """
         check backup is continue
         backup_path必须为空
@@ -299,7 +326,7 @@ class MySQLBackupFunction(object):
             'user' : self.dconf['dump_user'],
             'passwd' : self.dconf['dump_pass']
         }
-        v1 = self.checkPath(self.dconf['backup_path'])
+        v1 = self.checkPath(backup_path)
         v2 = self.checkActiveTrx(conn_setting=conn_instance)
         if not v1 or not v2:
             v = False
@@ -325,6 +352,77 @@ class MySQLBackupFunction(object):
         else:
             d = False
         return d
+
+
+    def resolveXtrabackupFile(self, f_tar=None):
+        """
+        Description:like resolveMydumperBackupFile
+        xtrabackup_info like this:
+        uuid = 2123e102-2ffc-11e9-a400-000c293e177f
+        name = 
+        tool_name = innobackupex
+        tool_command = --defaults-file=/data/mysql/10000/my.cnf --tmpdir=/tmp/xtrabackup_tmpdir_22310_20190128114400 --stream=tar --user=dump_user --password=... --host=172.16.112.13 --port=10000 --no-timestamp /tmp/xtrabackup_tmpdir_22310_20190128114400
+        tool_version = 2.4.5
+        ibbackup_version = 2.4.5
+        server_version = 5.7.19-log
+        start_time = 2019-02-14 09:59:01
+        end_time = 2019-02-14 09:59:14
+        lock_time = 0
+        binlog_pos = filename 'binlog.000013', position '24833953'
+        innodb_from_lsn = 0
+        innodb_to_lsn = 9154551785
+        partial = N
+        incremental = N
+        format = tar
+        compact = N
+        compressed = N
+        encrypted = N
+        """
+        if os.path.exists(f_tar):
+            cmd = ("""cd %s && tar zxvf backup.tar.gz xtrabackup_info >>%s 2>&1"""%(os.path.dirname(os.path.abspath(f_tar)),
+                                                                                    self.dconf['normal_log']))
+            self.BF.printLog(cmd, self.dconf['normal_log'], 'green')
+            # Tips:解压操作可能会很长，并且吃机器资源
+            subprocess.call(cmd, stdout=subprocess.PIPE, shell=True)
+            f_xtrabackup_info = "%s/xtrabackup_info"%(os.path.dirname(os.path.abspath(f_tar)))
+            if os.path.exists(f_xtrabackup_info):
+                cmd1 = """ cat %s | grep start_time| awk -F"= " '{print $2}' """%(f_xtrabackup_info)
+                cmd2 = """ cat %s | grep end_time| awk -F"= " '{print $2}' """%(f_xtrabackup_info)
+                cmd3 = """ cat %s | grep binlog_pos| awk -F"= " '{print $2}'| awk -F"," '{print $1}'| awk -F"filename " '{print $2}'| sed "s/'//g" """%(f_xtrabackup_info)
+                cmd4 = """ cat %s | grep binlog_pos| awk -F"= " '{print $2}'| awk -F"," '{print $2}'| awk -F"position " '{print $2}'| sed "s/'//g" """%(f_xtrabackup_info)
+                start_time = (subprocess.Popen(cmd1, stdout=subprocess.PIPE, shell=True).stdout.read()).replace('\n','')
+                end_time = (subprocess.Popen(cmd2, stdout=subprocess.PIPE, shell=True).stdout.read()).replace('\n','')
+                log_file = (subprocess.Popen(cmd3, stdout=subprocess.PIPE, shell=True).stdout.read()).replace('\n','')
+                log_pos = (subprocess.Popen(cmd4, stdout=subprocess.PIPE, shell=True).stdout.read()).replace('\n','')
+                master_host = self.dconf['f_info']['source_host']
+                master_port = self.dconf['f_info']['source_port']
+            else:
+                start_time = '1970-01-01 00:00:00'
+                end_time = start_time
+                log_file = ''
+                log_pos = 0
+                master_host = self.dconf['f_info']['source_host']
+                master_port = self.dconf['f_info']['source_port']
+        else:
+            start_time = '1970-01-01 00:00:00'
+            end_time = start_time
+            log_file = ''
+            log_pos = 0
+            master_host = self.dconf['f_info']['source_host']
+            master_port = self.dconf['f_info']['source_port']
+
+        # Todo:不支持GTID
+        metadata = {
+            'master_host' : master_host,
+            'master_port' : master_port,
+            'master_log_file' : log_file,
+            'master_log_pos' : log_pos,
+            'master_gtid' : '',
+            'start_time' : start_time,
+            'end_time' : end_time,
+        }
+        return metadata
+    
 
     def resolveMydumperBackupFile(self, f_metadata=None):
         """
@@ -413,7 +511,33 @@ class MySQLBackupFunction(object):
         return metadata
 
 
-    def doCheck(self):
+    def checkXtrabackupCommand(self, tmpdir=None):
+
+        local_xtrabackup_sh = "/data/DBARepository/mysql/mysql_backup/common/local_xtrabackup.sh"
+        mysql_host = "172.16.112.13"
+        mysql_ssh_port = 22
+        mysql_ssh_user = "douyuops"
+        mysql_ssh_pass = self.getSSHPass(mysql_host, mysql_ssh_user)
+        tmpdir = "/tmp/xtrabackup_tmpdir_22310_20190128114400"
+
+        cmd = ("""/usr/bin/sshpass -p {mysql_ssh_pass} /usr/bin/ssh -p {mysql_ssh_port} {mysql_ssh_user}@{mysql_host} "echo '{mysql_ssh_pass}' | sudo -S su -c \\"ps aux| grep 'innobackupex' | grep -v grep |grep 'tmpdir={tmpdir}' | wc -l  \\" " """
+              .format(mysql_ssh_pass = mysql_ssh_pass,
+                      mysql_ssh_port = mysql_ssh_port,
+                      mysql_ssh_user = mysql_ssh_user,
+                      mysql_host = mysql_host,
+                      tmpdir = tmpdir))
+        v = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        v = (v.stdout.read()).replace('\n','')
+        try:
+            if int(v) == 0:
+                return True
+            else:
+                return False
+        except Exception,e:
+            return False
+        
+
+    def doCheck(self, backup_mode=None, backup_path=None, check_info=None):
         """
         check backup is succ?
         Returns:check_info
@@ -432,33 +556,45 @@ class MySQLBackupFunction(object):
                 'memo' : '',
             }
         """
-        check_info = {
-             'check_status' : '',
-             'metadata' : '',
-             'size' : '0',
-             'memo' : '初始化字典',
-        }
-        backup_mode = self.dconf['f_info']['backup_mode'].upper()
-        if backup_mode == 'MYDUMPER':
-            f_metadata = "%s/metadata"%(self.dconf['backup_path'])
+        #backup_mode = self.dconf['f_info']['backup_mode'].upper()
+        if backup_mode.upper() == 'MYDUMPER':
+            #f_metadata = "%s/metadata"%(self.dconf['backup_path'])
+            f_metadata = "%s/metadata"%(backup_path)
             if os.path.isfile(f_metadata):
                 check_info['metadata'] = self.resolveMydumperBackupFile(f_metadata=f_metadata)
-                check_info['size'] = self.BF.runShell("du -shm %s | awk '{print $1}'"%(self.dconf['backup_path']))[1]
+                check_info['size'] = self.BF.runShell("du -shm %s | awk '{print $1}'"%(backup_path))[1]
                 check_info['check_status'] = 'Succ'
                 check_info['memo'] = '备份成功'
             else: # 可能依然还在做备份
                 check_info['check_status'] = 'Backing'
                 check_info['memo'] = 'not find metadata'
-        elif backup_mode == 'XTRABACKUP':
-            pass
-        elif backup_mode == 'MYSQLDUMP':
+        elif backup_mode.upper() == 'XTRABACKUP':
+            # 通过tmpdir检测命令是否存在
+            # 如若不存在,则认为备份完成,开始解析xtrabackup_info
+            r = self.checkXtrabackupCommand(tmpdir = '/tmp/xtrabackup_tmpdir_22310_20190128114400')
+            if r:
+                f_tar = "%s/backup.tar.gz"%(backup_path)
+                check_info['metadata'] = self.resolveXtrabackupFile(f_tar=f_tar)
+                if check_info['metadata']['master_log_file'] != '':
+                    check_info['size'] = self.BF.runShell("du -shm %s | awk '{print $1}'"%(backup_path))[1]
+                    check_info['check_status'] = 'Succ'
+                    check_info['memo'] = '备份成功'
+                else:
+                    check_info['size'] = 0
+                    check_info['check_status'] = 'Fail'
+                    check_info['memo'] = '备份失败,解析xtrabackup_info失败'
+            else:
+                check_info['check_status'] = 'Backing'
+                check_info['memo'] = 'innobackup pid is exists'
+            
+        elif backup_mode.upper() == 'MYSQLDUMP':
             pass
         else:
             pass
         return check_info
-    
+   
 
-    def doBackupMydumper(self, wait=1):
+    def doBackupMydumper(self, backup_path=None, wait=1):
         cmd = ("""{mydumper} --user='{user}'"""
                     """ --password='{password}'"""
                     """ --host='{host}' """
@@ -476,13 +612,13 @@ class MySQLBackupFunction(object):
                         host = self.dconf['f_info']['source_host'],
                         port = self.dconf['f_info']['source_port'],
                         threads = self.dconf['rconf']['dump_threads'],
-                        outputdir = self.dconf['backup_path'],
+                        outputdir = backup_path,
                         statement_size = self.dconf['rconf']['statement_size'],
                         rows = self.dconf['rconf']['rows'],
-                        log_file = '/tmp/python.log',
+                        log_file = self.dconf['normal_log'],
                     )
         )
-        self.BF.printLog("[%s]开始备份:%s"%(self.dconf['task_id'],cmd), self.dconf['normal_log'])
+        #self.BF.printLog("[%s]开始备份:%s"%(self.dconf['task_id'],cmd), self.dconf['normal_log'])
         if wait == 0: # not wait
             cmd = "%s &"%cmd
             subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -490,6 +626,58 @@ class MySQLBackupFunction(object):
             subprocess.call(cmd, stdout=subprocess.PIPE, shell=True)
         return True
 
+
+    # 获取服务器密码
+    def getSSHPass(self, ssh_host, ssh_user):
+        return 'redhat'
+
+    # 远程xtrbackup
+    def doBackupXtrabackup(self, backup_path=None, wait=1):
+        
+        local_xtrabackup_sh = "/data/DBARepository/mysql/mysql_backup/common/local_xtrabackup.sh"
+        mysql_host = "172.16.112.13"
+        mysql_ssh_port = 22
+        mysql_ssh_user = "douyuops"
+        mysql_ssh_pass = self.getSSHPass(mysql_host, mysql_ssh_user)
+
+        backup_ssh_user = "douyuops"
+        backup_ssh_pass = self.getSSHPass(self.dconf['local_ip'], backup_ssh_user)
+        backup_ssh_port = 22
+        
+        tmpdir = "/tmp/xtrabackup_tmpdir_22310_20190128114400"
+    
+        scp_cmd = ("""/usr/bin/sshpass -p {mysql_ssh_pass} /usr/bin/scp -P {mysql_ssh_port} {local_xtrabackup_sh} {mysql_ssh_user}@{mysql_host}:/tmp"""
+                  .format(mysql_ssh_pass = mysql_ssh_pass,
+                          mysql_ssh_port = mysql_ssh_port,
+                          local_xtrabackup_sh = local_xtrabackup_sh,
+                          mysql_ssh_user = mysql_ssh_user,
+                          mysql_host = mysql_host))
+        print scp_cmd
+        subprocess.call(scp_cmd, stdout=subprocess.PIPE, shell=True)
+
+        exec_cmd = ("""echo '{backup_ssh_pass}' | sudo -S su -c '/bin/bash /tmp/{basename_local_xtrabackup_sh} {mysql_host} {mysql_port} {mysql_user} {mysql_pass} {backup_host} {backup_ssh_port} {backup_ssh_user} {backup_ssh_pass} {backup_path} {tmpdir}' """
+                    .format(backup_ssh_pass = backup_ssh_pass,
+                            basename_local_xtrabackup_sh = os.path.basename(local_xtrabackup_sh),
+                            mysql_host = self.dconf['f_info']['source_host'],
+                            mysql_port = self.dconf['f_info']['source_port'],
+                            mysql_user = self.dconf['dump_user'],
+                            mysql_pass = self.dconf['dump_pass'],
+                            backup_host = self.dconf['local_ip'],
+                            backup_ssh_port = backup_ssh_port,
+                            backup_ssh_user = backup_ssh_user,
+                            backup_path = backup_path,
+                            tmpdir = tmpdir)
+        )
+        remote_cmd = ("""/usr/bin/sshpass -p {mysql_ssh_pass} /usr/bin/ssh -p {mysql_ssh_port} {mysql_ssh_user}@{mysql_host} "{cmd}" """
+                     .format(mysql_ssh_pass = mysql_ssh_pass,
+                             mysql_ssh_port = mysql_ssh_port,
+                             mysql_ssh_user = mysql_ssh_user,
+                             mysql_host = mysql_host,
+                             cmd = exec_cmd))
+        print remote_cmd
+        #subprocess.call(exec_cmd, stdout=subprocess.PIPE, shell=True)
+        return True
+        
 
 class BaseFunction(object):
 
@@ -645,629 +833,3 @@ class ApplicationInstance(object):
         except:
             pass
  
-
-
-#def archivePartitions(d):
-#    where_module = ("""TABLE_NAME IS NOT NULL
-#                        and PARTITION_METHOD = 'RANGE COLUMNS'
-#                        and table_schema='%s' 
-#                        and table_name='%s' 
-#                        and PARTITION_EXPRESSION='`%s`' 
-#                        and PARTITION_DESCRIPTION<'%s';"""
-#                    %(d['table_schema'],d['table_name'],d['column'],d['threshold_time'])
-#    )
-#    sql1 = ("""select TABLE_SCHEMA,TABLE_NAME,
-#                    sum(DATA_LENGTH+INDEX_LENGTH)/1024/1024 AS DATA_LENGTH,
-#                    sum(TABLE_ROWS) AS TABLE_ROWS,
-#                    count(*) AS TABLE_COUNT
-#              from information_schema.PARTITIONS
-#              where %s"""%(where_module))
-#    sql2 = ("""select PARTITION_NAME from information_schema.PARTITIONS where %s"""%(where_module))
-#
-#    si = connMySQL(sql1, d['conn_instance'])
-#    si = si[0]
-#    if si['TABLE_COUNT'] == 0:
-#        printLog("[%s]没有需要删除的分区"%(d['task_id']), normal_log)
-#        u_sql = ("""update %s set Fcount='0',Fexec_status='Succ',Fsql="没有需要删除的分区",Fmodify_time=now() where Ftask_id='%s';"""
-#                %(d['dconf']['t_mysql_archive_result'],d['task_id']))
-#    else:
-#        ps = connMySQL(sql2, d['conn_instance'], "0")
-#        v = ""
-#        for p in ps:
-#            p = p[0]
-#            if not v:
-#                v = p
-#            else:
-#                v = v + "," + p
-#
-#        printLog("[%s]开始执行删除语句,表名:%s,预计删除分区个数:%s,行数:%s,数据量大小:%sM"
-#                %(d['task_id'],
-#                    d['table'],
-#                    si['TABLE_COUNT'],
-#                    si['TABLE_ROWS'],
-#                    si['DATA_LENGTH']),
-#                normal_log)
-#        sql = ("""ALTER TABLE %s.%s DROP PARTITION %s;""" %(si['TABLE_SCHEMA'],si['TABLE_NAME'],v))
-#        connMySQL(sql, d['conn_instance'])
-#
-#        u_sql = ("""update %s set Fcount='%s',Fexec_status='Succ',Fsql="%s",Fmodify_time=now() where Ftask_id='%s';"""
-#                %(d['dconf']['t_mysql_archive_result'],si['TABLE_COUNT'],sql,d['task_id']))
-#    connMySQL(u_sql, conn_dbadb)
-#
-#
-#
-#def getFL(d):
-#
-#    general_sql = ("""select {select_module} from {table_schema}.{table_name}"""
-#            """ FORCE INDEX({uk_name})"""
-#            """ WHERE {column}<'{threshold_time}'""".format(select_module = d['select_module'],
-#                table_schema = d['table_schema'],
-#                table_name = d['table_name'],
-#                uk_name = d['uk_name'],
-#                column = d['column'],
-#                threshold_time = d['threshold_time']
-#                )
-#    )
-#    first_sql = "%s order by %s limit 1;"%(general_sql, d['uc_name'])
-#    last_sql = "%s order by %s desc limit 1;"%(general_sql, d['uc_name'])
-#    f = connMySQL(first_sql, d['conn_instance'])
-#    l = connMySQL(last_sql, d['conn_instance'])
-#    if f and l:
-#        f = f[0]['%s'%(d['uc_name'])]
-#        l = l[0]['%s'%(d['uc_name'])]
-#        v = (f, l)
-#    else:
-#        v = False
-#    return v
-#
-#
-#def deletePoint(v):
-#    return str(v.replace('.',''))
-#
-#def returnTaskID(ip, port):
-#    false_ip = deletePoint(ip)
-#    timestamp = time.strftime("%H%M%S_%Y%m%d")
-#    task_id = "%s_%s_%s"%(false_ip, port, timestamp)
-#    time.sleep(1)
-#    return task_id
-#
-#def splitPoint(v):
-#    return v.split('.',-1)[0], v.split('.',-1)[1]
-#
-#
-#
-#
-#def checkReadonly(conn_setting):
-#    sql = "SHOW GLOBAL VARIABLES LIKE 'read_only';"
-#    v = connMySQL("SHOW GLOBAL VARIABLES LIKE 'read_only';", conn_setting)
-#    v = v[0]['Value']
-#    return v
-#
-#
-#def getUniqueKeyColumn(conn_setting=None, table_schema=None, table_name=None):
-#    sql = ("""select COLUMN_NAME from information_schema.COLUMNS 
-#            where table_schema='%s' and table_name='%s' and COLUMN_KEY='PRI'"""
-#            %(table_schema, table_name))
-#    cs1 = connMySQL(sql, conn_setting)
-#    sql = ("""select COLUMN_NAME from information_schema.COLUMNS 
-#            where table_schema='%s' and table_name='%s' and COLUMN_KEY='UNI'"""
-#            %(table_schema, table_name))
-#    cs2 = connMySQL(sql, conn_setting)
-#    c = cs1[0] if cs1 else cs2[0]
-#    if c:
-#        if len(c) > 1: # Todo:不支持联合主键或者联合唯一键
-#            v = False
-#        else:
-#            v = c['COLUMN_NAME']
-#    else:
-#        v = False
-#    return v
-#
-#
-#def getUniqueKeyName(conn_setting=None, table_schema=None, table_name=None, uc_name=None):
-#    sql = ("""SELECT INDEX_NAME FROM INFORMATION_SCHEMA.STATISTICS 
-#            where table_schema='%s' and table_name='%s' and COLUMN_NAME='%s';"""
-#            %(table_schema, table_name, uc_name))
-#    name = connMySQL(sql, conn_setting)
-#    name = name[0]['INDEX_NAME']
-#    return name
-#
-#def getColumns(conn_setting=None, table_schema=None, table_name=None):
-#    sql = ("""select COLUMN_NAME from information_schema.COLUMNS 
-#            where table_schema='%s' and table_name='%s'"""
-#            %(table_schema, table_name))
-#    cs = connMySQL(sql, conn_setting)
-#    l = []
-#    for c in cs:
-#        c = c['COLUMN_NAME']
-#        l.append(c)
-#    return l
-#
-#def getSelectModule(columns=None):
-#    s = ""
-#    for column in columns:
-#        if s:
-#            s = s + "," + column
-#            #s = "`%s`,%s"%(column, s)
-#        else:
-#            s = column
-#            #s = "`%s`"%column
-#    return s
-#
-#
-#def checkColumnType(conn_setting=None, table_schema=None, table_name=None, column=None):
-#    sql = ("""select DATA_TYPE from information_schema.COLUMNS
-#            where table_schema='%s' and table_name='%s' and COLUMN_NAME='%s'; """
-#            %(table_schema, table_name, column))
-#    v = connMySQL(sql, conn_setting)
-#    if v:
-#        v = v[0]['DATA_TYPE']
-#        if v == "int":
-#            r = "int"
-#        elif v == "datetime" or v == "date" or v == "timestamp":
-#            r = "char"
-#        else:
-#            r = False
-#    else:
-#        r = False
-#    return r
-#
-#
-#def checkMain(d):
-#
-#    d_slave_status = showSlaveStatus(d['conn_instance'])
-#    if d_slave_status:
-#        if d_slave_status['Slave_IO_Running'] == "Yes" or d_slave_status['Slave_IO_Running'] == "Yes":
-#            printLog("[%s]天外有天"%d['task_id'])
-#            return False
-#
-#    if checkReadonly(d['conn_instance']).upper() != "OFF":
-#        print("[%s]主库read_only是ON?"%d['task_id'])
-#        return False
-#
-#    uc_name = getUniqueKeyColumn(conn_setting=d['conn_instance'], table_schema=d['table_schema'], 
-#                        table_name=d['table_name'])
-#    if not uc_name:
-#        printLog("[%s]找不到唯一约束"%['task_id'], normal_log)
-#        info = False
-#    else:
-#        ck_type = checkColumnType(conn_setting=d['conn_instance'], table_schema=d['table_schema'],
-#                            table_name=d['table_name'], column=d['column'])
-#        if not ck_type:
-#            printLog("[%s]匹配列字段类型只能为时间类型(int|datetime|date|timestamp)"
-#                        %(d['task_id']), normal_log)
-#            info = False
-#        else:
-#            uk_name = getUniqueKeyName(conn_setting=d['conn_instance'], table_schema=d['table_schema'],
-#                            table_name=d['table_name'], uc_name=uc_name)
-#            columns = getColumns(conn_setting=d['conn_instance'], table_schema=d['table_schema'],
-#                            table_name=d['table_name'])
-#            select_module = getSelectModule(columns)
-#            info = uc_name,ck_type,uk_name,columns,select_module
-#    return info
-#
-#
-#def checkTableType(conn_setting=None, table_schema=None, table_name=None):
-#    sql = ("""select count(*) from information_schema.PARTITIONS
-#            where table_schema='%s' and table_name='%s' and PARTITION_NAME is NOT NULL"""
-#            %(table_schema,table_name))
-#    is_count = connMySQL(sql, conn_setting)
-#    is_count = is_count[0]['count(*)']
-#    v = True if is_count > 0 else False
-#    return v
-#
-#
-#def getThresholdTime(ck_type=None, days=None):
-#    d = (datetime.datetime.now() + datetime.timedelta(days=int("-%s"%int(days)))).strftime("%Y-%m-%d")
-#    if ck_type == 'int':
-#        try:
-#            time.strptime("%s 00:00:01"%d,'%Y-%m-%d %H:%M:%S')
-#            threshold_time = int(time.mktime(time.strptime("%s 00:00:01"%d,'%Y-%m-%d %H:%M:%S')))
-#        except ValueError, e:
-#            time.strptime(d,'%Y-%m-%d %H:%M:%S')
-#            threshold_time = int(time.mktime(time.strptime(d,'%Y-%m-%d %H:%M:%S')))
-#    else:
-#        threshold_time = d
-#    return threshold_time
-#
-#
-#
-#
-#def dealData(d, f_begin=None, f_end=None, d_rc=None):
-#
-#    general_sql = ("""FROM {table_schema}.{table_name}"""
-#            """ FORCE INDEX({uk_name})"""
-#            """ WHERE {column}<'{threshold_time}'"""
-#            """ AND {uc_name}>='{f_begin}'""" # 左开
-#            """ AND {uc_name}<='{f_end}'""" # 又闭
-#            """ ORDER BY {uc_name};""".format(
-#                    table_schema = d['table_schema'],
-#                    table_name = d['table_name'],
-#                    uk_name = d['uk_name'],
-#                    column = d['column'],
-#                    threshold_time = d['threshold_time'],
-#                    uc_name = d['uc_name'],
-#                    f_begin = f_begin,
-#                    f_end = f_end
-#                )
-#    )
-#        
-#    mysql_cmd = ("""{mysql} -u{user} -p{passwd} -h{host} -P{port} -N --default-character-set='utf8'"""
-#            .format(
-#                mysql = mysql,
-#                user = getKV(k='backup_user'),
-#                passwd = getKV(k='backup_pass'),
-#                host = getKV(k='backup_host'),
-#                port = getKV(k='backup_port')
-#            )
-#    )
-#
-#    if d['backup_status'].upper() == "Y": # 备份逻辑
-#        backup_sql = "SELECT %s %s;"%(d['select_module'], general_sql)
-#        load_sql = ("""LOAD DATA LOCAL INFILE '%s' REPLACE INTO TABLE %s CHARACTER SET UTF8 (%s)"""
-#                %(d['tmp_file'], d['t_backup'], d['select_module']))
-#        runShell(""" echo "%s" | %s >%s """%(backup_sql, mysql_cmd, d['tmp_file']))
-#        runShell(""" echo "%s" | %s """%(load_sql, mysql_cmd))
-#        runShell("rm -fv %s"%(d['tmp_file']))
-#
-#    if not d['bool_partition']:
-#        delete_sql = ("""DELETE FROM {table_schema}.{table_name}"""
-#                """ WHERE {column}<'{threshold_time}'"""
-#                """ AND {uc_name}>='{f_begin}'""" # 左开
-#                """ AND {uc_name}<='{f_end}'""" # 又闭
-#                """ LIMIT {archive_count};""".format(
-#                        table_schema = d['table_schema'],
-#                        table_name = d['table_name'],
-#                        column = d['column'],
-#                        threshold_time = d['threshold_time'],
-#                        uc_name = d['uc_name'],
-#                        f_begin = f_begin,
-#                        f_end = f_end,
-#                        archive_count = int(d_rc['archive_count']),
-#                    )
-#        )
-#        start_pos = showMasterStatus(d['conn_instance'])
-#        v_del = runShell(""" echo "%s" | %s """%(delete_sql, mysql_cmd))
-#        end_pos = showMasterStatus(d['conn_instance'])
-#        exec_status = "Succ" if v_del[0] == 0 else "Fail"
-#        report_sql = ("""replace into {t}"""
-#                """ (Ftask_id,Fbegin_unique,Fend_unique,Fstart_pos,Fend_pos,Fexec_status,Fmodify_time)"""
-#                """ values"""
-#                """ ("{task_id}","{begin_unique}","{end_unique}","{start_pos}","{end_pos}","{exec_status}",now()) """
-#                .format(t = d['t_taskid'],
-#                    task_id = d['task_id'],
-#                    begin_unique = f_begin,
-#                    end_unique = f_end,
-#                    start_pos = start_pos,
-#                    end_pos = end_pos,
-#                    exec_status = exec_status)
-#        )
-#        connMySQL(report_sql, conn_dbadb)
-#
-#
-#def showMasterStatus(conn_setting=None):
-#
-#    sql = "SHOW MASTER STATUS;"
-#    v = connMySQL(sql, conn_setting)
-#    v = v[0] if v else ""
-#    return v
-#
-#
-#def checkThreadsRunning(conn_setting=None, a=None):
-#    r = True
-#    sql = "SHOW GLOBAL STATUS LIKE 'Threads_running';"
-#    v = connMySQL(sql, conn_setting)
-#    v = v[0]['Value']
-#    if int(v) > a:
-#        printLog("[%s:%s]当前Threads_running:%s(阈值%s)"%(conn_setting['host'],conn_setting['port'],v,a), normal_log)
-#        r = False
-#    else:
-#        printLog("[%s:%s]当前Threads_running:%s(阈值%s)"%(conn_setting['host'],conn_setting['port'],v,a), normal_log)
-#    return r
-#    
-#
-#def getSlave(conn_setting=None, master_host=None, master_port=None):
-# 
-#    t_mysql_info = getKV('t_mysql_info')
-#    sql = ("""select Fserver_host as slave_host,
-#                    Fserver_port as slave_port 
-#            from {t_mysql_info} 
-#            where Fstate='online' and Frole!='Master' 
-#            and Ftype in (
-#                select Ftype from {t_mysql_info} 
-#                where Fstate='online' 
-#                    and Fserver_host='{master_host}' 
-#                    and Fserver_port='{master_port}'
-#                    and Frole='Master');"""
-#            .format(t_mysql_info = t_mysql_info,
-#                    master_host = master_host,
-#                    master_port = master_port,
-#            )
-#    )
-#    slave_hosts = connMySQL(sql, conn_setting)
-#    return slave_hosts
-#
-#def checkSlaveDelay(conn_setting=None, a=None):
-#
-#    r = True
-#    repl_user = getKV('repl_user')
-#    repl_pass = getKV('repl_pass')
-#    master_host = conn_setting['host']
-#    master_port = conn_setting['port']
-#    slave_hosts = getSlave(conn_setting=conn_setting, master_host=master_host, master_port=master_port)
-#    for s in slave_hosts:
-#        slave_host = s['slave_host']
-#        slave_port = s['slave_port']
-#        conn_slave = {'host' : slave_host,
-#            'port' : slave_port,
-#            'user' : repl_user,
-#            'passwd' : repl_pass
-#        }
-#        slave_status = showSlaveStatus(conn_slave)
-#        """
-#        slave_status = {'Seconds_Behind_Master': 0L, 'Slave_IO_Running': u'Yes', 'Slave_SQL_Running': u'Yes'}
-#        """
-#        if slave_status['Slave_IO_Running'] == 'Yes' and slave_status['Slave_SQL_Running'] == 'Yes':
-#            if int(slave_status['Seconds_Behind_Master']) > a:
-#                printLog("[%s:%s]当前主从延迟:%ss(阈值%ss)"
-#                        %(slave_host,slave_port,slave_status['Seconds_Behind_Master'],a),
-#                        normal_log)
-#                r = False
-#            else:
-#                printLog("[%s:%s]当前主从延迟:%ss(阈值%ss)"
-#                        %(slave_host,slave_port,slave_status['Seconds_Behind_Master'],a),
-#                        normal_log)
-#        else:
-#            printLog("[%s:%s]主从复制已断开(%s)"%(slave_host,slave_port,slave_status), normal_log)
-#            r = False
-#    return r
-#
-#
-#def checkDBStatus(conn_setting=None, d_rc=None, times=1):
-#
-#    if times > 10800: # 我等你一天
-#        return False
-#
-#    r1 = checkThreadsRunning(conn_setting=conn_setting, a=int(d_rc['threads_running']))
-#    r2 = checkSlaveDelay(conn_setting=conn_dbadb, a=int(d_rc['repl_time']))
-#    if not r1 or not r2:
-#        times = times + 1
-#        time.sleep(8)
-#        checkDBStatus(conn_setting, d_rc=d_rc, times=times)
-#    return True
-#
-#
-#def getCurFL(d=None, f0=None, max_value=None):
-#    rconf = getKVDict(realtime_keys, ip=d['ip'], port=d['port']) # 实时keys,每次读取数据库最新数据
-#    general_sql = ("""from {table_schema}.{table_name}"""
-#            """ FORCE INDEX({uk_name})"""
-#            """ WHERE {column}<'{threshold_time}'"""
-#            """ AND {uc_name}>='{f0}'""" # 左开
-#            """ AND {uc_name}<'{max_value}'""" # 右闭
-#            """ ORDER BY {uc_name}""".format(
-#                    table_schema = d['table_schema'],
-#                    table_name = d['table_name'],
-#                    uk_name = d['uk_name'],
-#                    column = d['column'],
-#                    threshold_time = d['threshold_time'],
-#                    uc_name = d['uc_name'],
-#                    f0 = f0,
-#                    max_value = max_value,
-#                )
-#    )
-#        
-#    f12_sql = "SELECT %s %s limit %s,2;"%(d['select_module'], general_sql, int(rconf['archive_count'])-1)
-#    f12 = connMySQL(f12_sql, d['conn_instance'], 0)
-#    if f12:
-#        f1 = f12[0][0]
-#        f2 = f12[1][0]
-#        printLog("[%s]开始处理数据(%s-%s)"%(d['task_id'],f0,f1), normal_log)
-#        dealData(d=d, f_begin=f0, f_end=f1, d_rc=rconf)
-#        printLog("[%s]结束处理数据(%s-%s)"%(d['task_id'],f0,f1), normal_log)
-#        printLog("[%s]开始检测DB状态"%(d['task_id']), normal_log)
-#        if not checkDBStatus(conn_setting=d['conn_instance'], d_rc=rconf, times=1): 
-#            printLog("[%s]检测不通过,执行失败,退出逻辑"%(d['task_id']), normal_log)
-#            return False # 生命之再再次跳转
-#        else:
-#            printLog("[%s]检测通过,进入下一步逻辑"%(d['task_id']), normal_log)
-#        getCurFL(d=d, f0=f2, max_value=max_value)
-#        v = True
-#    else: # 来日无期
-#        f1_sql = "SELECT %s %s limit 1;"%(d['select_module'], general_sql)
-#        f1 = connMySQL(f1_sql, d['conn_instance'], 0)
-#        f1 = f1[0][0]
-#        f2 = max_value # Todo:最后一条数据获取不到
-#        printLog("[%s]开始处理数据(%s-%s)"%(d['task_id'],f1,f2), normal_log)
-#        dealData(d=d, f_begin=f1, f_end=f2, d_rc=rconf)
-#        printLog("[%s]结束处理数据(%s-%s)"%(d['task_id'],f1,f2), normal_log)
-#        v = False
-#    if not v:
-#        return
-#        
-#
-#def recordTable(d):
-#
-#    sql1 = "select count(*) as cnt from %s where Fexec_status='Fail';"%(d['t_taskid'])
-#    cnt = connMySQL(sql1, conn_dbadb)
-#    cnt = cnt[0]['cnt']
-#    if cnt > 0:
-#        exec_status = "Fail"
-#    else:
-#        exec_status = "Succ"
-#
-#    sql2 = "select count(*) as cnt from %s;"%(d['t_backup']) # slow sql
-#    exec_cnt = connMySQL(sql2, conn_dbadb)
-#    exec_cnt = exec_cnt[0]['cnt']
-# 
-#    del_sql = "DLLETE FROM %s WHERE %s<'%s'"%(d['table'],d['column'],d['threshold_time'])  
-#    sql = ("""update {t_mysql_archive_result} 
-#            SET Fcount='{count}',Fexec_status='{exec_status}',Fsql="{sql}",Fmodify_time=now() 
-#            WHERE Ftask_id='{task_id}'"""
-#            .format(t_mysql_archive_result = d['dconf']['t_mysql_archive_result'],
-#                    count = exec_cnt,
-#                    sql = del_sql,
-#                    exec_status = exec_status,
-#                    task_id = d['task_id'])
-#    )
-#    connMySQL(sql, conn_dbadb)
-#
-#
-#def archiveTableMain(d):
-#    if 'f_uc_name' in d and 'l_uc_name' in d:
-#        getCurFL(d=d, f0=d['f_uc_name'], max_value=d['l_uc_name'])       
-#    if d['bool_partition']: # 处理分区表
-#        archivePartitions(d)
-#    else:
-#        recordTable(d)
-#        
-#
-#
-#def getTableDefion(conn_setting=None, table_schema=None, table_name=None):
-#
-#    sql = "show create table %s.%s"%(table_schema, table_name)
-#    v = connMySQL(sql, conn_setting)
-#    if v:
-#        v = v[0]['Create Table']
-#        v = re.sub('AUTO_INCREMENT=[0-9].*','',v)  
-#    else:
-#        v = False
-#    return v
-#
-#def createBackupTable(conn_setting=None, t_new=None, t_old=None, t_defition=None):
-#    table_schema,table_name  = splitPoint(t_new)
-#    t_defition = re.sub('`%s`'%t_old, t_new, t_defition)  
-#    createTable(conn_setting=conn_setting, t=t_new, t_defition=t_defition)
-#
-#def createTable(conn_setting=None, t=None, t_defition=None):
-#
-#    table_schema,table_name  = splitPoint(t)
-#    sql = ("""select count(*) from information_schema.tables 
-#              where table_schema='%s' and table_name='%s'"""%(table_schema, table_name))
-#    v = connMySQL(sql, conn_setting)
-#    if v:
-#        if v[0]['count(*)'] == 0:
-#            connMySQL(t_defition, conn_setting)
-#        else:
-#            return False
-#    else:
-#        return False
-#
-#
-#def processOneInstance(d_archive=None, sem=None):
-#
-#    d_archive['t_backup'] = 'mysql_archive_2018_db.t_backup_%s'%(d_archive['task_id'])
-#    d_archive['t_taskid'] = 'mysql_archive_2018_db.t_taskid_%s'%(d_archive['task_id'])
-#    d_archive['tmp_file'] = '%s/%s.txt'%(tmp_dir,d_archive['task_id'])
-#    d_archive['conn_instance'] = {
-#            'host' : d_archive['ip'],
-#            'port' : int(d_archive['port']),
-#            'user' : getKV(k='ddl_user', ip=d_archive['ip'], port=int(d_archive['port'])),
-#            'passwd' : getKV(k='ddl_pass', ip=d_archive['ip'], port=int(d_archive['port']))
-#    }
-#    d_archive['table_schema'], d_archive['table_name'] = splitPoint(d_archive['table'])
-#
-#    printLog("[%s]begin:检测参数"%d_archive['task_id'], normal_log, 'green')
-#    check_info = checkMain(d_archive)
-#    if not check_info:
-#        printLog("[%s]end:参数有误,退出逻辑"%d_archive['task_id'], normal_log, 'red')
-#        return False # Tips:死亡跳转
-#    else:
-#        printLog("[%s]end:参数正常"%d_archive['task_id'], normal_log, 'green')
-#
-#    d_archive['uc_name'] = check_info[0]
-#    d_archive['ck_type'] = check_info[1]
-#    d_archive['uk_name'] = check_info[2]
-#    d_archive['columns'] = check_info[3]
-#    d_archive['select_module'] = check_info[4]
-#    d_archive['threshold_time'] = getThresholdTime(ck_type=d_archive['ck_type'], days=d_archive['keep_days'])
-#
-#    result_sql = ("""replace into {t} (Ftask_id,Fdate,Fip,Fport,Ftable,Fexec_status,Fcreate_time,Fmodify_time) 
-#            values 
-#            ('{task_id}','{dt}','{ip}','{port}','{table}','{exec_status}',now(),now());"""
-#            .format(t = d_archive['dconf']['t_mysql_archive_result'],
-#                    task_id = d_archive['task_id'],
-#                    dt = getToday(),
-#                    ip = d_archive['conn_instance']['host'],
-#                    port = d_archive['conn_instance']['port'],
-#                    table = d_archive['table'],
-#                    exec_status = 'Init')
-#    )
-#    connMySQL(result_sql, conn_dbadb)
-#
-#    fl = getFL(d_archive)
-#    if not fl:
-#        printLog("[%s]找不到需要归档的数据"%(d_archive['task_id']), normal_log)
-#        #return False # Tips:再一次死亡跳转
-#    else:
-#        d_archive['f_uc_name'] = fl[0]
-#        d_archive['l_uc_name'] = fl[1]
-#        printLog("[%s]本次计划归档的数据(%s:%s-%s)"
-#                    %(d_archive['task_id'], d_archive['uc_name'], 
-#                    d_archive['f_uc_name'], d_archive['l_uc_name']), 
-#                normal_log)
-#
-#    t_task_id_defition = example_sql.replace('table_schema.table_name','%s'%(d_archive['t_taskid']))
-#    createTable(conn_setting=conn_dbadb, t=d_archive['t_taskid'], t_defition=t_task_id_defition)
-#    if d_archive['backup_status'].upper() == 'Y':
-#        table_deftion = getTableDefion(conn_setting=d_archive['conn_instance'], 
-#                table_schema=d_archive['table_schema'], table_name=d_archive['table_name'])
-#        printLog("[%s]创建备份库%s"%(d_archive['task_id'], d_archive['t_backup']), normal_log)
-#        printLog("[%s]创建结果库%s"%(d_archive['task_id'], d_archive['t_taskid']), normal_log)
-#        createBackupTable(conn_setting=conn_dbadb, t_new=d_archive['t_backup'], t_old=d_archive['table_name'], t_defition=table_deftion)
-#
-#    d_archive['bool_partition'] = checkTableType(conn_setting=d_archive['conn_instance'], 
-#                                        table_schema=d_archive['table_schema'], table_name=d_archive['table_name'])
-#
-#    archiveTableMain(d_archive)
-#
-#    sem.release() # 释放 semaphore
-#
-#
-#def getToday():
-#    return time.strftime('%F',time.localtime())
-#
-#def getOnlineInfo(conn_setting, t):
-#    sql = ("""select 
-#                Fserver_host as `ip`,
-#                Fserver_port as `port`,
-#                Ftable as `table`,
-#                Fcolumn as `column`,
-#                Fkeep_days as `keep_days`,
-#                Fbackup_status as `backup_status` 
-#            from %s 
-#            where Fstate='online';"""%(t)
-#    )
-#    d = connMySQL(sql, conn_setting)
-#    return d
-#
-#
-
-
-#def main():
-#
-#    printLog('===start execute archive progress.', normal_log, 'purple')
-#
-#    dconf = getKVDict(conf_keys)
-#    archive_infos = getOnlineInfo(conn_dbadb, dconf['t_mysql_archive_info'])
-#    thread_num = 3 # 同时跑的线程数
-#    sem = Semaphore(thread_num) 
-#    threads = []
-#    for archive_info in archive_infos:
-#        archive_info['dconf'] = dconf
-#        archive_info['task_id'] = returnTaskID(archive_info['ip'], archive_info['port'])
-#        t = threading.Thread(target=processOneInstance, args=(archive_info, sem))
-#        threads.append(t)
-#    length = len(threads)
-#    for i in range(length):
-#        sem.acquire()
-#        threads[i].start()
-#    for i in range(length):
-#        threads[i].join()
-#
-#    printLog('===archive progress is Done.', normal_log, 'purple')
-#
-#
-#if __name__ == '__main__':
-#
-#    main()
-#
