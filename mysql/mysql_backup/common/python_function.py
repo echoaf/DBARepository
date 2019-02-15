@@ -14,6 +14,7 @@ import logging
 import linecache
 import MySQLdb
 import MySQLdb.cursors
+import shutil
 
 
 class MySQLBackupFunction(object):
@@ -67,6 +68,100 @@ class MySQLBackupFunction(object):
         return v
 
 
+    def dealBackupFail(self, instance=None):
+        sql = ("""select Ftask_id as task_id,
+                         Fpath as backup_path 
+                  from %s 
+                  where Ftype='%s' 
+                        and Fbackup_status='Fail' 
+                        and Fclear_status!='done';"""
+                %(self.dconf['t_mysql_backup_result'], instance))
+        infos = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
+        for info in infos:
+            task_id = info['task_id']
+            backup_path = info['backup_path']
+            self.BF.printLog("[%s]清理数据:%s"%(task_id, backup_path),
+                                                self.dconf['normal_log'], 'green')
+            shutil.rmtree(backup_path) 
+            u_sql = ("""update {t_mysql_backup_result} 
+                        set Fclear_status='done',Fmodify_time=now() 
+                        where Ftask_id={task_id};"""
+                    .format(t_mysql_backup_result = self.dconf['t_mysql_backup_result'],
+                            task_id = task_id))
+            self.BF.connMySQL(u_sql, self.dconf['conn_dbadb'])
+
+
+    def clearData(self, backup_info=None, clear_rule=None):
+        print backup_info['backup_date']
+
+    def dealBackupSucc(self, instance=None):
+        sql = ("""select Ftask_id as task_id,
+                         Fpath as backup_path, 
+                         Fmode as backup_mode,
+                         Fdate as backup_date
+                  from %s 
+                  where Ftype='%s' 
+                        and Fbackup_status='Succ' 
+                        and Fclear_status='todo' 
+                        and Fremote_backup_status='todo';"""
+                        #and Fremote_backup_status='done';"""
+                %(self.dconf['t_mysql_backup_result'], instance))
+        infos = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
+        sql2 = ("""select Fxtrabackup_clear_rule as xtrabackup_clear_rule,
+                          Fmydumper_clear_rule as mydumper_clear_rule,
+                          Fmysqldump_clear_rule as mysqldump_clear_rule 
+                    from {t_mysql_backup_info} 
+                    where Ftype='{instance}' 
+                          and Faddress='{backup_machine}';"""
+                    .format(t_mysql_backup_info = self.dconf['t_mysql_backup_info'],
+                            instance = instance,
+                            backup_machine = self.dconf['local_ip']))
+        clear_rule = self.BF.connMySQL(sql2, self.dconf['conn_dbadb'])
+        try:
+            mysqldump_clear_rule = clear_rule[0]['mysqldump_clear_rule']
+            xtrabackup_clear_rule = clear_rule[0]['xtrabackup_clear_rule']
+            mydumper_clear_rule = clear_rule[0]['mydumper_clear_rule']
+        except Exception,e:
+            mysqldump_clear_rule = None
+            xtrabackup_clear_rule = None
+            mydumper_clear_rule = None
+        for info in infos:
+            #task_id = info['task_id']
+            #backup_path = info['backup_path']
+            backup_mode = info['backup_mode']
+            #backup_date = info['backup_date']
+            if backup_mode.upper() == 'MYSQLDUMP':
+                self.clearData(backup_info=info, clear_rule=mysqldump_clear_rule)
+            elif backup_mode.upper() == 'MYDUMPER':
+                self.clearData(backup_info=info, clear_rule=mydumper_clear_rule)
+            elif backup_mode.upper() == 'XTRABACKUP':
+                self.clearData(backup_info=info, clear_rule=xtrabackup_clear_rule)
+            else:
+                pass
+
+    # Tips:递归调用自己
+    def doClear(self):
+        sql = """select Ftype as instance from %s"""%(self.dconf['t_mysql_backup_info'])
+        instances = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
+        for instance in instances:
+            instance = instance['instance']
+            self.dealBackupFail(instance=instance)
+            self.dealBackupSucc(instance=instance)
+                
+
+    def getDiskPercent(self, mount=None):
+
+        cmd = "df -hP %s | tail -1| awk '{print $5}'| sed 's/%%//g'"%(mount)
+        p = self.BF.runShell(cmd)[1]
+        if p:
+            try:
+                p = int(p)
+            except Exception,e:
+                p = False
+        else:
+            p = False
+        return p
+
     def findFirstBinaryLogName(self):
 
         sql = "SHOW BINARY LOGS;"
@@ -99,7 +194,8 @@ class MySQLBackupFunction(object):
     def getSpecialtoday(self, w):
         """获取本周具体周几的日期"""
         # 本周周日的日期
-        weekday_sun = (datetime.date.today() - datetime.timedelta(days=datetime.date.today().weekday()) 
+        weekday_sun = (datetime.date.today() - 
+                       datetime.timedelta(days=datetime.date.today().weekday()) 
                         + datetime.timedelta(days=6)) 
         t = weekday_sun + datetime.timedelta(days=int(w))
         return t
@@ -162,7 +258,8 @@ class MySQLBackupFunction(object):
                 self.doBackupXtrabackup(wait=0, backup_path=backup_path)
                 v = True
             elif backup_mode == 'MYSQLDUMP':
-                v = False
+                self.doBackupMysqldump(wait=0, backup_path=backup_path)
+                v = True
             else:
                 v = False
         return v
@@ -172,7 +269,8 @@ class MySQLBackupFunction(object):
         if os.path.isdir(path):
             if os.listdir(path):
                 self.BF.printLog("目录不为空:%s"%(path), self.dconf['normal_log'])
-                v = False
+                #v = False
+                v = True
             else:
                 #self.BF.printLog("目录为空目录:%s"%(path), self.dconf['normal_log'])
                 v = True
@@ -568,6 +666,7 @@ class MySQLBackupFunction(object):
             else: # 可能依然还在做备份
                 check_info['check_status'] = 'Backing'
                 check_info['memo'] = 'not find metadata'
+
         elif backup_mode.upper() == 'XTRABACKUP':
             # 通过tmpdir检测命令是否存在
             # 如若不存在,则认为备份完成,开始解析xtrabackup_info
@@ -586,13 +685,57 @@ class MySQLBackupFunction(object):
             else:
                 check_info['check_status'] = 'Backing'
                 check_info['memo'] = 'innobackup pid is exists'
-            
+        # Tips:使用mysqldump备份方式都为备份成功状态    
         elif backup_mode.upper() == 'MYSQLDUMP':
-            pass
+            check_info['size'] = 0
+            check_info['check_status'] = 'Succ'
+            check_info['memo'] = '备份成功'
+
         else:
             pass
         return check_info
    
+
+    def doBackupMysqldump(self, backup_path=None, wait=1):
+        
+        sql = ("""select SCHEMA_NAME as table_schema
+                  from information_schema.SCHEMATA 
+                 where SCHEMA_NAME 
+                    not in ('information_schema','performance_schema','sys');""")
+        conn_mysql = {'host': self.dconf['f_info']['source_host'],
+                      'port': self.dconf['f_info']['source_port'],
+                      'passwd': self.dconf['dump_pass'],
+                      'user': self.dconf['dump_user']}
+        table_schemas = self.BF.connMySQL(sql, conn_mysql)
+        for table_schema in table_schemas:
+            table_schema = table_schema['table_schema']
+            cmd = ("""{mysqldump} --default-character-set=utf8 --complete-insert """
+                    """ --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False"""
+                    """ --user='{user}'"""
+                    """ --password='{password}'"""
+                    """ --host='{host}' """
+                    """ --port='{port}'"""
+                    """ --databases {table_schema} >{backup_path}/{table_schema}.sql"""
+                    """ 2>>{log_file}"""
+                    .format(
+                        mysqldump = "/data/DBARepository/mysql/mysql_backup/common/mysqldump",
+                        user = self.dconf['dump_user'],
+                        password = self.dconf['dump_pass'],
+                        host = self.dconf['f_info']['source_host'],
+                        port = self.dconf['f_info']['source_port'],
+                        table_schema = table_schema,
+                        backup_path = backup_path,
+                        log_file = self.dconf['normal_log'],
+                    )
+            )
+            self.BF.printLog("开始备份库:%s(%s)"%(table_schema,cmd), self.dconf['normal_log'], 'green')
+            if wait == 0: # not wait
+                cmd = "%s &"%cmd
+                subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+            else:
+                subprocess.call(cmd, stdout=subprocess.PIPE, shell=True)
+        return True
+
 
     def doBackupMydumper(self, backup_path=None, wait=1):
         cmd = ("""{mydumper} --user='{user}'"""
@@ -833,3 +976,4 @@ class ApplicationInstance(object):
         except:
             pass
  
+
