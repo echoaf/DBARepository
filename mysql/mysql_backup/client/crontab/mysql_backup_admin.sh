@@ -9,7 +9,7 @@ main_dir="/data/DBARepository/mysql/mysql_backup"
 resident="$main_dir/client/resident/"
 normal_log="$main_dir/log/shell.log"
 
-array=(mysql_binarybackup.py mysql_clear.py mysql_fullbackup.py)
+array=(mysql_binarybackup.py mysql_clear.py mysql_fullbackup.py mysql_backup_protection.py)
 
 
 function printLog()

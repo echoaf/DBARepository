@@ -28,6 +28,7 @@ class MySQLBackupFunction(object):
     
         sql=("""select  
                         Ftype as instance,
+                        Faddress as address,
                         Fsource_host as source_host,
                         Fsource_port as source_port,
                         Fxtrabackup_state as xtrabackup_state,
@@ -67,6 +68,75 @@ class MySQLBackupFunction(object):
         v = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
         return v
 
+
+    def checkSlave(self, d=None):
+
+        slave_status = self.BF.connMySQL(sql="show slave status;", d=d)
+        if not slave_status: # Master
+            role = "master"
+            delay_time = 0
+        else: # Master or Slave
+            if (slave_status[0]['Slave_IO_Running'] == "Yes" 
+                and slave_status[0]['Slave_SQL_Running'] == "Yes"): # Slave
+                role = "slave"
+                delay_time = slave_status[0]['Seconds_Behind_Master']
+            else:
+                role = "master"
+                delay_time = 0
+        return role, delay_time
+            
+
+    def doProtect(self):
+        
+        max_delay_time = 120 # 延迟阈值
+        max_ddl_cnt = 10 # ddl线程数阈值
+
+        d = {'host': self.dconf['f_info']['source_host'], 
+             'port': self.dconf['f_info']['source_port'],
+             'user': self.dconf['admin_user'],
+             #'passwd': self.dconf['admin_pass']}
+             'passwd': 'redhat'}
+        # Waiting for global read lock
+        sql = ("""select ID as id,
+                         USER as user,
+                         HOST as host,
+                         STATE as state,
+                         INFO as info 
+                  from information_schema.processlist 
+                  where USER='{dump_user}' and STATE like '%Waiting%lock%' and HOST like '{address}%';"""
+                  .format(dump_user = self.dconf['dump_user'],
+                          address = self.dconf['f_info']['address']))
+        ddl_infos = self.BF.connMySQL(sql, d)
+
+        if ddl_infos:
+            role, delay_time = self.checkSlave(d=d)
+            self.BF.printLog("[%s:%s]当前存在锁表,机器角色为%s,延迟时间为%ss,延迟阈值为%ss,mdl线程阈值为%s"%
+                              (self.dconf['f_info']['source_host'], 
+                                    self.dconf['f_info']['source_port'],
+                                    role, delay_time, max_delay_time, max_ddl_cnt), 
+                               self.dconf['normal_log'], 'red')
+
+
+            sql = ("""select count(*) as cnt
+                  from information_schema.processlist where STATE like '%Waiting%lock%';""")
+        
+            cnt = self.BF.connMySQL(sql=sql, d=d)[0]['cnt']
+
+            if ((role == "master" and cnt >= max_ddl_cnt) 
+                    or (role == "slave" and cnt >= max_ddl_cnt) 
+                    or (role == "slave" and delay_time >= max_delay_time)):
+                for ddl_info in ddl_infos:
+                    self.BF.printLog("[%s:%s]开始进入kill逻辑,kill %s(user:%s,host:%s,state:%s,info:%s)"
+                            %(self.dconf['f_info']['source_host'],
+                                self.dconf['f_info']['source_port'],
+                                ddl_info['id'],
+                                ddl_info['user'],
+                                ddl_info['host'],
+                                ddl_info['state'],
+                                ddl_info['info']),
+                            self.dconf['normal_log'], 'red')
+                    # BUGS:没有更新备份结果表
+                    self.BF.connMySQL(sql="kill %s;"%(ddl_info['id']), d=d)
 
     def rmANDUpdateBackuppath(self, backup_path=None, task_id=None):
 
@@ -839,7 +909,7 @@ class MySQLBackupFunction(object):
                         log_file = self.dconf['normal_log'],
                     )
         )
-        #self.BF.printLog("[%s]开始备份:%s"%(self.dconf['task_id'],cmd), self.dconf['normal_log'])
+        self.BF.printLog("开始备份:%s"%(cmd), self.dconf['normal_log'])
         if wait == 0: # not wait
             cmd = "%s &"%cmd
             subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
