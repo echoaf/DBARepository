@@ -56,7 +56,6 @@ def mysqlBackupMain():
         MF.dconf['rconf'] = BF.getKVDict(ip=f_info['source_host'],
                                          port=f_info['source_port'], 
                                          real=1)
-
         l = [MF.dconf['xtrabackup_task_id'], 
              MF.dconf['mydumper_task_id'], 
              MF.dconf['mysqldump_task_id']]

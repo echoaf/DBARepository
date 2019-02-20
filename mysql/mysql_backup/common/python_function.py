@@ -68,6 +68,20 @@ class MySQLBackupFunction(object):
         return v
 
 
+    def rmANDUpdateBackuppath(self, backup_path=None, task_id=None):
+
+        self.BF.printLog("[%s]清理数据:%s"%(task_id, backup_path),
+                                            self.dconf['normal_log'], 'green')
+        #shutil.rmtree(backup_path) 
+        self.BF.runShell("rm -rfv %s"%backup_path)
+        u_sql = ("""update {t_mysql_backup_result} 
+                    set Fclear_status='done',Fmodify_time=now() 
+                    where Ftask_id='{task_id}';"""
+                .format(t_mysql_backup_result = self.dconf['t_mysql_backup_result'],
+                        task_id = task_id))
+        self.BF.connMySQL(u_sql, self.dconf['conn_dbadb'])
+
+
     def dealBackupFail(self, instance=None):
         sql = ("""select Ftask_id as task_id,
                          Fpath as backup_path 
@@ -80,33 +94,98 @@ class MySQLBackupFunction(object):
         for info in infos:
             task_id = info['task_id']
             backup_path = info['backup_path']
-            self.BF.printLog("[%s]清理数据:%s"%(task_id, backup_path),
-                                                self.dconf['normal_log'], 'green')
-            shutil.rmtree(backup_path) 
-            u_sql = ("""update {t_mysql_backup_result} 
-                        set Fclear_status='done',Fmodify_time=now() 
-                        where Ftask_id={task_id};"""
-                    .format(t_mysql_backup_result = self.dconf['t_mysql_backup_result'],
-                            task_id = task_id))
-            self.BF.connMySQL(u_sql, self.dconf['conn_dbadb'])
+            self.rmANDUpdateBackuppath(backup_path=backup_path, task_id=task_id)
+        
+
+    def addToList(self, l=None, string=None):
+
+        if string not in l:
+            l.append(string)
+        return l
 
 
-    def clearData(self, backup_info=None, clear_rule=None):
-        print backup_info['backup_date']
-
-    def dealBackupSucc(self, instance=None):
-        sql = ("""select Ftask_id as task_id,
-                         Fpath as backup_path, 
-                         Fmode as backup_mode,
-                         Fdate as backup_date
-                  from %s 
+    def clearData(self, backup_mode=None, clear_rule=None, instance=None):
+        
+        """
+        待保留的数据:
+        最老的一份数据
+        最新的一份数据
+        在区间内最新的一份数据
+        """
+        b_sql = ("""select Ftask_id as task_id
+                  from %s
                   where Ftype='%s' 
                         and Fbackup_status='Succ' 
                         and Fclear_status='todo' 
-                        and Fremote_backup_status='todo';"""
-                        #and Fremote_backup_status='done';"""
-                %(self.dconf['t_mysql_backup_result'], instance))
-        infos = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
+                        and Fremote_backup_status='todo'
+                        and Fmode='%s'"""
+                 %(self.dconf['t_mysql_backup_result'], instance, backup_mode))
+
+        t = [] #Tips:待保存的task_id列表
+
+        # Tips:以下为需要保留的数据集
+        max_old = self.BF.connMySQL("%s order by Fdate limit 1;"%b_sql, self.dconf['conn_dbadb']) # 最老的一份数据
+        max_new = self.BF.connMySQL("%s order by Fdate desc limit 1;"%b_sql, self.dconf['conn_dbadb']) # 最新的一份数据
+        if max_old:
+            max_old_task_id = "'%s'"%max_old[0]['task_id']
+            t = self.addToList(l=t, string=max_old_task_id)
+        if max_new:
+            max_new_task_id = "'%s'"%max_new[0]['task_id']
+            t = self.addToList(l=t, string=max_new_task_id)
+        # 计算区间内最新的一份数据
+        if clear_rule:
+            l = clear_rule.split('-',-1)
+            l_len = len(l)
+            l.append('36600') # Tips:1、写死最大值为100 year;2、l的长度有增长,并不能在重复计算len
+            for i in range(l_len):
+                first_num = int("-%s"%l[i])
+                last_num = int("-%s"%l[i+1])
+                now_date = datetime.datetime.now() 
+                f_date =  (now_date + datetime.timedelta(days=first_num)).strftime("%Y-%m-%d") 
+                l_date =  (now_date + datetime.timedelta(days=last_num)).strftime("%Y-%m-%d") 
+                #print ("""%s and Fdate>='%s' and Fdate<'%s' 
+                #                           order by Fdate desc limit 1;"""%(b_sql,l_date,f_date))
+                cur = self.BF.connMySQL("""%s and Fdate>='%s' and Fdate<'%s' 
+                                           order by Fdate desc limit 1;"""
+                                        %(b_sql,l_date,f_date), self.dconf['conn_dbadb'])
+                if cur:
+                    task_id = "'%s'"%cur[0]['task_id']
+                    t = self.addToList(l=t, string=task_id)
+                    self.BF.printLog("""[%s]本次区间范围为(%s)天-(%s)天,时间周期为(%s)-(%s),待保存的task_id为:%s"""
+                                    %(instance,first_num,last_num,f_date,l_date,task_id), 
+                                        self.dconf['normal_log'], 'green')
+                else:
+                    self.BF.printLog("""[%s]本次区间范围为(%s)天-(%s)天,时间周期为(%s)-(%s),找不到待保存的task_id"""
+                                        %(instance,first_num,last_num,f_date,l_date),
+                                           self.dconf['normal_log'], 'green')
+        w = '' # 初始化where条件
+        for i in t:
+            w = w + ",%s"%(i) if w else i # 三目操作
+        sql = ("""select Ftask_id as task_id,
+                         Fpath as backup_path
+                  from {t}
+                  where Ftype='{instance}' 
+                        and Fbackup_status='Succ' 
+                        and Fclear_status='todo' 
+                        and Fremote_backup_status='todo'
+                        and Fmode='{mode}'
+                        and Ftask_id not in ({w})"""
+                .format(t=self.dconf['t_mysql_backup_result'],
+                        instance = instance,
+                        mode = backup_mode,
+                        w = w))
+        d_infos = self.BF.connMySQL(sql, self.dconf['conn_dbadb']) # 最新的一份数据
+        if not d_infos:
+            #self.BF.printLog("""[%s-%s]找不到待清理的task_id"""%(instance,backup_mode), self.dconf['normal_log'], 'red')
+            pass
+            
+        for d_info in d_infos:
+            task_id = d_info['task_id']
+            backup_path = d_info['backup_path']
+            self.rmANDUpdateBackuppath(backup_path=backup_path, task_id=task_id)
+
+    def dealBackupSucc(self, instance=None):
+
         sql2 = ("""select Fxtrabackup_clear_rule as xtrabackup_clear_rule,
                           Fmydumper_clear_rule as mydumper_clear_rule,
                           Fmysqldump_clear_rule as mysqldump_clear_rule 
@@ -117,27 +196,19 @@ class MySQLBackupFunction(object):
                             instance = instance,
                             backup_machine = self.dconf['local_ip']))
         clear_rule = self.BF.connMySQL(sql2, self.dconf['conn_dbadb'])
+
         try:
             mysqldump_clear_rule = clear_rule[0]['mysqldump_clear_rule']
             xtrabackup_clear_rule = clear_rule[0]['xtrabackup_clear_rule']
             mydumper_clear_rule = clear_rule[0]['mydumper_clear_rule']
-        except Exception,e:
+        except Exception,e: # 清理规则不一定存在
             mysqldump_clear_rule = None
             xtrabackup_clear_rule = None
             mydumper_clear_rule = None
-        for info in infos:
-            #task_id = info['task_id']
-            #backup_path = info['backup_path']
-            backup_mode = info['backup_mode']
-            #backup_date = info['backup_date']
-            if backup_mode.upper() == 'MYSQLDUMP':
-                self.clearData(backup_info=info, clear_rule=mysqldump_clear_rule)
-            elif backup_mode.upper() == 'MYDUMPER':
-                self.clearData(backup_info=info, clear_rule=mydumper_clear_rule)
-            elif backup_mode.upper() == 'XTRABACKUP':
-                self.clearData(backup_info=info, clear_rule=xtrabackup_clear_rule)
-            else:
-                pass
+
+        self.clearData(backup_mode='xtrabackup', clear_rule=xtrabackup_clear_rule, instance=instance)
+        self.clearData(backup_mode='mydumper', clear_rule=mydumper_clear_rule, instance=instance)
+        self.clearData(backup_mode='mysqldump', clear_rule=mysqldump_clear_rule, instance=instance)
 
     # Tips:递归调用自己
     def doClear(self):
@@ -145,6 +216,13 @@ class MySQLBackupFunction(object):
         instances = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
         for instance in instances:
             instance = instance['instance']
+            """
+            Tips
+            1、备份失败了的，但是还没清理
+                where Ftype='DBADB' and Fbackup_status='Fail' and Fclear_status!='done';
+            2、备份成功了的，并且是待清理状态，并且远程备份状态为上传成功
+                where Fbackup_status='Succ' and Fclear_status='todo' and Fremote_backup_status='done';
+            """
             self.dealBackupFail(instance=instance)
             self.dealBackupSucc(instance=instance)
                 
@@ -358,7 +436,7 @@ class MySQLBackupFunction(object):
                             backup_info = d_result['backup_info']
                         )
                     )
-        print u_sql    
+        #print u_sql    
         self.BF.connMySQL(u_sql, self.BF.conn_dbadb)
 
     def updateFullbackup(self, d=None, task_id=None, backup_mode=None, backup_path=None):
@@ -609,14 +687,13 @@ class MySQLBackupFunction(object):
         return metadata
 
 
-    def checkXtrabackupCommand(self, tmpdir=None):
+    def checkXtrabackupCommand(self):
 
-        local_xtrabackup_sh = "/data/DBARepository/mysql/mysql_backup/common/local_xtrabackup.sh"
-        mysql_host = "172.16.112.13"
+        mysql_host = self.dconf['f_info']['source_host']
         mysql_ssh_port = 22
         mysql_ssh_user = "douyuops"
         mysql_ssh_pass = self.getSSHPass(mysql_host, mysql_ssh_user)
-        tmpdir = "/tmp/xtrabackup_tmpdir_22310_20190128114400"
+        tmpdir = "/tmp/xtrabackup_tmpdir_%s"%(self.dconf['xtrabackup_task_id'])
 
         cmd = ("""/usr/bin/sshpass -p {mysql_ssh_pass} /usr/bin/ssh -p {mysql_ssh_port} {mysql_ssh_user}@{mysql_host} "echo '{mysql_ssh_pass}' | sudo -S su -c \\"ps aux| grep 'innobackupex' | grep -v grep |grep 'tmpdir={tmpdir}' | wc -l  \\" " """
               .format(mysql_ssh_pass = mysql_ssh_pass,
@@ -624,6 +701,7 @@ class MySQLBackupFunction(object):
                       mysql_ssh_user = mysql_ssh_user,
                       mysql_host = mysql_host,
                       tmpdir = tmpdir))
+        self.BF.printLog("[%s]检测命令(%s)"%(self.dconf['xtrabackup_task_id'],cmd), self.dconf['normal_log'], 'green')
         v = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         v = (v.stdout.read()).replace('\n','')
         try:
@@ -670,7 +748,7 @@ class MySQLBackupFunction(object):
         elif backup_mode.upper() == 'XTRABACKUP':
             # 通过tmpdir检测命令是否存在
             # 如若不存在,则认为备份完成,开始解析xtrabackup_info
-            r = self.checkXtrabackupCommand(tmpdir = '/tmp/xtrabackup_tmpdir_22310_20190128114400')
+            r = self.checkXtrabackupCommand()
             if r:
                 f_tar = "%s/backup.tar.gz"%(backup_path)
                 check_info['metadata'] = self.resolveXtrabackupFile(f_tar=f_tar)
@@ -776,29 +854,29 @@ class MySQLBackupFunction(object):
 
     # 远程xtrbackup
     def doBackupXtrabackup(self, backup_path=None, wait=1):
-        
+       
+        # Tips:写死
         local_xtrabackup_sh = "/data/DBARepository/mysql/mysql_backup/common/local_xtrabackup.sh"
-        mysql_host = "172.16.112.13"
-        mysql_ssh_port = 22
+        mysql_host = self.dconf['f_info']['source_host']
+        mysql_ssh_port = 22 # Tips:写死
         mysql_ssh_user = "douyuops"
         mysql_ssh_pass = self.getSSHPass(mysql_host, mysql_ssh_user)
-
         backup_ssh_user = "douyuops"
         backup_ssh_pass = self.getSSHPass(self.dconf['local_ip'], backup_ssh_user)
         backup_ssh_port = 22
-        
-        tmpdir = "/tmp/xtrabackup_tmpdir_22310_20190128114400"
-    
+        tmpdir = "/tmp/xtrabackup_tmpdir_%s"%(self.dconf['xtrabackup_task_id'])
+
+        self.BF.runShell("chown -R %s:%s %s"%(backup_ssh_user,backup_ssh_user,backup_path))
         scp_cmd = ("""/usr/bin/sshpass -p {mysql_ssh_pass} /usr/bin/scp -P {mysql_ssh_port} {local_xtrabackup_sh} {mysql_ssh_user}@{mysql_host}:/tmp"""
                   .format(mysql_ssh_pass = mysql_ssh_pass,
                           mysql_ssh_port = mysql_ssh_port,
                           local_xtrabackup_sh = local_xtrabackup_sh,
                           mysql_ssh_user = mysql_ssh_user,
                           mysql_host = mysql_host))
-        print scp_cmd
+        self.BF.printLog("[%s]%s"%(self.dconf['xtrabackup_task_id'], scp_cmd), self.dconf['normal_log'], 'green')
         subprocess.call(scp_cmd, stdout=subprocess.PIPE, shell=True)
 
-        exec_cmd = ("""echo '{backup_ssh_pass}' | sudo -S su -c '/bin/bash /tmp/{basename_local_xtrabackup_sh} {mysql_host} {mysql_port} {mysql_user} {mysql_pass} {backup_host} {backup_ssh_port} {backup_ssh_user} {backup_ssh_pass} {backup_path} {tmpdir}' """
+        exec_cmd = ("""mkdir -p {tmpdir}; echo '{backup_ssh_pass}' | sudo -S su -c '/bin/bash /tmp/{basename_local_xtrabackup_sh} {mysql_host} {mysql_port} {mysql_user} {mysql_pass} {backup_host} {backup_ssh_port} {backup_ssh_user} {backup_ssh_pass} {backup_path} {tmpdir}' """
                     .format(backup_ssh_pass = backup_ssh_pass,
                             basename_local_xtrabackup_sh = os.path.basename(local_xtrabackup_sh),
                             mysql_host = self.dconf['f_info']['source_host'],
@@ -817,8 +895,9 @@ class MySQLBackupFunction(object):
                              mysql_ssh_user = mysql_ssh_user,
                              mysql_host = mysql_host,
                              cmd = exec_cmd))
-        print remote_cmd
+        self.BF.printLog("[%s]%s"%(self.dconf['xtrabackup_task_id'], remote_cmd), self.dconf['normal_log'], 'green')
         #subprocess.call(exec_cmd, stdout=subprocess.PIPE, shell=True)
+        subprocess.call(remote_cmd, stdout=subprocess.PIPE, shell=True)
         return True
         
 
