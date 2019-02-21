@@ -22,6 +22,9 @@ tmp_dir = '%s/tmp'%(base_dir)
 mysql = '%s/mysql'%(common_dir)
 mysqlbinlog = '%s/mysqlbinlog'%(common_dir)
 normal_log = '%s/python.log'%(log_dir)
+full_log = '%s/fullbackup.log'%(log_dir)
+binary_log = '%s/binary.log'%(log_dir)
+clear_log = '%s/clear.log'%(log_dir)
 local_xtrabackup_sh = "%s/local_xtrabackup.sh"%(common_dir)
 
 conf_host = '172.16.112.12'

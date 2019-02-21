@@ -125,9 +125,10 @@ def mysqlBinaryBackupMain():
     dconf['local_ip'] =  BF.runShell(ip_command)[1]
     dconf['conn_dbadb'] = conn_dbadb
     dconf['normal_log'] = normal_log
+    dconf['binary_log'] = binary_log
     MF = MySQLBackupFunction(BF=BF, dconf=dconf)
 
-    BF.printLog('===MySQL BINARYBACKUP IS START.', normal_log, 'purple')
+    BF.printLog('===MySQL BINARYBACKUP IS START.', binary_log, 'purple')
 
     f_infos = MF.getOnlineBinarybackupInfo()
     for f_info in f_infos:
@@ -151,7 +152,7 @@ def mysqlBinaryBackupMain():
         monitorProcess(MF=MF)
         checkMain(MF=MF)
 
-    BF.printLog('===MySQL BINARYBACKUP IS END.', normal_log, 'purple')
+    BF.printLog('===MySQL BINARYBACKUP IS END.', binary_log, 'purple')
 
 
 def main():

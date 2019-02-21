@@ -416,14 +416,14 @@ class MySQLBackupFunction(object):
     def checkPath(self, path=None):
         if os.path.isdir(path):
             if os.listdir(path):
-                self.BF.printLog("目录不为空:%s"%(path), self.dconf['normal_log'])
+                self.BF.printLog("目录不为空:%s"%(path), self.dconf['full_log'])
+                #self.BF.runShell("rm -rfv %s"%path) # 清理目录
                 #v = False
                 v = True
             else:
-                #self.BF.printLog("目录为空目录:%s"%(path), self.dconf['normal_log'])
                 v = True
         else:
-            self.BF.printLog("找不到目录:%s"%(path), self.dconf['normal_log'])
+            self.BF.printLog("找不到目录:%s"%(path), self.dconf['full_log'])
             v = False
         return v
 
@@ -435,7 +435,7 @@ class MySQLBackupFunction(object):
         if cnt[0]['cnt'] > 0:
             self.BF.printLog("""[%s:%s]数据库存在活跃事务:%s"""
                                 %(conn_setting['host'],conn_setting['port'],cnt[0]['cnt']),
-                                self.dconf['normal_log'])
+                                self.dconf['full_log'])
             v = False
         else:
             v = True
@@ -555,7 +555,7 @@ class MySQLBackupFunction(object):
                                 task_id = task_id
                             )
                      )
-        #print u_sql
+        self.BF.printLog(u_sql, self.dconf['full_log'], green)
         self.BF.connMySQL(u_sql, self.BF.conn_dbadb)
 
 
@@ -866,17 +866,18 @@ class MySQLBackupFunction(object):
                     """ --databases {table_schema} >{backup_path}/{table_schema}.sql"""
                     """ 2>>{log_file}"""
                     .format(
-                        mysqldump = "/data/DBARepository/mysql/mysql_backup/common/mysqldump",
+                        mysqldump = self.dconf['mysqldump'],
                         user = self.dconf['dump_user'],
                         password = self.dconf['dump_pass'],
                         host = self.dconf['f_info']['source_host'],
                         port = self.dconf['f_info']['source_port'],
                         table_schema = table_schema,
                         backup_path = backup_path,
-                        log_file = self.dconf['normal_log'],
+                        log_file = self.dconf['full_log'],
                     )
             )
-            self.BF.printLog("开始备份库:%s(%s)"%(table_schema,cmd), self.dconf['normal_log'], 'green')
+            self.BF.printLog("开始备份库:%s(%s)"%(table_schema,cmd),
+                              self.dconf['full_log'], 'green')
             if wait == 0: # not wait
                 cmd = "%s &"%cmd
                 subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -909,7 +910,7 @@ class MySQLBackupFunction(object):
                         log_file = self.dconf['normal_log'],
                     )
         )
-        self.BF.printLog("开始备份:%s"%(cmd), self.dconf['normal_log'])
+        self.BF.printLog("开始备份:%s"%(cmd), self.dconf['full_log'])
         if wait == 0: # not wait
             cmd = "%s &"%cmd
             subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -926,29 +927,31 @@ class MySQLBackupFunction(object):
     def doBackupXtrabackup(self, backup_path=None, wait=1):
        
         # Tips:写死
-        local_xtrabackup_sh = "/data/DBARepository/mysql/mysql_backup/common/local_xtrabackup.sh"
+        #local_xtrabackup_sh = "/data/DBARepository/mysql/mysql_backup/common/local_xtrabackup.sh"
         mysql_host = self.dconf['f_info']['source_host']
-        mysql_ssh_port = 22 # Tips:写死
-        mysql_ssh_user = "douyuops"
+        mysql_ssh_port = self.dconf['ssh_port'] 
+        mysql_ssh_user = self.dconf['ssh_user']
         mysql_ssh_pass = self.getSSHPass(mysql_host, mysql_ssh_user)
-        backup_ssh_user = "douyuops"
+        backup_ssh_port = self.dconf['ssh_port']
+        backup_ssh_user = self.dconf['ssh_user']
         backup_ssh_pass = self.getSSHPass(self.dconf['local_ip'], backup_ssh_user)
-        backup_ssh_port = 22
         tmpdir = "/tmp/xtrabackup_tmpdir_%s"%(self.dconf['xtrabackup_task_id'])
 
         self.BF.runShell("chown -R %s:%s %s"%(backup_ssh_user,backup_ssh_user,backup_path))
         scp_cmd = ("""/usr/bin/sshpass -p {mysql_ssh_pass} /usr/bin/scp -P {mysql_ssh_port} {local_xtrabackup_sh} {mysql_ssh_user}@{mysql_host}:/tmp"""
                   .format(mysql_ssh_pass = mysql_ssh_pass,
                           mysql_ssh_port = mysql_ssh_port,
-                          local_xtrabackup_sh = local_xtrabackup_sh,
+                          local_xtrabackup_sh = self.dconf['local_xtrabackup_sh'],
                           mysql_ssh_user = mysql_ssh_user,
                           mysql_host = mysql_host))
-        self.BF.printLog("[%s]%s"%(self.dconf['xtrabackup_task_id'], scp_cmd), self.dconf['normal_log'], 'green')
+        self.BF.printLog("[%s]%s"%(self.dconf['xtrabackup_task_id'], scp_cmd),
+                          self.dconf['full_log'], 'green')
         subprocess.call(scp_cmd, stdout=subprocess.PIPE, shell=True)
 
         exec_cmd = ("""mkdir -p {tmpdir}; echo '{backup_ssh_pass}' | sudo -S su -c '/bin/bash /tmp/{basename_local_xtrabackup_sh} {mysql_host} {mysql_port} {mysql_user} {mysql_pass} {backup_host} {backup_ssh_port} {backup_ssh_user} {backup_ssh_pass} {backup_path} {tmpdir}' """
                     .format(backup_ssh_pass = backup_ssh_pass,
-                            basename_local_xtrabackup_sh = os.path.basename(local_xtrabackup_sh),
+                            basename_local_xtrabackup_sh = os.path.basename(
+                            self.dconf['local_xtrabackup_sh']),
                             mysql_host = self.dconf['f_info']['source_host'],
                             mysql_port = self.dconf['f_info']['source_port'],
                             mysql_user = self.dconf['dump_user'],
@@ -965,8 +968,8 @@ class MySQLBackupFunction(object):
                              mysql_ssh_user = mysql_ssh_user,
                              mysql_host = mysql_host,
                              cmd = exec_cmd))
-        self.BF.printLog("[%s]%s"%(self.dconf['xtrabackup_task_id'], remote_cmd), self.dconf['normal_log'], 'green')
-        #subprocess.call(exec_cmd, stdout=subprocess.PIPE, shell=True)
+        self.BF.printLog("[%s]%s"%(self.dconf['xtrabackup_task_id'], remote_cmd), 
+                          self.dconf['full_log'], 'green')
         subprocess.call(remote_cmd, stdout=subprocess.PIPE, shell=True)
         return True
         
@@ -1005,8 +1008,24 @@ class BaseFunction(object):
             return values
         except Exception,e:
             raise Exception("sql is running error:%s..."%e)
+
+    def addLog(self, content=None, normal_log=None):
+        log = "%s/python.log"%(os.path.dirname(normal_log))
+        try:
+            logging.basicConfig(level = logging.DEBUG,
+                    format = '[%(asctime)s %(filename)s]:%(message)s',
+                    datefmt = '%Y-%m-%d %H:%M:%S',
+                    filename = log,
+                    filemode = 'a'
+            )
+            logging.info(content)
+            content = str(content)
+        except Exception,e:
+            print e
+            pass
     
     def printLog(self, content=None, normal_log=None, color='normal'):
+        #self.addLog(content=content, normal_log=normal_log) # Tips:所有日志都入normal_log
         if normal_log:
             try:
                 logging.basicConfig(level = logging.DEBUG,
@@ -1069,7 +1088,6 @@ class BaseFunction(object):
         for kv in kvs:
             k = kv['k']
             d[k] = self.getKV(k=k, ip=ip, port=port)
-            #d[key] = self.getKV(k=key, ip=ip, port=port)
         return d
 
     def runShell(self, c):
