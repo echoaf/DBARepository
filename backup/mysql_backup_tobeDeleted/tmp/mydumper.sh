@@ -1,1 +1,0 @@
-/usr/local/bin/mydumper -u dump_user -p dump_user -h 172.16.112.10 -P 11000 -v 2 -t 4 -s 1000000 -r 1000000 -o /data/MySQL_BACKUP/FULL_BACKUP/TESTDB/20181205 -L /data/repository/mysql_repo/mysql_backup/log/shell.log &
