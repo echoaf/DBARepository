@@ -13,7 +13,7 @@ import pprint
 import commands
 import json
 
-base_dir = '/data/DBARepository/mysql/mysql_backup'
+base_dir = '/home/repo/dba_repo/repo_admin/mysql_repo/mysql_backup'
 common_dir = '%s/common'%base_dir
 sys.path.append(common_dir)
 from python_conf import *

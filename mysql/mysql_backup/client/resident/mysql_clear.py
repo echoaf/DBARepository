@@ -12,7 +12,7 @@ import pprint
 import commands
 import json
 
-base_dir = '/data/DBARepository/mysql/mysql_backup'
+base_dir = '/home/repo/dba_repo/repo_admin/mysql_repo/mysql_backup'
 common_dir = '%s/common'%base_dir
 sys.path.append(common_dir)
 from python_conf import *
@@ -35,7 +35,7 @@ def mysqlClearMain():
     MF = MySQLBackupFunction(BF=BF, dconf=dconf)
 
     BF.printLog('===MySQL CLEAR IS START.', normal_log, 'purple')
-    mount = "/data"
+    mount = dconf['backup_pdir']
     disk_percent = MF.getDiskPercent(mount=mount)
     BF.printLog("[%s]当前磁盘使用%s(阈值%s)"%(mount,disk_percent,dconf['clear_threshold']), normal_log, 'red')
     if disk_percent >= int(dconf['clear_threshold']):

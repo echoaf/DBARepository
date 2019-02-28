@@ -11,8 +11,7 @@ import re
 import pprint
 import commands
 import json
-
-base_dir = '/data/DBARepository/mysql/mysql_backup'
+base_dir = '/home/repo/dba_repo/repo_admin/mysql_repo/mysql_backup'
 common_dir = '%s/common'%base_dir
 sys.path.append(common_dir)
 from python_conf import *
@@ -27,6 +26,7 @@ def mysqlBackupMain():
 
     BF = BaseFunction(t_conf_common=t_conf_common, t_conf_person=t_conf_person, 
                       conn_dbadb=conn_dbadb)
+    BF.printLog('===MySQL FULLBACKUP IS START.', full_log, 'purple')
     #f_sock = BF.getSockFile(__file__, tmp_dir)
     #BF.runApplication(f=f_sock, times=run_times)
     #print run_times
@@ -41,8 +41,6 @@ def mysqlBackupMain():
     dconf['local_xtrabackup_sh'] = local_xtrabackup_sh
     MF = MySQLBackupFunction(BF=BF, dconf=dconf)
 
-    BF.printLog('===MySQL FULLBACKUP IS START.', full_log, 'purple')
-
     f_infos = MF.getOnlineFullbackupInfo()
     for f_info in f_infos:
         MF.dconf['f_info'] = f_info 
@@ -53,7 +51,7 @@ def mysqlBackupMain():
         MF.dconf['rconf'] = BF.getKVDict(ip=f_info['source_host'],
                                          port=f_info['source_port'], 
                                          real=1)
-        BF.printLog('MF.dconf(%s)'%(MF.dconf), full_log, 'purple')
+        #BF.printLog('MF.dconf(%s)'%(MF.dconf), full_log, 'purple')
         l = [MF.dconf['xtrabackup_task_id'], 
              MF.dconf['mydumper_task_id'], 
              MF.dconf['mysqldump_task_id']]
@@ -123,4 +121,3 @@ def main():
 if __name__ == '__main__':
 
     main()
-

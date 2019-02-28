@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #coding=utf8
 
+# version 2.0:xtrbackup不压缩 | arthur | 2019-02-25
+
 import sys
 import os
 import os.path
@@ -94,8 +96,7 @@ class MySQLBackupFunction(object):
         d = {'host': self.dconf['f_info']['source_host'], 
              'port': self.dconf['f_info']['source_port'],
              'user': self.dconf['admin_user'],
-             #'passwd': self.dconf['admin_pass']}
-             'passwd': 'redhat'}
+             'passwd': self.dconf['admin_pass']}
         # Waiting for global read lock
         sql = ("""select ID as id,
                          USER as user,
@@ -103,25 +104,24 @@ class MySQLBackupFunction(object):
                          STATE as state,
                          INFO as info 
                   from information_schema.processlist 
-                  where USER='{dump_user}' and STATE like '%Waiting%lock%' and HOST like '{address}%';"""
+                  where USER='{dump_user}' and HOST like '{address}%';"""
+                  #where USER='{dump_user}' and STATE like '%Waiting%lock%' and HOST like '{address}%';"""
                   .format(dump_user = self.dconf['dump_user'],
                           address = self.dconf['f_info']['address']))
         ddl_infos = self.BF.connMySQL(sql, d)
 
-        if ddl_infos:
-            role, delay_time = self.checkSlave(d=d)
-            self.BF.printLog("[%s:%s]当前存在锁表,机器角色为%s,延迟时间为%ss,延迟阈值为%ss,mdl线程阈值为%s"%
-                              (self.dconf['f_info']['source_host'], 
-                                    self.dconf['f_info']['source_port'],
-                                    role, delay_time, max_delay_time, max_ddl_cnt), 
-                               self.dconf['normal_log'], 'red')
+        sql = ("""select count(*) as cnt
+              from information_schema.processlist where STATE like '%Waiting%lock%';""")
+        cnt = self.BF.connMySQL(sql=sql, d=d)[0]['cnt']
+            
+        role, delay_time = self.checkSlave(d=d)
+        self.BF.printLog("[%s:%s]当前机器角色为%s,延迟时间为%ss,延迟阈值为%ss,mdl锁总数为%s,mdl线程阈值为%s"%
+                          (self.dconf['f_info']['source_host'], 
+                                self.dconf['f_info']['source_port'],
+                                role, delay_time, max_delay_time, cnt, max_ddl_cnt), 
+                           self.dconf['normal_log'], 'red')
 
-
-            sql = ("""select count(*) as cnt
-                  from information_schema.processlist where STATE like '%Waiting%lock%';""")
-        
-            cnt = self.BF.connMySQL(sql=sql, d=d)[0]['cnt']
-
+        if cnt > 0:
             if ((role == "master" and cnt >= max_ddl_cnt) 
                     or (role == "slave" and cnt >= max_ddl_cnt) 
                     or (role == "slave" and delay_time >= max_delay_time)):
@@ -380,6 +380,7 @@ class MySQLBackupFunction(object):
         elif backup_weekday in range(0,7):
             if backup_weekday > weekday: # 非我良时
                 task_id = False
+                return task_id # Tips:trap
             else:
                 d_today = self.getSpecialtoday(backup_weekday)
                 d_compact_today = self.compactTime(str(d_today))
@@ -388,24 +389,27 @@ class MySQLBackupFunction(object):
                                                                        backup_mode=backup_mode)
         else:
             task_id = False
+            return task_id # Tips:trap
         task_id = task_id.upper()
         return task_id
 
 
     def doBackup(self, backup_mode=None, backup_path=None):
         # Returns:True|False
-        v_check = self.checkBackup(backup_path=backup_path)
+        v_check = self.checkBackup(backup_path=backup_path, backup_mode=backup_mode)
         if not v_check:
+            self.BF.printLog("[%s]不进入备份逻辑"%(backup_path), self.dconf['full_log'], 'green')
             v = False 
         else:
+            self.BF.printLog("[%s]进入备份逻辑,开始备份"%(backup_path), self.dconf['full_log'], 'green')
             backup_mode = backup_mode.upper()
-            if backup_mode == 'MYDUMPER':
+            if backup_mode.upper() == 'MYDUMPER':
                 self.doBackupMydumper(wait=0, backup_path=backup_path)
                 v = True
-            elif backup_mode == 'XTRABACKUP':
+            elif backup_mode.upper() == 'XTRABACKUP':
                 self.doBackupXtrabackup(wait=0, backup_path=backup_path)
                 v = True
-            elif backup_mode == 'MYSQLDUMP':
+            elif backup_mode.upper() == 'MYSQLDUMP':
                 self.doBackupMysqldump(wait=0, backup_path=backup_path)
                 v = True
             else:
@@ -416,6 +420,7 @@ class MySQLBackupFunction(object):
     def checkPath(self, path=None):
         if os.path.isdir(path):
             if os.listdir(path):
+                # BUGS:目录存在数据,也进入备份逻辑,并且不清理老数据
                 self.BF.printLog("目录不为空:%s"%(path), self.dconf['full_log'])
                 #self.BF.runShell("rm -rfv %s"%path) # 清理目录
                 #v = False
@@ -555,17 +560,61 @@ class MySQLBackupFunction(object):
                                 task_id = task_id
                             )
                      )
-        self.BF.printLog(u_sql, self.dconf['full_log'], green)
+        #self.BF.printLog(u_sql, self.dconf['full_log'], 'green')
         self.BF.connMySQL(u_sql, self.BF.conn_dbadb)
 
+    def changeDTTOUnixtime(self, dt):
+        time.strptime(dt, '%Y-%m-%d %H:%M:%S')
+        try:
+            s = time.mktime(time.strptime(dt, '%Y-%m-%d %H:%M:%S'))
+        except Exception,e: # Tips:避免数据库时间格式不标准
+            s = 0
+        return int(s)
 
-    def checkBackup(self, backup_path=None):
+    def checkTime(self, backup_mode=None):
+
+        if backup_mode.upper() == 'MYDUMPER': 
+            start_time = self.dconf['f_info']['mydumper_start_time']
+            end_time = self.dconf['f_info']['mydumper_end_time']
+        elif backup_mode.upper() == 'MYSQLDUMP': 
+            start_time = self.dconf['f_info']['mysqldump_start_time']
+            end_time = self.dconf['f_info']['mysqldump_end_time']
+        elif backup_mode.upper() == 'XTRABACKUP': 
+            start_time = self.dconf['f_info']['xtrabackup_start_time']
+            end_time = self.dconf['f_info']['xtrabackup_end_time']
+        else:
+            return False
+
+        t = time.strftime('%F',time.localtime())
+
+        cur_time = time.strftime('%F %T',time.localtime())
+        start_time = "%s %s"%(t, start_time)
+        end_time = "%s %s"%(t, end_time)
+
+        cur_timestamp = self.changeDTTOUnixtime(cur_time)
+        start_timestamp = self.changeDTTOUnixtime(start_time)
+        end_timestamp = self.changeDTTOUnixtime(end_time)
+
+        if cur_timestamp > start_timestamp and cur_timestamp < end_timestamp:
+            self.BF.printLog("[%s]当前时间:'%s',在备份时间段:'%s'-'%s'"%(backup_mode,cur_time,start_time,end_time), 
+                              self.dconf['full_log'], 'green')
+            return True
+        else:
+            self.BF.printLog("[%s]当前时间:'%s',不在备份时间段:'%s'-'%s'"%(backup_mode,cur_time,start_time,end_time), 
+                              self.dconf['full_log'], 'green')
+            return False
+
+
+    def checkBackup(self, backup_path=None, backup_mode=None):
         """
         check backup is continue
-        backup_path必须为空
-        不存在活跃事务
+            backup_path必须为空
+            不存在活跃事务
+            检测当前备份时间点,是否能继续,比如10点不在备份时间0点-8点内
+            检测是否有其他备份计划任务正在执行,比如mydumper状态为backing,则不能进入xtrabackup逻辑
         Returns:True:False
         """
+
         conn_instance = {
             'host' : self.dconf['f_info']['source_host'],
             'port' : self.dconf['f_info']['source_port'],
@@ -574,11 +623,20 @@ class MySQLBackupFunction(object):
         }
         v1 = self.checkPath(backup_path)
         v2 = self.checkActiveTrx(conn_setting=conn_instance)
-        if not v1 or not v2:
+        sql = ("""select Ftask_id from {t_mysql_backup_result} 
+                        where Fbackup_status='Backing' and Ftype='{instance}';"""
+                  .format(t_mysql_backup_result=self.dconf['t_mysql_backup_result'],
+                         instance=self.dconf['f_info']['instance']))
+        v3 = self.BF.connMySQL(sql, self.BF.conn_dbadb)
+        v4 = self.checkTime(backup_mode=backup_mode)
+        #print v1,v2,v3,v4
+        #if not v1 or not v2 or v3 or not v4:
+        if not v1 or not v2 or not v4:
             v = False
         else:
             v = True
         return v
+
 
     def showSlaveStatus(self, conn_setting):
         slave_status = self.BF.connMySQL("SHOW SLAVE STATUS;", conn_setting)
@@ -625,7 +683,7 @@ class MySQLBackupFunction(object):
         encrypted = N
         """
         if os.path.exists(f_tar):
-            cmd = ("""cd %s && tar zxvf backup.tar.gz xtrabackup_info >>%s 2>&1"""%(os.path.dirname(os.path.abspath(f_tar)),
+            cmd = ("""cd %s && tar xvf backup.tar xtrabackup_info >>%s 2>&1"""%(os.path.dirname(os.path.abspath(f_tar)),
                                                                                     self.dconf['normal_log']))
             self.BF.printLog(cmd, self.dconf['normal_log'], 'green')
             # Tips:解压操作可能会很长，并且吃机器资源
@@ -760,12 +818,17 @@ class MySQLBackupFunction(object):
     def checkXtrabackupCommand(self):
 
         mysql_host = self.dconf['f_info']['source_host']
-        mysql_ssh_port = 22
-        mysql_ssh_user = "douyuops"
+        mysql_ssh_port = self.dconf['ssh_port']
+        mysql_ssh_user = self.dconf['ssh_user']
         mysql_ssh_pass = self.getSSHPass(mysql_host, mysql_ssh_user)
-        tmpdir = "/tmp/xtrabackup_tmpdir_%s"%(self.dconf['xtrabackup_task_id'])
+        print mysql_host,mysql_ssh_pass
+        if not mysql_ssh_user:
+            self.BF.printLog("[%s]获取密码失败"%(self.dconf['xtrabackup_task_id']), self.dconf['normal_log'], 'green')
+            return False
+            
+        tmpdir = "/tmp/xtrabackup_tmpdir/%s"%(self.dconf['xtrabackup_task_id'])
 
-        cmd = ("""/usr/bin/sshpass -p {mysql_ssh_pass} /usr/bin/ssh -p {mysql_ssh_port} {mysql_ssh_user}@{mysql_host} "echo '{mysql_ssh_pass}' | sudo -S su -c \\"ps aux| grep 'innobackupex' | grep -v grep |grep 'tmpdir={tmpdir}' | wc -l  \\" " """
+        cmd = ("""/usr/bin/sshpass -p {mysql_ssh_pass} /usr/bin/ssh -t -o StrictHostKeyChecking=no -p {mysql_ssh_port} {mysql_ssh_user}@{mysql_host} "echo '{mysql_ssh_pass}' | sudo -S su -c \\"ps aux| grep 'innobackupex' | grep -v grep |grep 'tmpdir={tmpdir}' | wc -l  \\" " """
               .format(mysql_ssh_pass = mysql_ssh_pass,
                       mysql_ssh_port = mysql_ssh_port,
                       mysql_ssh_user = mysql_ssh_user,
@@ -820,7 +883,9 @@ class MySQLBackupFunction(object):
             # 如若不存在,则认为备份完成,开始解析xtrabackup_info
             r = self.checkXtrabackupCommand()
             if r:
-                f_tar = "%s/backup.tar.gz"%(backup_path)
+                #f_tar = "%s/backup.tar.gz"%(backup_path)
+                # version 2.0:xtrbackup不压缩 | arthur | 2019-02-25
+                f_tar = "%s/backup.tar"%(backup_path)
                 check_info['metadata'] = self.resolveXtrabackupFile(f_tar=f_tar)
                 if check_info['metadata']['master_log_file'] != '':
                     check_info['size'] = self.BF.runShell("du -shm %s | awk '{print $1}'"%(backup_path))[1]
@@ -922,12 +987,21 @@ class MySQLBackupFunction(object):
     # 获取服务器密码
     def getSSHPass(self, ssh_host, ssh_user):
         return 'redhat'
+        # BUGS:待优化
+        #sql = ("""select Fclear_pass from mysql_info_db.t_server_user_info 
+        #         where Fuser_name='%s' and Fserver_host='%s';"""%(ssh_user, ssh_host))
+        #ssh_pass = self.BF.connMySQL(sql, self.dconf['conn_dbadb'])
+        #if ssh_pass:
+        #    ssh_pass = ssh_pass[0]['Fclear_pass']
+        #else:
+        #    ssh_pass = False
+        #return ssh_pass
+
 
     # 远程xtrbackup
     def doBackupXtrabackup(self, backup_path=None, wait=1):
        
         # Tips:写死
-        #local_xtrabackup_sh = "/data/DBARepository/mysql/mysql_backup/common/local_xtrabackup.sh"
         mysql_host = self.dconf['f_info']['source_host']
         mysql_ssh_port = self.dconf['ssh_port'] 
         mysql_ssh_user = self.dconf['ssh_user']
@@ -935,10 +1009,15 @@ class MySQLBackupFunction(object):
         backup_ssh_port = self.dconf['ssh_port']
         backup_ssh_user = self.dconf['ssh_user']
         backup_ssh_pass = self.getSSHPass(self.dconf['local_ip'], backup_ssh_user)
-        tmpdir = "/tmp/xtrabackup_tmpdir_%s"%(self.dconf['xtrabackup_task_id'])
+        tmpdir = "/tmp/xtrabackup_tmpdir/%s"%(self.dconf['xtrabackup_task_id'])
+
+        if not mysql_ssh_pass or not backup_ssh_pass:
+            self.BF.printLog("[%s]:获取密码失败"%(self.dconf['xtrabackup_task_id']), 
+                              self.dconf['full_log'], 'green')
+            return False
 
         self.BF.runShell("chown -R %s:%s %s"%(backup_ssh_user,backup_ssh_user,backup_path))
-        scp_cmd = ("""/usr/bin/sshpass -p {mysql_ssh_pass} /usr/bin/scp -P {mysql_ssh_port} {local_xtrabackup_sh} {mysql_ssh_user}@{mysql_host}:/tmp"""
+        scp_cmd = ("""/usr/bin/sshpass -p {mysql_ssh_pass} /usr/bin/scp -o StrictHostKeyChecking=no -P {mysql_ssh_port} {local_xtrabackup_sh} {mysql_ssh_user}@{mysql_host}:/tmp"""
                   .format(mysql_ssh_pass = mysql_ssh_pass,
                           mysql_ssh_port = mysql_ssh_port,
                           local_xtrabackup_sh = self.dconf['local_xtrabackup_sh'],
@@ -948,8 +1027,9 @@ class MySQLBackupFunction(object):
                           self.dconf['full_log'], 'green')
         subprocess.call(scp_cmd, stdout=subprocess.PIPE, shell=True)
 
-        exec_cmd = ("""mkdir -p {tmpdir}; echo '{backup_ssh_pass}' | sudo -S su -c '/bin/bash /tmp/{basename_local_xtrabackup_sh} {mysql_host} {mysql_port} {mysql_user} {mysql_pass} {backup_host} {backup_ssh_port} {backup_ssh_user} {backup_ssh_pass} {backup_path} {tmpdir}' """
-                    .format(backup_ssh_pass = backup_ssh_pass,
+        exec_cmd = ("""mkdir -p {tmpdir}; echo '{mysql_ssh_pass}' | sudo -S su -c '/bin/bash /tmp/{basename_local_xtrabackup_sh} {mysql_host} {mysql_port} {mysql_user} {mysql_pass} {backup_host} {backup_ssh_port} {backup_ssh_user} {backup_ssh_pass} {backup_path} {tmpdir}' """
+                    .format(mysql_ssh_pass = mysql_ssh_pass,
+                            backup_ssh_pass = backup_ssh_pass,
                             basename_local_xtrabackup_sh = os.path.basename(
                             self.dconf['local_xtrabackup_sh']),
                             mysql_host = self.dconf['f_info']['source_host'],
@@ -962,7 +1042,7 @@ class MySQLBackupFunction(object):
                             backup_path = backup_path,
                             tmpdir = tmpdir)
         )
-        remote_cmd = ("""/usr/bin/sshpass -p {mysql_ssh_pass} /usr/bin/ssh -p {mysql_ssh_port} {mysql_ssh_user}@{mysql_host} "{cmd}" """
+        remote_cmd = ("""/usr/bin/sshpass -p {mysql_ssh_pass} /usr/bin/ssh -t -o StrictHostKeyChecking=no -p {mysql_ssh_port} {mysql_ssh_user}@{mysql_host} "{cmd}" """
                      .format(mysql_ssh_pass = mysql_ssh_pass,
                              mysql_ssh_port = mysql_ssh_port,
                              mysql_ssh_user = mysql_ssh_user,
@@ -1143,4 +1223,5 @@ class ApplicationInstance(object):
         except:
             pass
  
+
 
