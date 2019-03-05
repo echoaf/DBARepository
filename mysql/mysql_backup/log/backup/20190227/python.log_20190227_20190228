@@ -1,0 +1,12 @@
+[2019-02-21 15:45:32 python_function.py]:===MySQL BINARYBACKUP IS START.
+[2019-02-21 15:45:32 python_function.py]:===MySQL BINARYBACKUP IS START.
+[2019-02-21 15:45:33 python_function.py]:===MySQL BINARYBACKUP IS END.
+[2019-02-21 15:45:33 python_function.py]:===MySQL BINARYBACKUP IS END.
+[2019-02-21 15:45:52 python_function.py]:===MySQL BINARYBACKUP IS START.
+[2019-02-21 15:45:52 python_function.py]:===MySQL BINARYBACKUP IS START.
+[2019-02-21 15:45:52 python_function.py]:===MySQL BINARYBACKUP IS END.
+[2019-02-21 15:45:52 python_function.py]:===MySQL BINARYBACKUP IS END.
+mysqlbinlog: [Warning] Using a password on the command line interface can be insecure.
+[2019-02-21 16:53:05 python_function.py]:===MySQL Protection CHECK IS START.
+[2019-02-21 16:53:05 python_function.py]:===MySQL Protection CHECK IS END.
+ERROR: Got error reading packet from server: could not find next log; the first event 'binlog.000001' at 4, the last event read from './binlog.000018' at 57190, the last byte read from './binlog.000018' at 57190.

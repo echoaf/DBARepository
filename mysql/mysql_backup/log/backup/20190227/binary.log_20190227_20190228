@@ -1,0 +1,14 @@
+[2019-02-21 15:46:30 python_function.py]:===MySQL BINARYBACKUP IS START.
+[2019-02-21 15:46:30 python_function.py]:===MySQL BINARYBACKUP IS END.
+[2019-02-21 16:50:01 python_function.py]:===MySQL BINARYBACKUP IS START.
+[2019-02-21 16:50:01 python_function.py]:[172.16.112.13:10000]pull mysqlbinlog process.
+[2019-02-21 16:50:01 python_function.py]:/data/DBARepository/mysql/mysql_backup/common/mysqlbinlog -h172.16.112.13 -P10000 -urepl_user -predhat binlog.000001 --read-from-remote-server --raw --stop-never --result-file /data/MySQL_BACKUP/BINARYBACKUP/DBADB/172.16.112.13_10000/REPORTED/ >>/data/DBARepository/mysql/mysql_backup/log/python.log 2>&1 &
+[2019-02-21 16:50:01 python_function.py]:===MySQL BINARYBACKUP IS END.
+[2019-02-21 16:52:06 python_function.py]:===MySQL BINARYBACKUP IS START.
+[2019-02-21 16:52:32 python_function.py]:===MySQL BINARYBACKUP IS END.
+[2019-02-21 16:52:52 python_function.py]:===MySQL BINARYBACKUP IS START.
+[2019-02-21 16:52:52 python_function.py]:===MySQL BINARYBACKUP IS END.
+[2019-02-21 16:52:54 python_function.py]:===MySQL BINARYBACKUP IS START.
+[2019-02-21 16:52:54 python_function.py]:===MySQL BINARYBACKUP IS END.
+[2019-02-21 16:52:55 python_function.py]:===MySQL BINARYBACKUP IS START.
+[2019-02-21 16:52:55 python_function.py]:===MySQL BINARYBACKUP IS END.

@@ -1,0 +1,355 @@
+[0;35m[2019-02-19 17:07:33] ===MySQL BINARYBACKUP IS START.[0m
+[0;35m[2019-02-19 17:07:33] ===MySQL BINARYBACKUP IS END.[0m
+[0;35m[2019-02-19 17:07:33] ===MySQL CLEAR IS START.[0m
+[0;31m[2019-02-19 17:07:33] [/data]当前磁盘使用85(阈值80)[0m
+[0;32m[2019-02-19 17:07:33] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-19)-(2019-02-12),待保存的task_id为:'DBADB-20190215-XTRABACKUP'[0m
+[0;32m[2019-02-19 17:07:33] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-12)-(2018-02-19),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:07:33] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-19)-(2009-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:07:33] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-21)-(1918-12-06),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:07:33] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-19)-(2019-02-12),待保存的task_id为:'DBADB-20190218-MYDUMPER'[0m
+[0;32m[2019-02-19 17:07:33] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-12)-(2018-02-19),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:07:33] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-19)-(2009-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:07:33] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-21)-(1918-12-06),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:07:33] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-19)-(2019-02-12),待保存的task_id为:'DBADB-20190218-MYSQLDUMP'[0m
+[0;32m[2019-02-19 17:07:33] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-12)-(2018-02-19),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:07:33] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-19)-(2009-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:07:33] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-21)-(1918-12-06),找不到待保存的task_id[0m
+[0;31m[2019-02-19 17:07:33] [/data]当前磁盘使用85(阈值80)[0m
+[0;35m[2019-02-19 17:07:33] ===MySQL CLEAR IS END.[0m
+[0;35m[2019-02-19 17:07:33] ===MySQL FULLBACKUP IS START.[0m
+[0m[2019-02-19 17:07:33] [DBADB-20190219-XTRABACKUP]backup status is SUCC, exit[0m
+[0m[2019-02-19 17:07:33] [DBADB-20190219-MYDUMPER]backup status is SUCC, exit[0m
+[0m[2019-02-19 17:07:33] [DBADB-20190219-MYSQLDUMP]backup status is SUCC, exit[0m
+[0;35m[2019-02-19 17:07:33] ===MySQL FULLBACKUP IS END.[0m
+[2019-02-19 17:09:02] 开始执行mysql_binarybackup.py
+[0;35m[2019-02-19 17:09:02] ===MySQL BINARYBACKUP IS START.[0m
+[0;35m[2019-02-19 17:09:03] ===MySQL BINARYBACKUP IS END.[0m
+[2019-02-19 17:09:03] 开始执行mysql_clear.py
+[0;35m[2019-02-19 17:09:03] ===MySQL CLEAR IS START.[0m
+[0;31m[2019-02-19 17:09:03] [/data]当前磁盘使用85(阈值80)[0m
+[0;32m[2019-02-19 17:09:03] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-19)-(2019-02-12),待保存的task_id为:'DBADB-20190215-XTRABACKUP'[0m
+[0;32m[2019-02-19 17:09:03] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-12)-(2018-02-19),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:09:03] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-19)-(2009-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:09:03] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-21)-(1918-12-06),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:09:03] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-19)-(2019-02-12),待保存的task_id为:'DBADB-20190218-MYDUMPER'[0m
+[0;32m[2019-02-19 17:09:03] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-12)-(2018-02-19),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:09:03] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-19)-(2009-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:09:03] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-21)-(1918-12-06),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:09:03] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-19)-(2019-02-12),待保存的task_id为:'DBADB-20190218-MYSQLDUMP'[0m
+[0;32m[2019-02-19 17:09:03] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-12)-(2018-02-19),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:09:03] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-19)-(2009-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:09:03] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-21)-(1918-12-06),找不到待保存的task_id[0m
+[0;31m[2019-02-19 17:09:03] [/data]当前磁盘使用85(阈值80)[0m
+[0;35m[2019-02-19 17:09:03] ===MySQL CLEAR IS END.[0m
+[2019-02-19 17:09:03] 开始执行mysql_fullbackup.py
+[0;35m[2019-02-19 17:09:03] ===MySQL FULLBACKUP IS START.[0m
+[0m[2019-02-19 17:09:03] [DBADB-20190219-XTRABACKUP]backup status is SUCC, exit[0m
+[0m[2019-02-19 17:09:03] [DBADB-20190219-MYDUMPER]backup status is SUCC, exit[0m
+[0m[2019-02-19 17:09:03] [DBADB-20190219-MYSQLDUMP]backup status is SUCC, exit[0m
+[0;35m[2019-02-19 17:09:03] ===MySQL FULLBACKUP IS END.[0m
+[2019-02-19 17:10:09] 开始执行mysql_binarybackup.py
+[0;35m[2019-02-19 17:10:09] ===MySQL BINARYBACKUP IS START.[0m
+[0;35m[2019-02-19 17:10:09] ===MySQL BINARYBACKUP IS END.[0m
+[2019-02-19 17:10:09] 开始执行mysql_clear.py
+[0;35m[2019-02-19 17:10:09] ===MySQL CLEAR IS START.[0m
+[0;31m[2019-02-19 17:10:09] [/data]当前磁盘使用85(阈值80)[0m
+[0;32m[2019-02-19 17:10:09] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-19)-(2019-02-12),待保存的task_id为:'DBADB-20190215-XTRABACKUP'[0m
+[0;32m[2019-02-19 17:10:09] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-12)-(2018-02-19),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:10:09] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-19)-(2009-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:10:09] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-21)-(1918-12-06),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:10:09] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-19)-(2019-02-12),待保存的task_id为:'DBADB-20190218-MYDUMPER'[0m
+[0;32m[2019-02-19 17:10:09] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-12)-(2018-02-19),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:10:09] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-19)-(2009-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:10:09] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-21)-(1918-12-06),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:10:09] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-19)-(2019-02-12),待保存的task_id为:'DBADB-20190218-MYSQLDUMP'[0m
+[0;32m[2019-02-19 17:10:09] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-12)-(2018-02-19),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:10:09] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-19)-(2009-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-19 17:10:09] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-21)-(1918-12-06),找不到待保存的task_id[0m
+[0;31m[2019-02-19 17:10:09] [/data]当前磁盘使用85(阈值80)[0m
+[0;35m[2019-02-19 17:10:09] ===MySQL CLEAR IS END.[0m
+[2019-02-19 17:10:10] 开始执行mysql_fullbackup.py
+[0;35m[2019-02-19 17:10:10] ===MySQL FULLBACKUP IS START.[0m
+[0m[2019-02-19 17:10:10] [DBADB-20190219-XTRABACKUP]backup status is SUCC, exit[0m
+[0m[2019-02-19 17:10:10] [DBADB-20190219-MYDUMPER]backup status is SUCC, exit[0m
+[0m[2019-02-19 17:10:10] [DBADB-20190219-MYSQLDUMP]backup status is SUCC, exit[0m
+[0;35m[2019-02-19 17:10:10] ===MySQL FULLBACKUP IS END.[0m
+[2019-02-19 17:39:59] [DBADB ]同步备份信息
+[2019-02-19 17:40:07] [DBADB 172.16.112.13:10000]同步备份信息
+[2019-02-19 17:40:21] [DBADB 172.16.112.13:10000]同步备份信息
+[2019-02-19 17:41:34] [DBADB 172.16.112.13:10000]同步备份信息
+[2019-02-19 17:42:56] [DBADB 172.16.112.13:10000]同步备份信息
+[2019-02-19 17:42:57] [DBADB 172.16.112.13:10000]同步备份信息
+[2019-02-19 17:43:32] [DBADB 172.16.112.13:10000]同步备份信息
+[2019-02-19 17:51:04] [DBADB 172.16.112.13:10000]同步备份信息
+[2019-02-19 17:51:04] [DBADB1 172.16.112.10:10002]同步备份信息
+[2019-02-19 17:51:04] [DBADB2 172.16.112.11:10002]同步备份信息
+[2019-02-19 17:51:20] [DBADB 172.16.112.13:10000]同步备份信息
+[2019-02-19 17:51:20] [DBADB1 172.16.112.10:10002]同步备份信息
+[2019-02-19 17:51:20] [DBADB2 172.16.112.11:10002]同步备份信息
+[2019-02-19 17:51:46] [DBADB 172.16.112.13:10000]同步备份信息
+[2019-02-19 17:51:46] [DBADB1 172.16.112.10:10002]同步备份信息
+[2019-02-19 17:51:46] [DBADB2 172.16.112.11:10002]同步备份信息
+[2019-02-19 17:55:03] [DBADB 172.16.112.13:10000]同步备份信息
+[2019-02-19 17:55:03] [DBADB1 172.16.112.10:10002]同步备份信息
+[2019-02-19 17:55:03] [DBADB2 172.16.112.11:10002]同步备份信息
+[2019-02-20 14:55:04] 开始执行mysql_binarybackup.py
+[0;35m[2019-02-20 14:55:04] ===MySQL BINARYBACKUP IS START.[0m
+[0;35m[2019-02-20 14:55:04] ===MySQL BINARYBACKUP IS END.[0m
+[2019-02-20 14:55:04] 开始执行mysql_clear.py
+[0;35m[2019-02-20 14:55:04] ===MySQL CLEAR IS START.[0m
+[0;31m[2019-02-20 14:55:04] [/data]当前磁盘使用86(阈值80)[0m
+[0;32m[2019-02-20 14:55:04] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-XTRABACKUP'[0m
+[0;32m[2019-02-20 14:55:04] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:04] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:04] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:04] [DBADB-20190215-XTRABACKUP]清理数据:/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190215-XTRABACKUP[0m
+[0;32m[2019-02-20 14:55:04] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-MYDUMPER'[0m
+[0;32m[2019-02-20 14:55:04] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:04] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:04] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:04] [DBADB-20190218-MYDUMPER]清理数据:/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190218-MYDUMPER[0m
+[0;32m[2019-02-20 14:55:05] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-MYSQLDUMP'[0m
+[0;32m[2019-02-20 14:55:05] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:05] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:05] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:05] [DBADB-20190218-MYSQLDUMP]清理数据:/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190218-MYSQLDUMP[0m
+[0;31m[2019-02-20 14:55:05] [/data]当前磁盘使用86(阈值80)[0m
+[0;35m[2019-02-20 14:55:05] ===MySQL CLEAR IS END.[0m
+[2019-02-20 14:55:05] 开始执行mysql_fullbackup.py
+[sudo] password for douyuops: [0;35m[2019-02-20 14:55:05] ===MySQL FULLBACKUP IS START.[0m
+[0m[2019-02-20 14:55:05] [DBADB-20190220-XTRABACKUP]init status, enter backuping[0m
+[0;32m[2019-02-20 14:55:05] [DBADB-20190220-XTRABACKUP]/usr/bin/sshpass -p redhat /usr/bin/scp -P 22 /data/DBARepository/mysql/mysql_backup/common/local_xtrabackup.sh douyuops@172.16.112.13:/tmp[0m
+[0;32m[2019-02-20 14:55:05] [DBADB-20190220-XTRABACKUP]/usr/bin/sshpass -p redhat /usr/bin/ssh -p 22 douyuops@172.16.112.13 "mkdir -p /tmp/xtrabackup_tmpdir_DBADB-20190220-XTRABACKUP; echo 'redhat' | sudo -S su -c '/bin/bash /tmp/local_xtrabackup.sh 172.16.112.13 10000 dump_user redhat 172.16.112.12 22 douyuops redhat /data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-XTRABACKUP /tmp/xtrabackup_tmpdir_DBADB-20190220-XTRABACKUP' " [0m
+[0m[2019-02-20 14:55:06] [DBADB-20190220-MYDUMPER]init status, enter backuping[0m
+[0m[2019-02-20 14:55:06] [DBADB-20190220-MYSQLDUMP]init status, enter backuping[0m
+[0;32m[2019-02-20 14:55:06] 开始备份库:backup_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases backup_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-MYSQLDUMP/backup_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-20 14:55:06] 开始备份库:conf_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases conf_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-MYSQLDUMP/conf_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-20 14:55:06] 开始备份库:dest_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases dest_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-MYSQLDUMP/dest_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-20 14:55:06] 开始备份库:mysql(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases mysql >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-MYSQLDUMP/mysql.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-20 14:55:06] 开始备份库:mysql_archive_2018_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases mysql_archive_2018_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-MYSQLDUMP/mysql_archive_2018_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-20 14:55:06] 开始备份库:mysql_archive_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases mysql_archive_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-MYSQLDUMP/mysql_archive_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-20 14:55:06] 开始备份库:mysql_backup_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases mysql_backup_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-MYSQLDUMP/mysql_backup_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-20 14:55:06] 开始备份库:mysql_info_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases mysql_info_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-MYSQLDUMP/mysql_info_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-20 14:55:06] 开始备份库:percona_schema(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases percona_schema >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-MYSQLDUMP/percona_schema.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-20 14:55:06] 开始备份库:source_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases source_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-MYSQLDUMP/source_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-20 14:55:06] 开始备份库:synchronization_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases synchronization_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-MYSQLDUMP/synchronization_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-20 14:55:06] 开始备份库:test_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases test_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-MYSQLDUMP/test_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;35m[2019-02-20 14:55:06] ===MySQL FULLBACKUP IS END.[0m
+[2019-02-20 14:55:29] 开始执行mysql_binarybackup.py
+[0;35m[2019-02-20 14:55:30] ===MySQL BINARYBACKUP IS START.[0m
+[0;35m[2019-02-20 14:55:30] ===MySQL BINARYBACKUP IS END.[0m
+[2019-02-20 14:55:30] 开始执行mysql_clear.py
+[0;35m[2019-02-20 14:55:31] ===MySQL CLEAR IS START.[0m
+[0;31m[2019-02-20 14:55:31] [/data]当前磁盘使用86(阈值80)[0m
+[0;32m[2019-02-20 14:55:31] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-XTRABACKUP'[0m
+[0;32m[2019-02-20 14:55:31] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:31] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:31] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:31] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-MYDUMPER'[0m
+[0;32m[2019-02-20 14:55:31] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:31] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:31] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:31] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-MYSQLDUMP'[0m
+[0;32m[2019-02-20 14:55:31] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:31] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:31] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;31m[2019-02-20 14:55:31] [/data]当前磁盘使用86(阈值80)[0m
+[0;35m[2019-02-20 14:55:31] ===MySQL CLEAR IS END.[0m
+[2019-02-20 14:55:31] 开始执行mysql_fullbackup.py
+[sudo] password for douyuops: [0;35m[2019-02-20 14:55:31] ===MySQL FULLBACKUP IS START.[0m
+[0m[2019-02-20 14:55:31] [DBADB-20190220-XTRABACKUP]backup status is BACKING, enter checking[0m
+[0;32m[2019-02-20 14:55:31] [DBADB-20190220-XTRABACKUP]检测命令(/usr/bin/sshpass -p redhat /usr/bin/ssh -p 22 douyuops@172.16.112.13 "echo 'redhat' | sudo -S su -c \"ps aux| grep 'innobackupex' | grep -v grep |grep 'tmpdir=/tmp/xtrabackup_tmpdir_DBADB-20190220-XTRABACKUP' | wc -l  \" " )[0m
+[0m[2019-02-20 14:55:33] [DBADB-20190220-MYDUMPER]backup status is BACKING, enter checking[0m
+[0m[2019-02-20 14:55:34] [DBADB-20190220-MYSQLDUMP]backup status is BACKING, enter checking[0m
+[0;35m[2019-02-20 14:55:34] ===MySQL FULLBACKUP IS END.[0m
+[2019-02-20 14:55:54] 开始执行mysql_binarybackup.py
+[0;35m[2019-02-20 14:55:54] ===MySQL BINARYBACKUP IS START.[0m
+[0;35m[2019-02-20 14:55:54] ===MySQL BINARYBACKUP IS END.[0m
+[2019-02-20 14:55:54] 开始执行mysql_clear.py
+[0;35m[2019-02-20 14:55:54] ===MySQL CLEAR IS START.[0m
+[0;31m[2019-02-20 14:55:54] [/data]当前磁盘使用86(阈值80)[0m
+[0;32m[2019-02-20 14:55:54] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-XTRABACKUP'[0m
+[0;32m[2019-02-20 14:55:54] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:54] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:54] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:54] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-MYDUMPER'[0m
+[0;32m[2019-02-20 14:55:54] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:54] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:54] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:54] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-MYSQLDUMP'[0m
+[0;32m[2019-02-20 14:55:54] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:54] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 14:55:54] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;31m[2019-02-20 14:55:54] [/data]当前磁盘使用86(阈值80)[0m
+[0;35m[2019-02-20 14:55:54] ===MySQL CLEAR IS END.[0m
+[2019-02-20 14:55:54] 开始执行mysql_fullbackup.py
+[sudo] password for douyuops: [0;35m[2019-02-20 14:55:54] ===MySQL FULLBACKUP IS START.[0m
+[0m[2019-02-20 14:55:54] [DBADB-20190220-XTRABACKUP]backup status is BACKING, enter checking[0m
+[0;32m[2019-02-20 14:55:54] [DBADB-20190220-XTRABACKUP]检测命令(/usr/bin/sshpass -p redhat /usr/bin/ssh -p 22 douyuops@172.16.112.13 "echo 'redhat' | sudo -S su -c \"ps aux| grep 'innobackupex' | grep -v grep |grep 'tmpdir=/tmp/xtrabackup_tmpdir_DBADB-20190220-XTRABACKUP' | wc -l  \" " )[0m
+[0;32m[2019-02-20 14:55:55] cd /data/MySQL_BACKUP/FULLBACKUP/DBADB-20190220-XTRABACKUP && tar zxvf backup.tar.gz xtrabackup_info >>/data/DBARepository/mysql/mysql_backup/log/python.log 2>&1[0m
+[0m[2019-02-20 14:55:58] [DBADB-20190220-MYDUMPER]backup status is SUCC, exit[0m
+[0m[2019-02-20 14:55:58] [DBADB-20190220-MYSQLDUMP]backup status is SUCC, exit[0m
+[0;35m[2019-02-20 14:55:58] ===MySQL FULLBACKUP IS END.[0m
+[2019-02-20 15:08:14] 开始执行mysql_binarybackup.py
+[0;35m[2019-02-20 15:08:15] ===MySQL BINARYBACKUP IS START.[0m
+[0;35m[2019-02-20 15:08:15] ===MySQL BINARYBACKUP IS END.[0m
+[2019-02-20 15:08:15] 开始执行mysql_clear.py
+[0;35m[2019-02-20 15:08:15] ===MySQL CLEAR IS START.[0m
+[0;31m[2019-02-20 15:08:15] [/data]当前磁盘使用86(阈值80)[0m
+[0;32m[2019-02-20 15:08:15] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-XTRABACKUP'[0m
+[0;32m[2019-02-20 15:08:15] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 15:08:15] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 15:08:15] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;32m[2019-02-20 15:08:15] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-MYDUMPER'[0m
+[0;32m[2019-02-20 15:08:15] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 15:08:15] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 15:08:15] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;32m[2019-02-20 15:08:15] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-MYSQLDUMP'[0m
+[0;32m[2019-02-20 15:08:15] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 15:08:15] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 15:08:15] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;31m[2019-02-20 15:08:15] [/data]当前磁盘使用86(阈值80)[0m
+[0;35m[2019-02-20 15:08:15] ===MySQL CLEAR IS END.[0m
+[2019-02-20 15:08:15] 开始执行mysql_fullbackup.py
+[0;35m[2019-02-20 15:08:15] ===MySQL FULLBACKUP IS START.[0m
+[0m[2019-02-20 15:08:15] [DBADB-20190220-XTRABACKUP]backup status is SUCC, exit[0m
+[0m[2019-02-20 15:08:15] [DBADB-20190220-MYDUMPER]backup status is SUCC, exit[0m
+[0m[2019-02-20 15:08:15] [DBADB-20190220-MYSQLDUMP]backup status is SUCC, exit[0m
+[0;35m[2019-02-20 15:08:15] ===MySQL FULLBACKUP IS END.[0m
+[2019-02-20 17:40:00] 开始执行mysql_binarybackup.py
+[0;35m[2019-02-20 17:40:00] ===MySQL BINARYBACKUP IS START.[0m
+[0;35m[2019-02-20 17:40:00] ===MySQL BINARYBACKUP IS END.[0m
+[2019-02-20 17:40:00] 开始执行mysql_clear.py
+[0;35m[2019-02-20 17:40:00] ===MySQL CLEAR IS START.[0m
+[0;31m[2019-02-20 17:40:00] [/data]当前磁盘使用86(阈值80)[0m
+[0;32m[2019-02-20 17:40:00] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-XTRABACKUP'[0m
+[0;32m[2019-02-20 17:40:00] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 17:40:00] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 17:40:00] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;32m[2019-02-20 17:40:00] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-MYDUMPER'[0m
+[0;32m[2019-02-20 17:40:00] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 17:40:00] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 17:40:00] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;32m[2019-02-20 17:40:00] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-20)-(2019-02-13),待保存的task_id为:'DBADB-20190219-MYSQLDUMP'[0m
+[0;32m[2019-02-20 17:40:00] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-13)-(2018-02-20),找不到待保存的task_id[0m
+[0;32m[2019-02-20 17:40:00] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-20)-(2009-02-22),找不到待保存的task_id[0m
+[0;32m[2019-02-20 17:40:00] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-22)-(1918-12-07),找不到待保存的task_id[0m
+[0;31m[2019-02-20 17:40:00] [/data]当前磁盘使用86(阈值80)[0m
+[0;35m[2019-02-20 17:40:00] ===MySQL CLEAR IS END.[0m
+[2019-02-20 17:40:00] 开始执行mysql_fullbackup.py
+[0;35m[2019-02-20 17:40:00] ===MySQL FULLBACKUP IS START.[0m
+[0m[2019-02-20 17:40:00] [DBADB-20190220-XTRABACKUP]backup status is SUCC, exit[0m
+[0m[2019-02-20 17:40:00] [DBADB-20190220-MYDUMPER]backup status is BACKING, enter checking[0m
+[0m[2019-02-20 17:40:00] [DBADB-20190220-MYSQLDUMP]backup status is SUCC, exit[0m
+[0;35m[2019-02-20 17:40:00] ===MySQL FULLBACKUP IS END.[0m
+[2019-02-20 17:40:01] 开始执行mysql_backup_protection.py
+[0;35m[2019-02-20 17:40:01] ===MySQL Protection CHECK IS START.[0m
+[0;35m[2019-02-20 17:40:01] ===MySQL Protection CHECK IS END.[0m
+[2019-02-21 11:14:19] 开始执行mysql_binarybackup.py
+[0;35m[2019-02-21 11:14:19] ===MySQL BINARYBACKUP IS START.[0m
+[0;35m[2019-02-21 11:14:19] ===MySQL BINARYBACKUP IS END.[0m
+[2019-02-21 11:14:19] 开始执行mysql_clear.py
+[0;35m[2019-02-21 11:14:19] ===MySQL CLEAR IS START.[0m
+[0;31m[2019-02-21 11:14:19] [/data]当前磁盘使用86(阈值80)[0m
+[0;32m[2019-02-21 11:14:19] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-21)-(2019-02-14),待保存的task_id为:'DBADB-20190220-XTRABACKUP'[0m
+[0;32m[2019-02-21 11:14:19] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-14)-(2018-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:19] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-21)-(2009-02-23),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:19] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-23)-(1918-12-08),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:19] [DBADB-20190219-XTRABACKUP]清理数据:/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190219-XTRABACKUP[0m
+[0;32m[2019-02-21 11:14:19] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-21)-(2019-02-14),待保存的task_id为:'DBADB-20190220-MYDUMPER'[0m
+[0;32m[2019-02-21 11:14:19] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-14)-(2018-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:19] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-21)-(2009-02-23),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:19] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-23)-(1918-12-08),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:19] [DBADB-20190219-MYDUMPER]清理数据:/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190219-MYDUMPER[0m
+[0;32m[2019-02-21 11:14:20] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-21)-(2019-02-14),待保存的task_id为:'DBADB-20190220-MYSQLDUMP'[0m
+[0;32m[2019-02-21 11:14:20] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-14)-(2018-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:20] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-21)-(2009-02-23),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:20] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-23)-(1918-12-08),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:20] [DBADB-20190219-MYSQLDUMP]清理数据:/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190219-MYSQLDUMP[0m
+[0;31m[2019-02-21 11:14:20] [/data]当前磁盘使用86(阈值80)[0m
+[0;35m[2019-02-21 11:14:20] ===MySQL CLEAR IS END.[0m
+[2019-02-21 11:14:20] 开始执行mysql_fullbackup.py
+[sudo] password for douyuops: [0;35m[2019-02-21 11:14:20] ===MySQL FULLBACKUP IS START.[0m
+[0m[2019-02-21 11:14:20] [DBADB-20190221-XTRABACKUP]init status, enter backuping[0m
+[0;32m[2019-02-21 11:14:20] [DBADB-20190221-XTRABACKUP]/usr/bin/sshpass -p redhat /usr/bin/scp -P 22 /data/DBARepository/mysql/mysql_backup/common/local_xtrabackup.sh douyuops@172.16.112.13:/tmp[0m
+[0;32m[2019-02-21 11:14:20] [DBADB-20190221-XTRABACKUP]/usr/bin/sshpass -p redhat /usr/bin/ssh -p 22 douyuops@172.16.112.13 "mkdir -p /tmp/xtrabackup_tmpdir_DBADB-20190221-XTRABACKUP; echo 'redhat' | sudo -S su -c '/bin/bash /tmp/local_xtrabackup.sh 172.16.112.13 10000 dump_user redhat 172.16.112.12 22 douyuops redhat /data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-XTRABACKUP /tmp/xtrabackup_tmpdir_DBADB-20190221-XTRABACKUP' " [0m
+[0m[2019-02-21 11:14:21] [DBADB-20190221-MYDUMPER]init status, enter backuping[0m
+[0m[2019-02-21 11:14:21] 开始备份:/usr/bin/dba/mydumper --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --threads='4' --outputdir='/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-MYDUMPER' --verbose=2 --statement-size='1000000' --rows='1000000' >>/data/DBARepository/mysql/mysql_backup/log/python.log 2>&1[0m
+[0m[2019-02-21 11:14:21] [DBADB-20190221-MYSQLDUMP]init status, enter backuping[0m
+[0;32m[2019-02-21 11:14:21] 开始备份库:backup_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases backup_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-MYSQLDUMP/backup_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-21 11:14:21] 开始备份库:conf_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases conf_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-MYSQLDUMP/conf_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-21 11:14:21] 开始备份库:dest_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases dest_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-MYSQLDUMP/dest_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-21 11:14:21] 开始备份库:mysql(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases mysql >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-MYSQLDUMP/mysql.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-21 11:14:21] 开始备份库:mysql_archive_2018_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases mysql_archive_2018_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-MYSQLDUMP/mysql_archive_2018_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-21 11:14:21] 开始备份库:mysql_archive_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases mysql_archive_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-MYSQLDUMP/mysql_archive_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-21 11:14:21] 开始备份库:mysql_backup_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases mysql_backup_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-MYSQLDUMP/mysql_backup_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-21 11:14:21] 开始备份库:mysql_info_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases mysql_info_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-MYSQLDUMP/mysql_info_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-21 11:14:21] 开始备份库:percona_schema(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases percona_schema >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-MYSQLDUMP/percona_schema.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-21 11:14:21] 开始备份库:source_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases source_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-MYSQLDUMP/source_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-21 11:14:21] 开始备份库:synchronization_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases synchronization_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-MYSQLDUMP/synchronization_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;32m[2019-02-21 11:14:21] 开始备份库:test_db(/data/DBARepository/mysql/mysql_backup/common/mysqldump --default-character-set=utf8 --complete-insert  --set-gtid-purged=OFF --lock-tables=false --add-drop-table=False --user='dump_user' --password='redhat' --host='172.16.112.13'  --port='10000' --databases test_db >/data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-MYSQLDUMP/test_db.sql 2>>/data/DBARepository/mysql/mysql_backup/log/python.log)[0m
+[0;35m[2019-02-21 11:14:21] ===MySQL FULLBACKUP IS END.[0m
+[2019-02-21 11:14:21] 开始执行mysql_backup_protection.py
+[0;35m[2019-02-21 11:14:22] ===MySQL Protection CHECK IS START.[0m
+[0;35m[2019-02-21 11:14:22] ===MySQL Protection CHECK IS END.[0m
+[2019-02-21 11:14:51] 开始执行mysql_binarybackup.py
+[0;35m[2019-02-21 11:14:51] ===MySQL BINARYBACKUP IS START.[0m
+[0;35m[2019-02-21 11:14:52] ===MySQL BINARYBACKUP IS END.[0m
+[2019-02-21 11:14:52] 开始执行mysql_clear.py
+[0;35m[2019-02-21 11:14:52] ===MySQL CLEAR IS START.[0m
+[0;31m[2019-02-21 11:14:52] [/data]当前磁盘使用86(阈值80)[0m
+[0;32m[2019-02-21 11:14:52] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-21)-(2019-02-14),待保存的task_id为:'DBADB-20190220-XTRABACKUP'[0m
+[0;32m[2019-02-21 11:14:52] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-14)-(2018-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:52] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-21)-(2009-02-23),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:52] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-23)-(1918-12-08),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:52] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-21)-(2019-02-14),待保存的task_id为:'DBADB-20190220-MYDUMPER'[0m
+[0;32m[2019-02-21 11:14:52] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-14)-(2018-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:52] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-21)-(2009-02-23),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:52] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-23)-(1918-12-08),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:52] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-21)-(2019-02-14),待保存的task_id为:'DBADB-20190220-MYSQLDUMP'[0m
+[0;32m[2019-02-21 11:14:52] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-14)-(2018-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:52] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-21)-(2009-02-23),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:14:52] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-23)-(1918-12-08),找不到待保存的task_id[0m
+[0;31m[2019-02-21 11:14:52] [/data]当前磁盘使用86(阈值80)[0m
+[0;35m[2019-02-21 11:14:52] ===MySQL CLEAR IS END.[0m
+[2019-02-21 11:14:52] 开始执行mysql_fullbackup.py
+[sudo] password for douyuops: [0;35m[2019-02-21 11:14:52] ===MySQL FULLBACKUP IS START.[0m
+[0m[2019-02-21 11:14:52] [DBADB-20190221-XTRABACKUP]backup status is BACKING, enter checking[0m
+[0;32m[2019-02-21 11:14:52] [DBADB-20190221-XTRABACKUP]检测命令(/usr/bin/sshpass -p redhat /usr/bin/ssh -p 22 douyuops@172.16.112.13 "echo 'redhat' | sudo -S su -c \"ps aux| grep 'innobackupex' | grep -v grep |grep 'tmpdir=/tmp/xtrabackup_tmpdir_DBADB-20190221-XTRABACKUP' | wc -l  \" " )[0m
+[0m[2019-02-21 11:14:56] [DBADB-20190221-MYDUMPER]backup status is BACKING, enter checking[0m
+[0m[2019-02-21 11:14:56] [DBADB-20190221-MYSQLDUMP]backup status is BACKING, enter checking[0m
+[0;35m[2019-02-21 11:14:56] ===MySQL FULLBACKUP IS END.[0m
+[2019-02-21 11:14:56] 开始执行mysql_backup_protection.py
+[0;35m[2019-02-21 11:14:56] ===MySQL Protection CHECK IS START.[0m
+[0;35m[2019-02-21 11:14:56] ===MySQL Protection CHECK IS END.[0m
+[2019-02-21 11:21:15] 开始执行mysql_binarybackup.py
+[0;35m[2019-02-21 11:21:15] ===MySQL BINARYBACKUP IS START.[0m
+[0;35m[2019-02-21 11:21:15] ===MySQL BINARYBACKUP IS END.[0m
+[2019-02-21 11:21:15] 开始执行mysql_clear.py
+[0;35m[2019-02-21 11:21:15] ===MySQL CLEAR IS START.[0m
+[0;31m[2019-02-21 11:21:15] [/data]当前磁盘使用86(阈值80)[0m
+[0;32m[2019-02-21 11:21:15] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-21)-(2019-02-14),待保存的task_id为:'DBADB-20190220-XTRABACKUP'[0m
+[0;32m[2019-02-21 11:21:15] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-14)-(2018-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:21:15] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-21)-(2009-02-23),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:21:15] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-23)-(1918-12-08),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:21:15] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-21)-(2019-02-14),待保存的task_id为:'DBADB-20190220-MYDUMPER'[0m
+[0;32m[2019-02-21 11:21:15] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-14)-(2018-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:21:15] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-21)-(2009-02-23),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:21:15] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-23)-(1918-12-08),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:21:15] [DBADB]本次区间范围为(0)天-(-7)天,时间周期为(2019-02-21)-(2019-02-14),待保存的task_id为:'DBADB-20190220-MYSQLDUMP'[0m
+[0;32m[2019-02-21 11:21:15] [DBADB]本次区间范围为(-7)天-(-365)天,时间周期为(2019-02-14)-(2018-02-21),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:21:15] [DBADB]本次区间范围为(-365)天-(-3650)天,时间周期为(2018-02-21)-(2009-02-23),找不到待保存的task_id[0m
+[0;32m[2019-02-21 11:21:15] [DBADB]本次区间范围为(-3650)天-(-36600)天,时间周期为(2009-02-23)-(1918-12-08),找不到待保存的task_id[0m
+[0;31m[2019-02-21 11:21:15] [/data]当前磁盘使用86(阈值80)[0m
+[0;35m[2019-02-21 11:21:15] ===MySQL CLEAR IS END.[0m
+[2019-02-21 11:21:15] 开始执行mysql_fullbackup.py
+[sudo] password for douyuops: [0;35m[2019-02-21 11:21:15] ===MySQL FULLBACKUP IS START.[0m
+[0m[2019-02-21 11:21:15] [DBADB-20190221-XTRABACKUP]backup status is BACKING, enter checking[0m
+[0;32m[2019-02-21 11:21:15] [DBADB-20190221-XTRABACKUP]检测命令(/usr/bin/sshpass -p redhat /usr/bin/ssh -p 22 douyuops@172.16.112.13 "echo 'redhat' | sudo -S su -c \"ps aux| grep 'innobackupex' | grep -v grep |grep 'tmpdir=/tmp/xtrabackup_tmpdir_DBADB-20190221-XTRABACKUP' | wc -l  \" " )[0m
+[0;32m[2019-02-21 11:21:16] cd /data/MySQL_BACKUP/FULLBACKUP/DBADB-20190221-XTRABACKUP && tar zxvf backup.tar.gz xtrabackup_info >>/data/DBARepository/mysql/mysql_backup/log/python.log 2>&1[0m
+[0m[2019-02-21 11:21:18] [DBADB-20190221-MYDUMPER]backup status is BACKING, enter checking[0m
+[0m[2019-02-21 11:21:18] [DBADB-20190221-MYSQLDUMP]backup status is SUCC, exit[0m
+[0;35m[2019-02-21 11:21:18] ===MySQL FULLBACKUP IS END.[0m
+[2019-02-21 11:21:18] 开始执行mysql_backup_protection.py
+[0;35m[2019-02-21 11:21:18] ===MySQL Protection CHECK IS START.[0m
+[0;35m[2019-02-21 11:21:18] ===MySQL Protection CHECK IS END.[0m

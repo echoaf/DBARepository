@@ -2,8 +2,8 @@
 
 # 清理日志
 
-base_dir="/data/repository/mysql_repo/mysql_backup"
-log_dir="$base_dir/log_dir" # 待处理的日志目录
+base_dir="/data/DBARepository/mysql/mysql_backup"
+log_dir="$base_dir/log" 
 normal_log="${log_dir}/log_ratate.log"
 log_large=30 # 保留30天的备份日志
 
@@ -30,7 +30,7 @@ function logRatate()
     do
         base_log=$(basename $log)
         /bin/cp -avf $log ${backup_path}/${base_log}_${yesterday}_${today} >>$normal_log 2>&1
-        echo "" > $log # 情况日志,不能使用rm
+        echo "" > $log 
     done
     
     # --remove-files:压缩后删除源文件
